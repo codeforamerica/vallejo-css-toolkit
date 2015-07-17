@@ -6,8 +6,8 @@ from intake.models import Call
 @twilio_view
 def welcome(request):
     resp = twilio.twiml.Response()
-    resp.say("Hello! Thank you for calling.")
-    resp.pause(length=2)
+    resp.say("Hello! Thank you for calling the Community Services Section of the Vallejo Police Department.")
+    resp.pause(length=1)
 
 
     # call_sid = request.values.get('CallSid', None)
