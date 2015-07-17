@@ -9,13 +9,12 @@ def welcome(request):
     resp.say("Hello! Thank you for calling.")
     resp.pause(length=2)
 
-    call_sid = request.values.get('CallSid', None)
-    call_id = Call.objects.create(call_sid=call_sid)
 
-    with resp.record(action="/handle-name", method="POST") as r:
-        r.say("Please say your name.")
+    # call_sid = request.values.get('CallSid', None)
+    # call_id = Call.objects.create(call_sid=call_sid)
 
-    print len(resp)
+    resp.say("Please say your name.")
+    resp.record(action="/handle-name", method="POST")
 
     return resp
 
