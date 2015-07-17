@@ -15,6 +15,8 @@ def welcome(request):
     with resp.record(action="/handle-name", method="POST") as r:
         r.say("Please say your name.")
 
+    print len(resp)
+
     return resp
 
 @twilio_view
