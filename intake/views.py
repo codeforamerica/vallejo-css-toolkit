@@ -80,6 +80,7 @@ def handle_problem_address(request):
     call.save()
 
     resp = twilio.twiml.Response()
+    return resp
 
 @twilio_view
 def handle_problem_description(request):
@@ -92,5 +93,4 @@ def handle_problem_description(request):
 
     resp = twilio.twiml.Response()
     resp.say("Thank you for reporting this issue. Goodbye.")
-
-
+    return resp

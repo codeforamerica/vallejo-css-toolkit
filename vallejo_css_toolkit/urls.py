@@ -8,4 +8,5 @@ urlpatterns = patterns('',
     url(r'^intake/handle_feedback_pref/', 'intake.views.handle_feedback_pref', name='handle_feedback_pref'),
     url(r'^intake/handle_feedback_number/', 'intake.views.handle_feedback_number', name='handle_feedback_number'),
     url(r'^intake/handle_problem_address/', 'intake.views.handle_problem_address', name='handle_problem_address'),
+    url(r'^intake/handle_problem_description/', 'intake.views.handle_problem_description', name='handle_problem_description'),
 )
