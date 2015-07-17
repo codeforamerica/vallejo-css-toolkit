@@ -9,9 +9,8 @@ def welcome(request):
     resp.say("Hello! Thank you for calling the Community Services Section of the Vallejo Police Department.")
     resp.pause(length=1)
 
-
-    # call_sid = request.values.get('CallSid', None)
-    # call_id = Call.objects.create(call_sid=call_sid)
+    call_sid = request.values.get('CallSid', None)
+    call_id = Call.objects.create(call_sid=call_sid)
 
     resp.say("Please say your name.")
     resp.record(action="/handle-name", method="POST")

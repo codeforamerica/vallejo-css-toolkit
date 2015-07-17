@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from intake.models import Call
+
+class CallAdmin(admin.ModelAdmin):
+    pass
+
+admin.site.register(Call, CallAdmin)
