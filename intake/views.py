@@ -23,10 +23,10 @@ def welcome(request):
 
 @twilio_view
 def handle_name(request):
-    call_sid = request.values.get('CallSid', None)
+    call_sid = request.POST.get('CallSid', None)
     call = Call.objects.get(call_sid=call_sid)
 
-    name_recording_url = request.values.get("RecordingUrl", None)
+    name_recording_url = request.POST.get("RecordingUrl", None)
     call.name_recording_url = name_recording_url
     call.save()
 
@@ -39,12 +39,12 @@ def handle_name(request):
 
 @twilio_view
 def handle_feedback_pref(request):
-    digit_pressed = request.values.get('Digits', None)
+    digit_pressed = request.POST.get('Digits', None)
 
     resp = twilio.twiml.Response()
 
     if digit_pressed and digit_pressed.is_digit():
-        call_sid = request.values.get('CallSid', None)
+        call_sid = request.POST.get('CallSid', None)
         call = Call.objects.get(call_sid=call_sid)
         call.caller_preferred_contact = int(digit_pressed)
         call.save()
@@ -59,9 +59,9 @@ def handle_feedback_pref(request):
 
 @twilio_view
 def handle_feedback_number(request):
-    digit_pressed = request.values.get('Digits', None)
+    digit_pressed = request.POST.get('Digits', None)
     if digit_pressed and digit_pressed.is_digit() and len(digit_pressed) == 10:
-        call_sid = request.values.get('CallSid', None)
+        call_sid = request.POST.get('CallSid', None)
         call = Call.objects.get(call_sid=call_sid)
 
         call.caller_number = int(digit_pressed)
@@ -76,10 +76,10 @@ def handle_feedback_number(request):
 
 @twilio_view
 def handle_problem_address(request):
-    call_sid = request.values.get('CallSid', None)
+    call_sid = request.POST.get('CallSid', None)
     call = Call.objects.get(call_sid=call_sid)
 
-    address_recording_url = request.values.get("RecordingUrl", None)
+    address_recording_url = request.POST.get("RecordingUrl", None)
     call.address_recording_url = address_recording_url
     call.save()
 
@@ -88,10 +88,10 @@ def handle_problem_address(request):
 
 @twilio_view
 def handle_problem_description(request):
-    call_sid = request.values.get('CallSid', None)
+    call_sid = request.POST.get('CallSid', None)
     call = Call.objects.get(call_sid=call_sid)
 
-    description_recording_url = request.values.get("RecordingUrl", None)
+    description_recording_url = request.POST.get("RecordingUrl", None)
     call.description_recording_url = description_recording_url
     call.save()
 
