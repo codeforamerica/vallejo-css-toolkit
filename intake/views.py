@@ -9,7 +9,11 @@ def welcome(request):
     resp.say("Hello! Thank you for calling the Community Services Section of the Vallejo Police Department.")
     resp.pause(length=1)
 
-    call_sid = request.values.get('CallSid', None)
+    import logging
+    logger = logging.getLogger('testlogger')
+    logger.info(request)
+
+    call_sid = request.POST.get('CallSid', None)
     call_id = Call.objects.create(call_sid=call_sid)
 
     resp.say("Please say your name.")
