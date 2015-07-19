@@ -59,18 +59,18 @@ def handle_feedback_pref(request):
 
 @twilio_view
 def handle_feedback_number(request):
-    digit_pressed = request.POST.get('Digits', None)
-    if digit_pressed and digit_pressed.is_digit() and len(digit_pressed) == 10:
+    digits_pressed = request.POST.get('Digits', None)
+    if digits_pressed and digits_pressed.isdigit() and len(digits_pressed) == 10:
         call_sid = request.POST.get('CallSid', None)
         call = Call.objects.get(call_sid=call_sid)
 
-        call.caller_number = int(digit_pressed)
+        call.caller_number = int(digits_pressed)
         call.save()
 
     resp = twilio.twiml.Response()
 
-    resp.say("Please say the address you're calling to report issues about.")
-    resp.record(action="/intake/handle-problem-address/", transcribe="true", method="POST")
+    resp.say("Please say the address you're calling to report.")
+    resp.record(action="/intake/handle-problem-address/", transcribe=True, method="POST")
 
     return resp
 
