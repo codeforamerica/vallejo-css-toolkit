@@ -13,7 +13,7 @@ def welcome(request):
     call_id = Call.objects.create(call_sid=call_sid)
 
     resp.say("Please say your name.")
-    resp.record(action="/intake/handle-name/", transcribe="true", method="POST")
+    resp.record(action="/intake/handle-name/", transcribe=True, method="POST")
 
     return resp
 
@@ -43,7 +43,7 @@ def handle_feedback_pref(request):
 
     resp = twilio.twiml.Response()
 
-    if digit_pressed and digit_pressed.is_digit():
+    if digit_pressed and digit_pressed.isdigit():
         call_sid = request.POST.get('CallSid', None)
         call = Call.objects.get(call_sid=call_sid)
         call.caller_preferred_contact = int(digit_pressed)
