@@ -13,7 +13,7 @@ def welcome(request):
     call_id = Call.objects.create(call_sid=call_sid)
 
     resp.say("Please say your name.")
-    resp.record(action="/intake/handle-name/", transcribe=True, method="POST")
+    resp.record(action="/intake/handle-name/", transcribe=True, transcribeCallback="/intake/handle-name-transcription/", method="POST")
 
     return resp
 
@@ -25,17 +25,24 @@ def handle_name(request):
     name_recording_url = request.POST.get("RecordingUrl", None)
     call.name_recording_url = name_recording_url
 
-    name_transcription = request.POST.get("TranscriptionText", None)
-    call.caller_name = name_transcription
-
     call.save()
 
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/handle-feedback-pref/", numDigits=1, method="POST") as g:
-        g.say("Would you like to receive automated feedback about progress on this report? Press 1 for phone call, 2 for text, or 3 for none.")
+        g.say("Would you like to receive automated feedback about progress on this report? Press 1 for phone call, 2 for text. Press 3 if you wish not to receive updates.")
 
     return resp
+
+@twilio_view
+def handle_name_transcription(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = Call.objects.get(call_sid=call_sid)
+
+    name_transcription = request.POST.get("TranscriptionText", None)
+    call.caller_name = name_transcription
+
+    call.save()
 
 @twilio_view
 def handle_feedback_pref(request):
@@ -70,7 +77,7 @@ def handle_feedback_number(request):
     resp = twilio.twiml.Response()
 
     resp.say("Please say the address you're calling to report.")
-    resp.record(action="/intake/handle-problem-address/", transcribe=True, method="POST")
+    resp.record(action="/intake/handle-problem-address/", transcribe=True, transcribeCallBack="/intake/handle-problem-address-transcription/", method="POST")
 
     return resp
 
@@ -82,17 +89,24 @@ def handle_problem_address(request):
     address_recording_url = request.POST.get("RecordingUrl", None)
     call.address_recording_url = address_recording_url
 
-    address_transcription = request.POST.get("TranscriptionText", None)
-    call.problem_address = address_transcription
-
     call.save()
 
     resp = twilio.twiml.Response()
 
-    resp.say("Please briefly describe the issue.")
-    resp.record(action="/intake/handle-problem-description/", transcribe="true", timeout=30, method="POST")
+    resp.say("Please briefly describe the issue, ending with the pound key.")
+    resp.record(action="/intake/handle-problem-description/", transcribe=True, transcribeCallback="/intake/handle-problem-description-transcription/", finishOnKey="#", timeout=30, method="POST")
 
     return resp
+
+@twilio_view
+def handle_problem_address_transcription(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = Call.objects.get(call_sid=call_sid)
+
+    address_transcription = request.POST.get("TranscriptionText", None)
+    call.problem_address = address_transcription
+
+    call.save()
 
 @twilio_view
 def handle_problem_description(request):
@@ -102,8 +116,8 @@ def handle_problem_description(request):
     description_recording_url = request.POST.get("RecordingUrl", None)
     call.description_recording_url = description_recording_url
 
-    description_recording_url = request.POST.get("RecordingUrl", None)
-    call.description_recording_url = description_recording_url
+    description_transcription = request.POST.get("TranscriptionText", None)
+    call.problem_description = description_transcription
 
     call.save()
 
@@ -111,3 +125,13 @@ def handle_problem_description(request):
     resp.say("Thank you for reporting this issue. Goodbye.")
 
     return resp
+
+@twilio_view
+def handle_problem_description_transcription(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = Call.objects.get(call_sid=call_sid)
+
+    description_transcription = request.POST.get("TranscriptionText", None)
+    call.problem_description = description_transcription
+
+    call.save()
