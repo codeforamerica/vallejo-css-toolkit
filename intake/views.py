@@ -13,7 +13,7 @@ def welcome(request):
     call_id = Call.objects.create(call_sid=call_sid)
 
     resp.say("Please say your name.")
-    resp.record(action="/handle-name", transcribe="true", method="POST")
+    resp.record(action="/intake/handle-name/", transcribe="true", method="POST")
 
     return resp
 
@@ -32,7 +32,7 @@ def handle_name(request):
 
     resp = twilio.twiml.Response()
 
-    with resp.gather(action="/handle-feedback-pref", numDigits=1, method="POST") as g:
+    with resp.gather(action="/intake/handle-feedback-pref/", numDigits=1, method="POST") as g:
         g.say("Would you like to receive automated feedback about progress on this report? Press 1 for phone call, 2 for text, or 3 for none.")
 
     return resp
@@ -52,7 +52,7 @@ def handle_feedback_pref(request):
         # TODO: need to handle no contact preferred
 
         # if int(digit_pressed) in [1, 2]:
-    with resp.gather(action="/handle-feedback-number", numDigits=10, method="POST") as g:
+    with resp.gather(action="/intake/handle-feedback-number/", numDigits=10, method="POST") as g:
         g.say("Please enter your preferred phone number to receieve updates, beginning with the area code.")
 
     return resp
@@ -70,7 +70,7 @@ def handle_feedback_number(request):
     resp = twilio.twiml.Response()
 
     resp.say("Please say the address you're calling to report issues about.")
-    resp.record(action="/handle-problem-address", transcribe="true", method="POST")
+    resp.record(action="/intake/handle-problem-address/", transcribe="true", method="POST")
 
     return resp
 
@@ -90,7 +90,7 @@ def handle_problem_address(request):
     resp = twilio.twiml.Response()
 
     resp.say("Please briefly describe the issue.")
-    resp.record(action="/handle-problem-description", transcribe="true", timeout=30, method="POST")
+    resp.record(action="/intake/handle-problem-description/", transcribe="true", timeout=30, method="POST")
 
     return resp
 
