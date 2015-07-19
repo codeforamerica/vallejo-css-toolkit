@@ -9,15 +9,11 @@ def welcome(request):
     resp.say("Hello! Thank you for calling the Community Services Section of the Vallejo Police Department.")
     resp.pause(length=1)
 
-    import logging
-    logger = logging.getLogger('testlogger')
-    logger.info(request)
-
     call_sid = request.POST.get('CallSid', None)
     call_id = Call.objects.create(call_sid=call_sid)
 
     resp.say("Please say your name.")
-    resp.record(action="/handle-name", method="POST")
+    resp.record(action="/handle-name", transcribe="true", method="POST")
 
     return resp
 
@@ -28,6 +24,10 @@ def handle_name(request):
 
     name_recording_url = request.POST.get("RecordingUrl", None)
     call.name_recording_url = name_recording_url
+
+    name_transcription = request.POST.get("TranscriptionText", None)
+    call.caller_name = name_transcription
+
     call.save()
 
     resp = twilio.twiml.Response()
@@ -49,13 +49,13 @@ def handle_feedback_pref(request):
         call.caller_preferred_contact = int(digit_pressed)
         call.save()
 
-        if int(digit_pressed) in [1, 2]:
-            with resp.gather(action="/handle-feedback-number", numDigits=10, method="POST") as g:
-                g.say("Please enter your preferred phone number to receieve updates, beginning with the area code.")
+        # TODO: need to handle no contact preferred
 
-            return resp
+        # if int(digit_pressed) in [1, 2]:
+    with resp.gather(action="/handle-feedback-number", numDigits=10, method="POST") as g:
+        g.say("Please enter your preferred phone number to receieve updates, beginning with the area code.")
 
-        # else need to go onto reporting issue address
+    return resp
 
 @twilio_view
 def handle_feedback_number(request):
@@ -69,8 +69,8 @@ def handle_feedback_number(request):
 
     resp = twilio.twiml.Response()
 
-    with resp.record(action="/handle-problem-address", method="POST") as r:
-        g.say("Please say the address you're calling to report issues about.")
+    resp.say("Please say the address you're calling to report issues about.")
+    resp.record(action="/handle-problem-address", transcribe="true", method="POST")
 
     return resp
 
@@ -81,9 +81,17 @@ def handle_problem_address(request):
 
     address_recording_url = request.POST.get("RecordingUrl", None)
     call.address_recording_url = address_recording_url
+
+    address_transcription = request.POST.get("TranscriptionText", None)
+    call.problem_address = address_transcription
+
     call.save()
 
     resp = twilio.twiml.Response()
+
+    resp.say("Please briefly describe the issue.")
+    resp.record(action="/handle-problem-description", transcribe="true", timeout=30, method="POST")
+
     return resp
 
 @twilio_view
@@ -93,8 +101,13 @@ def handle_problem_description(request):
 
     description_recording_url = request.POST.get("RecordingUrl", None)
     call.description_recording_url = description_recording_url
+
+    description_recording_url = request.POST.get("RecordingUrl", None)
+    call.description_recording_url = description_recording_url
+
     call.save()
 
     resp = twilio.twiml.Response()
     resp.say("Thank you for reporting this issue. Goodbye.")
+
     return resp
