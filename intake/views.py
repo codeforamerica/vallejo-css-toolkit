@@ -116,9 +116,6 @@ def handle_problem_description(request):
     description_recording_url = request.POST.get("RecordingUrl", None)
     call.description_recording_url = description_recording_url
 
-    description_transcription = request.POST.get("TranscriptionText", None)
-    call.problem_description = description_transcription
-
     call.save()
 
     resp = twilio.twiml.Response()
