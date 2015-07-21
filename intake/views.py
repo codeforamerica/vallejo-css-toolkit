@@ -60,7 +60,7 @@ def handle_feedback_pref(request):
 
         # if int(digit_pressed) in [1, 2]:
     with resp.gather(action="/intake/handle-feedback-number/", numDigits=10, method="POST") as g:
-        g.say("Please enter your preferred phone number to receieve updates, beginning with the area code.")
+        g.say("Please enter your preferred phone number to receive updates, beginning with the area code.")
 
     return resp
 
@@ -77,7 +77,7 @@ def handle_feedback_number(request):
     resp = twilio.twiml.Response()
 
     resp.say("Please say the address you're calling to report.")
-    resp.record(action="/intake/handle-problem-address/", transcribe=True, transcribeCallBack="/intake/handle-problem-address-transcription/", method="POST")
+    resp.record(action="/intake/handle-problem-address/", transcribe=True, transcribeCallback="/intake/handle-problem-address-transcription/", method="POST")
 
     return resp
 
