@@ -3,6 +3,8 @@ from django_twilio.decorators import twilio_view
 
 from intake.models import Call
 
+from django.http import JsonResponse
+
 @twilio_view
 def welcome(request):
     resp = twilio.twiml.Response()
@@ -43,6 +45,8 @@ def handle_name_transcription(request):
     call.caller_name = name_transcription
 
     call.save()
+
+    return JsonResponse({'status': 'OK'})
 
 @twilio_view
 def handle_feedback_pref(request):
@@ -108,6 +112,8 @@ def handle_problem_address_transcription(request):
 
     call.save()
 
+    return JsonResponse({'status': 'OK'})
+
 @twilio_view
 def handle_problem_description(request):
     call_sid = request.POST.get('CallSid', None)
@@ -132,3 +138,5 @@ def handle_problem_description_transcription(request):
     call.problem_description = description_transcription
 
     call.save()
+
+    return JsonResponse({'status': 'OK'})

@@ -18,9 +18,6 @@ class CallAdmin(admin.ModelAdmin):
         if db_field.name == 'description_recording_url':
              kwargs['widget'] = DescriptionRecordingFieldWidget
 
-        # if db_field.name == 'problem_description':
-        #     return forms.CharField(widget=forms.Textarea(attrs={'cols': 90, 'rows':12, 'class': 'docx'}))
-
         return super(CallAdmin, self).formfield_for_dbfield(db_field,**kwargs)
 
 admin.site.register(Call, CallAdmin)
