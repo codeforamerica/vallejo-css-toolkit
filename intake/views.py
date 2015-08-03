@@ -253,12 +253,12 @@ def assigned_to_current_user(request):
             COALESCE(c.caller_name, '') as caller_name,
             COALESCE(c.problem_address, '') as problem_address,
             c.status as status
-
-        from intake_call c
-        left join auth_user u
-            on c.assignee_id = u.id
-
-        order by c.call_time desc
+        from
+            intake_call c
+        where
+            assignee_id = %s
+        order by
+            c.call_time desc
         ) a
 
         left join
@@ -273,7 +273,6 @@ def assigned_to_current_user(request):
         ) as b
 
         on a.id = b.call_id
-        where user.id = %s
         ;
         """,
         [current_user.id]
