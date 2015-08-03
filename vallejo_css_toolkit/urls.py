@@ -14,4 +14,5 @@ urlpatterns = patterns('',
     url(r'^intake/handle-problem-description-transcription/', 'intake.views.handle_problem_description_transcription', name='handle_problem_description_transcription'),
     url(r'^intake/call/(?P<call_id>\d*)/$', 'intake.views.call', name='call'),
     url(r'^intake/audit_log/$', 'intake.views.audit_log', name='audit_log'),
+    url(r'^intake/my_assignments/$', 'intake.views.assigned_to_current_user', name='assigned_to_current_user'),
 )

@@ -78,12 +78,13 @@
 
     </style>
 
+<body>
 
 <div class="layout-breve">
     <ul class="nav nav-pills pull-right">
         <li role="presentation"><a href="#">Unreviewed Reports</a></li>
-        <li role="presentation"><a href="/intake/my_assignments">My Assigned Reports</a></li>
-        <li role="presentation" class="Active"><a href="/intake/audit_log">Audit Log</a></li>
+        <li role="presentation" class="Active"><a href="/intake/my_assignments">My Assigned Reports</a></li>
+        <li role="presentation"><a href="/intake/audit_log">Audit Log</a></li>
     </ul>
 </div>
 
@@ -93,11 +94,11 @@
         <table id="data-table">
             <tr>
                 <th>Call</th>
-                <th>User</th>
-                <th>Timestamp</th>
-                <th>Changed Field</th>
-                <th>Old Value</th>
-                <th>New Value</th>
+                <th>Call Time</th>
+                <th>Caller Name</th>
+                <th>Property Address</th>
+                <th>Status</th>
+                <th>Last Updated</th>
             </tr>
         </table>
     </div>
@@ -106,21 +107,23 @@
 
 <script>
 // load django data objects
+var statusMap = {null: '', 1: 'Unreviewed', 2: 'Active', 3: 'Closed', 4: 'Suspended'};
+
 var objs = JSON.parse("{{objs}}".replace(/&quot;/g,'"'));
 // add data to map
 for (i=0; i<objs.length; i++) {
     console.log(objs[i]);
     $("#data-table").append(
         "<tr><td>" + "<a href='/intake/call/" + objs[i].id + "'>" + objs[i].caller_number + "</a>" +
-        "</td><td>" + objs[i].first_name + " " + objs[i].last_name +
-        "</td><td>" + objs[i].timestamp +
-        "</td><td>" + objs[i].changed_field +
-        "</td><td>" + objs[i].old_value +
-        "</td><td>" + objs[i].new_value +
+        "</td><td>" + objs[i].call_time +
+        "</td><td>" + objs[i].caller_name +
+        "</td><td>" + objs[i].problem_address +
+        "</td><td>" + statusMap[objs[i].status] +
+        "</td><td>" + objs[i].last_updated +
         "</td></tr>"
     );
 }
 </script>
 
-
+</body>
 </html>

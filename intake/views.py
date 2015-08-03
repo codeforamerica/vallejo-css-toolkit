@@ -10,7 +10,7 @@ from django.db import connection
 
 from django_twilio.decorators import twilio_view
 
-from intake.models import Call, CallAuditItem
+from intake.models import Call, CallAuditItem, STATUS_CHOICES
 from intake.forms import CallForm
 from intake.utils import create_call, update_call
 
@@ -172,8 +172,28 @@ def call(request, call_id):
 
         for field, new_value in form.cleaned_data.iteritems():
             old_value = form.initial.get(field)
+
+            if field == 'assignee':
+                if old_value:
+                    old_assignee = get_object_or_404(User, id=old_value)
+                    old_value = old_assignee.get_full_name()
+
+                if new_value:    
+                    new_assignee = get_object_or_404(User, username=new_value)
+                    new_value = new_assignee.get_full_name()
+
+            if field == 'status':
+                for status_choice in STATUS_CHOICES:
+                    if old_value == status_choice[0]:
+                        old_value = status_choice[1]
+                    if new_value == status_choice[0]:
+                        new_value = status_choice[1]
+
             if (old_value or new_value) and old_value != new_value:
                 CallAuditItem.objects.create(user=user, call=call, changed_field=field, old_value=old_value, new_value=new_value)
+
+        from django.contrib import messages
+        messages.add_message(request, messages.SUCCESS, 'Call successfully updated.')
 
         return HttpResponseRedirect('/intake/call/%d' % call.id)
 
@@ -206,6 +226,61 @@ def audit_log(request):
     results = dictfetchall(cursor)
 
     return render(request, 'intake/audit_log.html', {'objs': json.dumps(results)})
+
+def assigned_to_current_user(request):
+
+    current_user = get_object_or_404(User, id=request.user.id)
+
+    cursor = connection.cursor()
+    cursor.execute(
+        """
+        set time zone 'America/Los_Angeles';
+
+        select a.caller_number,
+        a.id,
+        a.call_time,
+        a.caller_name,
+        a.problem_address,
+        a.status,
+        b.last_updated
+
+        from
+
+        (select
+            c.id,
+            c.caller_number as caller_number,
+            COALESCE(to_char(c.call_time, 'MM-DD-YYYY HH24:MI:SS'), '') as call_time,
+            COALESCE(c.caller_name, '') as caller_name,
+            COALESCE(c.problem_address, '') as problem_address,
+            c.status as status
+
+        from intake_call c
+        left join auth_user u
+            on c.assignee_id = u.id
+
+        order by c.call_time desc
+        ) a
+
+        left join
+
+        (select
+            COALESCE(to_char(max(cai.timestamp), 'MM-DD-YYYY HH24:MI:SS'), '') as last_updated,
+            cai.call_id as call_id
+        from
+            intake_callaudititem cai
+        group by
+            cai.call_id
+        ) as b
+
+        on a.id = b.call_id
+
+        ;
+        """
+    )
+    
+    results = dictfetchall(cursor)
+
+    return render(request, 'intake/my_assignments.html', {'objs': json.dumps(results)})
 
 
 

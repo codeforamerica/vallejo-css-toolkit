@@ -70,14 +70,84 @@
         padding: 1em 2%;
         }
 
+    .messages {
+        font-size: 0.95em;
+    }
+
+    .messages ul {
+        list-style: none;
+        margin: 10px 0;
+        padding-left: 0;
+    }
+
+    .messages ul li {
+        padding: 0.1em;
+    }
+
+    .info,
+    .success,
+    .warning,
+    .error,
+    .validation {
+        border: 2px solid;
+        margin: 10px 0px;
+        padding:0 0 0 41px;
+        background-repeat: no-repeat;
+        background-position: 5px center;
+    }
+
+    .info {
+        color: #00529B;
+        border-color: #789FCC;
+        background-color: #CDEAF7;
+        background-image: url('/static/images/info.png');
+    }
+
+    .success {
+        color: #264409;
+        border-color: #C6D880;
+        background-color: #E6EFC2;
+/*        background-image:url('/static/images/success.png');*/
+        text-align: center;
+    }
+
+    .warning {
+        color: #514721;
+        border-color: #FFD324;
+        background-color: #FFF6BF;
+        background-image: url('/static/images/warning.png');
+    }
+
+    .error {
+        color: #8A1F11;
+        border-color: #FBC2C4; 
+        background-color: #FBE3E4;
+        background-image: url('/static/images/error.png');
+    }
+
+    .message-item {
+        text-align: center;
+    }
+
+    .hidden-attr {visibility: hidden; }
+
     </style>
 
+<body>
 
-<div class="layout-breve">
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<div class="layout-breve-thin">
     <ul class="nav nav-pills pull-right">
         <li role="presentation"><a href="#">Unreviewed Reports</a></li>
-        <li role="presentation"><a href="#">My Assigned Reports</a></li>
-        <li role="presentation"><a href="#">Audit Log</a></li>
+        <li role="presentation"><a href="/intake/my_assignments">My Assigned Reports</a></li>
+        <li role="presentation"><a href="/intake/audit_log">Audit Log</a></li>
     </ul>
 </div>
 
@@ -89,9 +159,66 @@
                 {% csrf_token %}
 
                     <div class="fieldWrapper">
+                        {{ form.problem_address.errors }}
+                        <h5>Address</h5>
+                        {{ form.problem_address }}
+                    </div>
+
+                    <div class="fieldWrapper hidden-attr">
+                        {{ form.address_recording_url.errors }}
+                        {{ form.address_recording_url }}
+                    </div>
+
+                    <div>
+                        {% if form.address_recording_url != '' %}
+                            <audio controls><source src="{{ form.address_recording_url.value }}.mp3" type="audio/mpeg"></audio>
+                        {% endif %}
+                    </div>
+
+                    <div class="fieldWrapper">
                         {{ form.problem_description.errors }}
-                        <h4>Description</h4>
+                        <h5>Description</h5>
                         {{ form.problem_description }}
+                    </div>
+
+                    <div class="fieldWrapper hidden-attr">
+                        {{ form.description_recording_url.errors }}
+                        {{ form.description_recording_url }}
+                    </div>
+
+                    <div>
+                        {% if form.description_recording_url != '' %}
+                            <audio controls><source src="{{ form.description_recording_url.value }}.mp3" type="audio/mpeg"></audio>
+                        {% endif %}
+                    </div>
+
+                    <div class="fieldWrapper">
+                        {{ form.caller_name.errors }}
+                        <h5>Reported By</h5>
+                        {{ form.caller_name }}
+                    </div>
+
+                    <div class="fieldWrapper hidden-attr">
+                        {{ form.name_recording_url.errors }}
+                        {{ form.name_recording_url }}
+                    </div>
+
+                    <div>
+                        {% if form.name_recording_url != '' %}
+                            <audio controls><source src="{{ form.name_recording_url.value }}.mp3" type="audio/mpeg"></audio>
+                        {% endif %}
+                    </div>
+
+                    <div class="fieldWrapper">
+                        {{ form.call_time.errors }}
+                        <h5>Reported At</h5>
+                        {{ form.call_time }}
+                    </div>
+
+                    <div class="fieldWrapper">
+                        {{ form.caller_number.errors }}
+                        <h5>Contact</h5>
+                        {{ form.caller_number }}
                     </div>
 
                     <div class="fieldWrapper">
@@ -121,7 +248,6 @@
 
 
                 <br/>
-                <button class="btn btn-default">Edit</button>
                 <input id="saveForm" class="btn btn-primary" type="submit" value="Save" />
             </form>
         </div>
@@ -145,5 +271,6 @@ L.tileLayer("http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.jpg",{minZoom:4,m
 L.marker([38.102381, -122.2601924]).addTo(map);
 </script>
 
+</body>
 
 </html>

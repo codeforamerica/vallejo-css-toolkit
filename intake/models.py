@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -7,7 +9,7 @@ CLOSED_STATUS = 3
 SUSPENDED_STATUS = 4
 
 STATUS_CHOICES = (
-    (UNREVIEWED_STATUS, 'Unreviwed'),
+    (UNREVIEWED_STATUS, 'Unreviewed'),
     (ACTIVE_STATUS, 'Active'),
     (CLOSED_STATUS, 'Closed'),
     (SUSPENDED_STATUS, 'Suspended'),
@@ -28,7 +30,7 @@ class Call(models.Model):
     caller_name = models.CharField(max_length=256, null=True, blank=True)
     name_recording_url = models.CharField(max_length=256, null=True, blank=True)
     caller_number = models.BigIntegerField(null=True, blank=True)
-    call_time = models.DateTimeField(auto_now_add=True)
+    call_time = models.DateTimeField(null=True)
     caller_preferred_contact = models.IntegerField(null=True, blank=True, choices=CONTACT_PREFERENCES_CHOICES)
     problem_address = models.CharField(max_length=256, null=True, blank=True)
     address_recording_url = models.CharField(max_length=256, null=True, blank=True)
@@ -38,6 +40,11 @@ class Call(models.Model):
     assignee = models.ForeignKey(User, null=True, blank=True)
     property_owner = models.CharField(max_length=256, null=True, blank=True)
     property_owner_phone = models.BigIntegerField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.call_time:
+            self.call_time = datetime.datetime.utcnow()
+        super(Call, self).save(*args, **kwargs)
 
 class CallAuditItem(models.Model):
     user = models.ForeignKey(User)
