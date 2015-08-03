@@ -273,9 +273,10 @@ def assigned_to_current_user(request):
         ) as b
 
         on a.id = b.call_id
-
+        where user.id = %s
         ;
-        """
+        """,
+        [current_user.id]
     )
     
     results = dictfetchall(cursor)
