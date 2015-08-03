@@ -215,7 +215,7 @@ def audit_log(request):
             COALESCE(cai.old_value, '') as old_value,
             COALESCE(cai.new_value, '') as new_value
         from intake_call c
-        left join intake_callaudititem cai
+        join intake_callaudititem cai
             on c.id = cai.call_id
         left join auth_user u
             on cai.user_id = u.id
