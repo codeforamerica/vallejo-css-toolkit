@@ -1,9 +1,28 @@
+import json
+
 import twilio.twiml
+
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth.models import User
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db import connection
+
 from django_twilio.decorators import twilio_view
 
-from intake.models import Call
+from intake.models import Call, CallAuditItem
+from intake.forms import CallForm
+from intake.utils import create_call, update_call
 
-from django.http import JsonResponse
+
+def dictfetchall(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
 
 @twilio_view
 def welcome(request):
@@ -140,3 +159,54 @@ def handle_problem_description_transcription(request):
     call.save()
 
     return JsonResponse({'status': 'OK'})
+
+def call(request, call_id):
+    instance = get_object_or_404(Call, id=call_id)
+
+    form = CallForm(request.POST or None, instance=instance)
+
+    if form.is_valid():
+
+        call = form.save()
+        user = get_object_or_404(User, id=request.user.id)
+
+        for field, new_value in form.cleaned_data.iteritems():
+            old_value = form.initial.get(field)
+            if (old_value or new_value) and old_value != new_value:
+                CallAuditItem.objects.create(user=user, call=call, changed_field=field, old_value=old_value, new_value=new_value)
+
+        return HttpResponseRedirect('/intake/call/%d' % call.id)
+
+    return render(request, 'intake/call.html', {'form': form})
+
+def audit_log(request):
+    cursor = connection.cursor()
+    cursor.execute(
+        """
+        set time zone 'America/Los_Angeles';
+
+        select
+            COALESCE(u.first_name, '') as first_name,
+            COALESCE(u.last_name, '') as last_name,
+            c.id,
+            c.caller_number as caller_number,
+            COALESCE(to_char(cai.timestamp, 'MM-DD-YYYY HH24:MI:SS'), '') as timestamp,
+            replace(COALESCE(cai.changed_field, ''), '_', ' ') as changed_field,
+            COALESCE(cai.old_value, '') as old_value,
+            COALESCE(cai.new_value, '') as new_value
+        from intake_call c
+        left join intake_callaudititem cai
+            on c.id = cai.call_id
+        left join auth_user u
+            on cai.user_id = u.id
+        order by timestamp desc;
+        """
+    )
+    
+    results = dictfetchall(cursor)
+
+    return render(request, 'intake/audit_log.html', {'objs': json.dumps(results)})
+
+
+
+

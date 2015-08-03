@@ -1,0 +1,126 @@
+<html>
+    <head>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    </head>
+
+    <style>
+
+    [class*="layout-minor"] {
+        width: 26%;
+        float: left;
+        }
+    
+    [class*="block-"][class*="layout-minor"] {
+        width: calc(26% - 36px);
+        }
+        
+    .layout-minor-invert {
+        float: right;
+        clear: none;
+        }
+    
+    [class*="layout-major"] {
+        float: right;
+        width: 70%;
+        clear: none;
+        }
+    
+    [class*="block-"][class*="layout-major"] {
+        width: calc(70% - 36px);
+        }
+    
+    .layout-major-invert {
+        float: left;
+        clear: both;
+        }
+
+
+    .layout-breve {
+        width: 96%;
+        padding: 3em 2%;
+        max-width: 80em;
+        margin: 0 auto;
+        float: none;
+        }
+    
+    [class*="block-"][class*="layout-breve"] {
+        width: calc(96% - 36px);
+        }
+
+    [class*="block-"][class*="layout-breve-thin"] {
+        width: calc(96% - 36px);
+        }
+
+    .detail-modal { background-color: lightgrey; }
+    #map { height: 280px; }
+
+    #saveForm {
+        margin-left: auto;
+        margin-right: auto;
+
+    }
+
+    .layout-breve-thin {
+        padding: 1em 2%;
+        }
+
+    tr:nth-child(even) {background: #CCC}
+    tr:nth-child(odd) {background: #FFF}
+
+    th, td { padding: 10px 15px; }
+
+    th, td { text-align: center; }
+
+    table { width: 100%; }
+
+    </style>
+
+
+<div class="layout-breve">
+    <ul class="nav nav-pills pull-right">
+        <li role="presentation"><a href="#">Unreviewed Reports</a></li>
+        <li role="presentation"><a href="#">My Assigned Reports</a></li>
+        <li role="presentation" class="Active"><a href="#">Audit Log</a></li>
+    </ul>
+</div>
+
+<div class="layout-breve">
+
+    <div class="layout-brever">
+        <table id="data-table">
+            <tr>
+                <th>Call</th>
+                <th>User</th>
+                <th>Timestamp</th>
+                <th>Changed Field</th>
+                <th>Old Value</th>
+                <th>New Value</th>
+            </tr>
+        </table>
+    </div>
+
+</div>
+
+<script>
+// load django data objects
+var objs = JSON.parse("{{objs}}".replace(/&quot;/g,'"'));
+// add data to map
+for (i=0; i<objs.length; i++) {
+    console.log(objs[i]);
+    $("#data-table").append(
+        "<tr><td>" + "<a href='/intake/call/" + objs[i].id + "'>" + objs[i].caller_number + "</a>" +
+        "</td><td>" + objs[i].first_name + " " + objs[i].last_name +
+        "</td><td>" + objs[i].timestamp +
+        "</td><td>" + objs[i].changed_field +
+        "</td><td>" + objs[i].old_value +
+        "</td><td>" + objs[i].new_value +
+        "</td></tr>"
+    );
+}
+</script>
+
+
+</html>

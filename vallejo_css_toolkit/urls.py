@@ -12,4 +12,6 @@ urlpatterns = patterns('',
     url(r'^intake/handle-problem-address-transcription/', 'intake.views.handle_problem_address_transcription', name='handle_problem_address_transcription'),
     url(r'^intake/handle-problem-description/', 'intake.views.handle_problem_description', name='handle_problem_description'),
     url(r'^intake/handle-problem-description-transcription/', 'intake.views.handle_problem_description_transcription', name='handle_problem_description_transcription'),
+    url(r'^intake/call/(?P<call_id>\d*)/$', 'intake.views.call', name='call'),
+    url(r'^intake/audit_log/$', 'intake.views.audit_log', name='audit_log'),
 )

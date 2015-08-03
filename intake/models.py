@@ -1,4 +1,27 @@
 from django.db import models
+from django.contrib.auth.models import User
+
+UNREVIEWED_STATUS = 1
+ACTIVE_STATUS = 2
+CLOSED_STATUS = 3
+SUSPENDED_STATUS = 4
+
+STATUS_CHOICES = (
+    (UNREVIEWED_STATUS, 'Unreviwed'),
+    (ACTIVE_STATUS, 'Active'),
+    (CLOSED_STATUS, 'Closed'),
+    (SUSPENDED_STATUS, 'Suspended'),
+)
+
+NO_CONTACT_PREFERENCE = 1
+TEXT_CONTACT_PREFERENCE = 2
+CALL_CONTACT_PREFERENCE = 3
+
+CONTACT_PREFERENCES_CHOICES = (
+    (NO_CONTACT_PREFERENCE, 'No Contact'),
+    (NO_CONTACT_PREFERENCE, 'Text'),
+    (CALL_CONTACT_PREFERENCE, 'Call'),
+)
 
 class Call(models.Model):
     call_sid = models.CharField(max_length=256, null=True)
@@ -6,8 +29,20 @@ class Call(models.Model):
     name_recording_url = models.CharField(max_length=256, null=True, blank=True)
     caller_number = models.BigIntegerField(null=True, blank=True)
     call_time = models.DateTimeField(auto_now_add=True)
-    caller_preferred_contact = models.IntegerField(null=True, blank=True)
+    caller_preferred_contact = models.IntegerField(null=True, blank=True, choices=CONTACT_PREFERENCES_CHOICES)
     problem_address = models.CharField(max_length=256, null=True, blank=True)
     address_recording_url = models.CharField(max_length=256, null=True, blank=True)
     problem_description = models.TextField(max_length=1024, null=True, blank=True)
     description_recording_url = models.CharField(max_length=256, null=True, blank=True)
+    status = models.IntegerField(null=True, blank=True, choices=STATUS_CHOICES)
+    assignee = models.ForeignKey(User, null=True, blank=True)
+    property_owner = models.CharField(max_length=256, null=True, blank=True)
+    property_owner_phone = models.BigIntegerField(null=True, blank=True)
+
+class CallAuditItem(models.Model):
+    user = models.ForeignKey(User)
+    call = models.ForeignKey(Call)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    changed_field = models.CharField(max_length=256, null=True, blank=True)
+    old_value = models.CharField(max_length=256, null=True, blank=True)
+    new_value = models.CharField(max_length=256, null=True, blank=True)
