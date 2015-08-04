@@ -40,6 +40,13 @@ def welcome(request):
     return resp
 
 @twilio_view
+def sms_reply(request):
+    resp = twilio.twiml.Response()
+    resp.message("Thank you for your message. We appreciate your input.")
+
+    return resp
+
+@twilio_view
 def handle_name(request):
     call_sid = request.POST.get('CallSid', None)
     call = Call.objects.get(call_sid=call_sid)
