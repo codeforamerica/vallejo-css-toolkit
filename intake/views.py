@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.contrib.auth.models import User
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import connection
+from django.contrib.auth.decorators import login_required
 
 from django_twilio.decorators import twilio_view
 
@@ -160,6 +161,7 @@ def handle_problem_description_transcription(request):
 
     return JsonResponse({'status': 'OK'})
 
+@login_required
 def call(request, call_id):
     instance = get_object_or_404(Call, id=call_id)
 
@@ -199,6 +201,7 @@ def call(request, call_id):
 
     return render(request, 'intake/call.html', {'form': form})
 
+@login_required
 def audit_log(request):
     cursor = connection.cursor()
     cursor.execute(
@@ -227,6 +230,7 @@ def audit_log(request):
 
     return render(request, 'intake/audit_log.html', {'objs': json.dumps(results)})
 
+@login_required
 def assigned_to_current_user(request):
 
     current_user = get_object_or_404(User, id=request.user.id)
