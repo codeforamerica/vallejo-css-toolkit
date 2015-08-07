@@ -21,9 +21,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '(!h8=s=-&c&0%yppd@84(@j8ono_i#f!&n6wccvt4ha031rs-z'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = []
 
 
@@ -37,6 +34,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'intake',
+    'geo',
+    'workflow'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -79,6 +78,7 @@ if 'environment' in os.environ:
         # Parse database configuration from $DATABASE_URL
         import dj_database_url
         DATABASES = {'default': dj_database_url.config()}
+        DEBUG = False
 
     elif os.environ['environment'] == 'DEV':
         DATABASES = {
@@ -91,6 +91,8 @@ if 'environment' in os.environ:
                 'PORT': ''
             }
         }
+        DEBUG = True
+
 else:
     raise Exception("Unexpected or missing `environment` env variable. Expecting either 'PROD' or 'DEV'.")
 

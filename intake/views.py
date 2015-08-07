@@ -292,7 +292,3 @@ def assigned_to_current_user(request):
     results = dictfetchall(cursor)
 
     return render(request, 'intake/my_assignments.html', {'objs': json.dumps(results)})
-
-
-
-
