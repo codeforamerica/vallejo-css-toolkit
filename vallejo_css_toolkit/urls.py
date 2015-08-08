@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     url(r'^sms_reply/$', 'intake.views.sms_reply', name='sms_reply'),
     url(r'^workflow/map/$', 'workflow.views.map_view', name='map_view'),
     url(r'^workflow/map_data/$', 'workflow.views.map_data', name='map_data'),
+    url(r'^workflow/rms_data/$', 'workflow.views.rms_data', name='rms_data'),
 )

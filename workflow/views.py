@@ -22,7 +22,21 @@ def map_data(request):
     cursor = connection.cursor()
     cursor.execute(
         """
-        SELECT lat, lng from workflow_case where lat is not null and lng is not null;
+        SELECT lat, lng from workflow_case where lat is not null and lng is not null and dept is null;
+        """
+    )
+
+    results = dictfetchall(cursor)
+
+    return JsonResponse({'results': results})
+
+@login_required
+def rms_data(request):
+
+    cursor = connection.cursor()
+    cursor.execute(
+        """
+        SELECT lat, lng from workflow_case where lat is not null and lng is not null and dept = 1;
         """
     )
 

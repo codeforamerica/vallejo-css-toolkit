@@ -25,7 +25,7 @@ def geocode_try_nearby(street_number, street_name, street_descriptor=None):
 
     query = """
         select lat, lng, street_number from geo_address
-        where street_name = %s
+        where lower(street_name) = lower(%s)
         and abs(street_number - %s) < 10
         order by abs(street_number - %s)
         limit 1;
@@ -51,7 +51,7 @@ def geocode_try_interpolate(street_number, street_name, street_descriptor=None):
     modulo = street_number % 2
 
     query = """select street_number, lat, lng from geo_address
-    where street_name = %s and street_number %s %s and street_number %% 2 = %s
+    where lower(street_name) = lower(%s) and street_number %s %s and street_number %% 2 = %s
     order by street_number %s
     limit 2
     """
@@ -98,7 +98,7 @@ def geocode_try_exact(street_number, street_name, street_descriptor=None):
 
 
     base_query = """select lat, lng from geo_address
-    where street_name = %s and street_number = %s
+    where lower(street_name) = lower(%s) and street_number = %s
     """
     base_params = [street_name, street_number]
 
@@ -154,6 +154,7 @@ def geocode(street_number, street_name, street_descriptor=None):
 
     for x in removals:
         street_name = street_name.replace(x, '')
+        street_name = street_name.replace(x.lower(), '')
 
     for x, y in replacements:
         street_name = street_name.replace(x, y)
@@ -172,7 +173,8 @@ def geocode(street_number, street_name, street_descriptor=None):
             return interpolate_match
 
         else:
-            print street_number, street_name, len(street_name)
+            pass
+            # print street_number, street_name, len(street_name)
 
 
 def test_geocode(filepath=None):
