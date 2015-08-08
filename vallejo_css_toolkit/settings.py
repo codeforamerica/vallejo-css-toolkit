@@ -21,11 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '(!h8=s=-&c&0%yppd@84(@j8ono_i#f!&n6wccvt4ha031rs-z'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -37,6 +33,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'intake',
+    'geo',
+    'workflow'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -70,30 +68,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'vallejo_css_toolkit.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/1.8/ref/settings/#databases
-
-if 'environment' in os.environ:
-    if os.environ['environment'] == 'PROD':
-        # Parse database configuration from $DATABASE_URL
-        import dj_database_url
-        DATABASES = {'default': dj_database_url.config()}
-
-    elif os.environ['environment'] == 'DEV':
-        DATABASES = {
-            'default': {
-                'ENGINE': 'django.db.backends.postgresql_psycopg2',
-                'NAME': 'vallejo_css_toolkit',
-                'USER': 'vallejo_css_toolkit',
-                'PASSWORD': 'development',
-                'HOST': 'localhost',
-                'PORT': ''
-            }
-        }
-else:
-    raise Exception("Unexpected or missing `environment` env variable. Expecting either 'PROD' or 'DEV'.")
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
@@ -125,36 +99,3 @@ STATIC_ROOT = 'staticfiles'
 # STATICFILES_DIRS = (
 #     os.path.join(BASE_DIR, 'static'),
 # )
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': ('%(asctime)s [%(process)d] [%(levelname)s] ' +
-                       'pathname=%(pathname)s lineno=%(lineno)s ' +
-                       'funcname=%(funcName)s %(message)s'),
-            'datefmt': '%Y-%m-%d %H:%M:%S'
-        },
-        'simple': {
-            'format': '%(levelname)s %(message)s'
-        }
-    },
-    'handlers': {
-        'null': {
-            'level': 'DEBUG',
-            'class': 'logging.NullHandler',
-        },
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose'
-        }
-    },
-    'loggers': {
-        'testlogger': {
-            'handlers': ['console'],
-            'level': 'INFO',
-        }
-    }
-}
