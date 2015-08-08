@@ -84,15 +84,21 @@ $(document).ready(function(){
         }
     }});
 
-    var objs = JSON.parse("{{objs}}".replace(/&quot;/g,'"'));
+    $.ajax({url: "/workflow/map_data", success: function(objs){
 
-    for (i=0; i<objs.length; i++) {
-        var circle = L.circle([objs[i].lat, objs[i].lng], 100, {
-            color: 'red',
-            fillColor: '#f03',
-            fillOpacity: 0.5
-        }).addTo(m);
-    }
+        for (i=0; i<objs.results.length; i++) {
+            console.log(objs.results[i]);
+            var circle = L.circle([objs.results[i].lat, objs.results[i].lng], 100, {
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5
+            }).addTo(m);
+        }
+        
+    }});
+
+    // var objs = JSON.parse("{{objs}}".replace(/&quot;/g,'"'));
+
 
 
 

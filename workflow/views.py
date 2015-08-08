@@ -3,6 +3,7 @@ import json
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db import connection
+from django.http import JsonResponse
 
 from workflow.models import Case
 
@@ -16,9 +17,8 @@ def dictfetchall(cursor):
     ]
 
 @login_required
-def map_view(request):
+def map_data(request):
 
-    # placeholder for db call to fetch geocoded reports
     cursor = connection.cursor()
     cursor.execute(
         """
@@ -28,5 +28,11 @@ def map_view(request):
 
     results = dictfetchall(cursor)
 
+    return JsonResponse({'results': results})
+
+@login_required
+def map_view(request):
+
+
     # TODO: move this template
-    return render(request, 'intake/map.html', {'objs': json.dumps(results)})
+    return render(request, 'intake/map.html')

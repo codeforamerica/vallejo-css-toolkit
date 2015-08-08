@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     url(r'^intake/my_assignments/$', 'intake.views.assigned_to_current_user', name='assigned_to_current_user'),
     url(r'^sms_reply/$', 'intake.views.sms_reply', name='sms_reply'),
     url(r'^workflow/map/$', 'workflow.views.map_view', name='map_view'),
+    url(r'^workflow/map_data/$', 'workflow.views.map_data', name='map_data'),
 )
