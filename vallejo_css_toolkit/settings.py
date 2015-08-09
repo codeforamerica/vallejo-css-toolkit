@@ -34,7 +34,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'intake',
     'geo',
-    'workflow'
+    'workflow',
+    'data_load'
 )
 
 MIDDLEWARE_CLASSES = (

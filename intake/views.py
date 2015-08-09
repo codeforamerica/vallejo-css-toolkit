@@ -230,7 +230,7 @@ def audit_log_data(request):
         left join auth_user u
             on cai.user_id = u.id
         order by timestamp desc;
-        """
+        ;"""
     )
     
     results = dictfetchall(cursor)
@@ -243,7 +243,7 @@ def audit_log(request):
     return render(request, 'intake/audit_log.html')
 
 @login_required
-def assigned_to_current_user(request):
+def assigned_to_current_user_data(request):
 
     current_user = get_object_or_404(User, id=request.user.id)
 
@@ -252,48 +252,48 @@ def assigned_to_current_user(request):
         """
         set time zone 'America/Los_Angeles';
 
-        select a.caller_number,
-        a.id,
-        a.call_time,
-        a.caller_name,
-        a.problem_address,
-        a.status,
-        b.last_updated
-
-        from
-
-        (select
-            c.id,
-            c.caller_number as caller_number,
-            COALESCE(to_char(c.call_time, 'MM-DD-YYYY HH24:MI:SS'), '') as call_time,
-            COALESCE(c.caller_name, '') as caller_name,
-            COALESCE(c.problem_address, '') as problem_address,
-            c.status as status
-        from
-            intake_call c
-        where
-            assignee_id = %s
-        order by
-            c.call_time desc
+        select
+            a.caller_number,
+            a.id,
+            a.call_time,
+            a.caller_name,
+            a.problem_address,
+            a.status,
+            b.last_updated
+        from (
+            select
+                c.id,
+                c.caller_number as caller_number,
+                COALESCE(to_char(c.call_time, 'MM-DD-YYYY HH24:MI:SS'), '') as call_time,
+                COALESCE(c.caller_name, '') as caller_name,
+                COALESCE(c.problem_address, '') as problem_address,
+                c.status as status
+            from
+                intake_call c
+            where
+                assignee_id = %s
+            order by
+                c.call_time desc
         ) a
-
-        left join
-
-        (select
-            COALESCE(to_char(max(cai.timestamp), 'MM-DD-YYYY HH24:MI:SS'), '') as last_updated,
-            cai.call_id as call_id
-        from
-            intake_callaudititem cai
-        group by
-            cai.call_id
-        ) as b
-
+        left join (
+            select
+                COALESCE(to_char(max(cai.timestamp), 'MM-DD-YYYY HH24:MI:SS'), '') as last_updated,
+                cai.call_id as call_id
+            from
+                intake_callaudititem cai
+            group by
+                cai.call_id
+        ) b
         on a.id = b.call_id
-        ;
-        """,
+        ;""",
         [current_user.id]
     )
     
     results = dictfetchall(cursor)
 
-    return render(request, 'intake/my_assignments.html', {'objs': json.dumps(results)})
+    return JsonResponse({'results': results})
+
+@login_required
+def assigned_to_current_user(request):
+
+    return render(request, 'intake/my_assignments.html')
