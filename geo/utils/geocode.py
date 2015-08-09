@@ -96,9 +96,6 @@ def geocode_try_interpolate(street_number, street_name, street_descriptor=None):
 
         return [{'lat': interp_lat, 'lng': interp_lng}]
 
-    else:
-        return geocode_try_nearby(street_number, street_name, street_descriptor=None)
-
 def geocode_try_exact(street_number, street_name, street_descriptor=None):
 
     query = """
@@ -149,7 +146,6 @@ def geocode(street_number, street_name, street_descriptor=None):
         ['Bergawall', 'Bergwall'],
         ['McDougal', 'Mc Dougal'],
         ['Elliot', 'Elliott']
-
     ]
 
     # TODO: need to use regex replace and remove instead
@@ -165,16 +161,6 @@ def geocode(street_number, street_name, street_descriptor=None):
 
     street_name = street_name.strip()
 
-    maybe_match = geocode_try_exact(street_number, street_name, street_descriptor=None)
-
-    if maybe_match:
-        return maybe_match
-
-    else:
-        interpolate_match = geocode_try_interpolate(street_number, street_name, street_descriptor=None)
-
-        if interpolate_match:
-            return interpolate_match
-
-        else:
-            pass
+    return geocode_try_exact(street_number, street_name, street_descriptor=None) \
+        or geocode_try_interpolate(street_number, street_name, street_descriptor=None) \
+        or geocode_try_nearby(street_number, street_name, street_descriptor=None)

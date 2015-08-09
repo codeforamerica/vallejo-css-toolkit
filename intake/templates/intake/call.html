@@ -1,162 +1,51 @@
+<!DOCTYPE html>
+
 <html>
-    <head>
-        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=1024, user-scalable=no">
 
-        <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
-        <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
-    </head>
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-    <style>
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
 
-    [class*="layout-minor"] {
-        width: 26%;
-        float: left;
-        }
-    
-    [class*="block-"][class*="layout-minor"] {
-        width: calc(26% - 36px);
-        }
-        
-    .layout-minor-invert {
-        float: right;
-        clear: none;
-        }
-    
-    [class*="layout-major"] {
-        float: right;
-        width: 70%;
-        clear: none;
-        }
-    
-    [class*="block-"][class*="layout-major"] {
-        width: calc(70% - 36px);
-        }
-    
-    .layout-major-invert {
-        float: left;
-        clear: both;
-        }
+{% load staticfiles %}
 
+<link rel="stylesheet" href="{% static "intake/call.css" %}"/>
+<script src="{% static "intake/call.js" %}"></script>
 
-    .layout-breve {
-        width: 96%;
-        padding: 3em 2%;
-        max-width: 80em;
-        margin: 0 auto;
-        float: none;
-        }
-    
-    [class*="block-"][class*="layout-breve"] {
-        width: calc(96% - 36px);
-        }
-
-    [class*="block-"][class*="layout-breve-thin"] {
-        width: calc(96% - 36px);
-        }
-
-    .detail-modal { background-color: lightgrey; }
-    #map { height: 280px; }
-
-    #saveForm {
-        margin-left: auto;
-        margin-right: auto;
-
-    }
-
-    .layout-breve-thin {
-        padding: 1em 2%;
-        }
-
-    .messages {
-        font-size: 0.95em;
-    }
-
-    .messages ul {
-        list-style: none;
-        margin: 10px 0;
-        padding-left: 0;
-    }
-
-    .messages ul li {
-        padding: 0.1em;
-    }
-
-    .info,
-    .success,
-    .warning,
-    .error,
-    .validation {
-        border: 2px solid;
-        margin: 10px 0px;
-        padding:0 0 0 41px;
-        background-repeat: no-repeat;
-        background-position: 5px center;
-    }
-
-    .info {
-        color: #00529B;
-        border-color: #789FCC;
-        background-color: #CDEAF7;
-        background-image: url('/static/images/info.png');
-    }
-
-    .success {
-        color: #264409;
-        border-color: #C6D880;
-        background-color: #E6EFC2;
-/*        background-image:url('/static/images/success.png');*/
-        text-align: center;
-    }
-
-    .warning {
-        color: #514721;
-        border-color: #FFD324;
-        background-color: #FFF6BF;
-        background-image: url('/static/images/warning.png');
-    }
-
-    .error {
-        color: #8A1F11;
-        border-color: #FBC2C4; 
-        background-color: #FBE3E4;
-        background-image: url('/static/images/error.png');
-    }
-
-    .message-item {
-        text-align: center;
-    }
-
-    .hidden-attr {visibility: hidden; }
-
-    </style>
+<title>...placeholder...</title>
+</head>
 
 <body>
 
-{% if messages %}
-<div class="messages">
-    {% for message in messages %}
-    <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
-    {% endfor %}
-</div>
-{% endif %}
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
-<div class="layout-breve-thin">
-    <ul class="nav nav-pills pull-right">
-        <li role="presentation"><a href="#">Unreviewed Reports</a></li>
-        <li role="presentation"><a href="/intake/my_assignments">My Assigned Reports</a></li>
-        <li role="presentation"><a href="/intake/audit_log">Audit Log</a></li>
-    </ul>
-</div>
+    <div class="layout-breve-thin">
+        <ul class="nav nav-pills pull-right">
+            <li role="presentation"><a href="#">Unreviewed Reports</a></li>
+            <li role="presentation"><a href="/intake/my_assignments">My Assigned Reports</a></li>
+            <li role="presentation"><a href="/intake/audit_log">Audit Log</a></li>
+        </ul>
+    </div>
 
-<div class="layout-breve">
-    <div class="layout-major detail-modal">
-        <div class="layout-breve">
-            <form method="post">
+    <div class="layout-breve">
+        <div class="layout-major detail-modal">
+            <div class="layout-breve">
+                <form method="post">
 
-                {% csrf_token %}
+                    {% csrf_token %}
 
                     <div class="fieldWrapper">
                         {{ form.problem_address.errors }}
@@ -245,32 +134,19 @@
                             {{ form.status }}
                     </div>
 
-
-
-                <br/>
-                <input id="saveForm" class="btn btn-primary" type="submit" value="Save" />
-            </form>
-        </div>
-    </div>
-
-    <div class="layout-minor detail-modal">
-        <div class="layout-breve layout-breve-thin">
-            <h4>{{ form.problem_address.value }}</h4>
+                    <br/>
+                    <input id="saveForm" class="btn btn-primary" type="submit" value="Save" />
+                </form>
+            </div>
         </div>
 
-        <div id="map"></div>
-
+        <div class="layout-minor detail-modal">
+            <div class="layout-breve layout-breve-thin">
+                <h4>{{ form.problem_address.value }}</h4>
+            </div>
+            <div id="map"></div>
+        </div>
     </div>
-</div>
-
-<script>
-var map = L.map('map').setView([38.102381, -122.2601924], 13);
-L.tileLayer("http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.jpg",{minZoom:4,maxZoom:18,opacity:0.75,attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'})
-.addTo(map);
-
-L.marker([38.102381, -122.2601924]).addTo(map);
-</script>
 
 </body>
-
 </html>

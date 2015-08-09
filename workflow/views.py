@@ -1,5 +1,3 @@
-import json
-
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db import connection
@@ -22,8 +20,13 @@ def map_data(request):
     cursor = connection.cursor()
     cursor.execute(
         """
-        SELECT lat, lng from workflow_case where lat is not null and lng is not null and dept is null;
-        """
+        SELECT lat, lng
+        from workflow_case
+        where
+            lat is not null
+            and lng is not null
+            and dept is null
+        ;"""
     )
 
     results = dictfetchall(cursor)
@@ -36,8 +39,13 @@ def rms_data(request):
     cursor = connection.cursor()
     cursor.execute(
         """
-        SELECT lat, lng from workflow_case where lat is not null and lng is not null and dept = 1;
-        """
+        SELECT lat, lng
+        from workflow_case
+        where
+            lat is not null
+            and lng is not null
+            and dept = 1
+        ;"""
     )
 
     results = dictfetchall(cursor)
@@ -47,6 +55,4 @@ def rms_data(request):
 @login_required
 def map_view(request):
 
-
-    # TODO: move this template
-    return render(request, 'intake/map.html')
+    return render(request, 'workflow/map.html')

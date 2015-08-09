@@ -41,7 +41,17 @@ python manage.py migrate
 
 Launch an instance locally:
 ```
-foreman start
+python manage.py runserver
+```
+
+####Running tests
+In psql, allow the default user to create a test database (one-time setup):
+```
+ALTER ROLE vallejo_css_toolkit CREATEDB;
+```
+Tests can be run with:
+```
+python manage.py test
 ```
 
 Launch an instance on Heroku:

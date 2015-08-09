@@ -209,7 +209,7 @@ def call(request, call_id):
     return render(request, 'intake/call.html', {'form': form})
 
 @login_required
-def audit_log(request):
+def audit_log_data(request):
     cursor = connection.cursor()
     cursor.execute(
         """
@@ -235,7 +235,12 @@ def audit_log(request):
     
     results = dictfetchall(cursor)
 
-    return render(request, 'intake/audit_log.html', {'objs': json.dumps(results)})
+    return JsonResponse({'results': results})
+
+@login_required
+def audit_log(request):
+
+    return render(request, 'intake/audit_log.html')
 
 @login_required
 def assigned_to_current_user(request):
