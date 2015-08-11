@@ -2,59 +2,60 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from geo.utils.geocode import geocode
-from workflow.models import Case, CaseStatus
+from geo.utils.normalize_address import normalize_address_by_number_and_street, combine_address_parts
+from workflow.models import CSSCase, CaseStatus, CaseLocation
 
+import logging
+logger = logging.getLogger('consolelogger')
 
-def import_css(f):
+def process_row(row, commit=False):
+    street_number = row[1]
+    street_name = row[2]
+    description = row[5].strip()
+    resolution = row[6].strip()
+    closed = row[9]
 
-    dialect = csv.Sniffer().sniff(f.read(1048576), delimiters=",")
-    f.seek(0)
-    reader = csv.reader(f, dialect)
+    normalized = normalize_address_by_number_and_street(street_number, street_name)
 
-    next(reader)
+    if not normalized:
+        logger.info('Unable to normalize address: {}'.format(combine_address_parts(street_number, street_name)))
+        return
 
-    for i, row in enumerate(reader):
-        street_number = row[1]
-        street_name = row[2]
-        description = row[5].strip()
-        resolution = row[6].strip()
-        closed = row[9]
+    normalized_street_number, normalized_street_name, normalized_street_descriptor = normalized
 
-        if not street_number and street_name:
-            continue
+    if commit:
+        closed_status, _ = CaseStatus.objects.get_or_create(name='Closed')
+        active_status, _ = CaseStatus.objects.get_or_create(name='Active')
 
-        if not street_number.isdigit():
-            continue
+        case_location, _ = CaseLocation.objects.get_or_create(
+            street_number=normalized_street_number,
+            street_name=normalized_street_name,
+            street_descriptor=normalized_street_descriptor
+        )
 
-        street_number = int(street_number)
-
-        lat, lng = None, None
-
-        results = geocode(street_number, street_name)
-
-        if results:
-            lat = results[0].get('lat')
-            lng = results[0].get('lng')
-
-        closed_status = CaseStatus.objects.get(name='Closed')
-        active_status = CaseStatus.objects.get(name='Active')
-
-        Case.objects.get_or_create(
+        CSSCase.objects.get_or_create(
             description=description,
             resolution=resolution,
             status=closed and closed_status or active_status,
-            lat=lat,
-            lng=lng
+            raw_address=combine_address_parts(street_number, street_name)
         )
 
-class Command(BaseCommand):
+def import_css(f, commit=False):
+    dialect = csv.Sniffer().sniff(f.read(1048576), delimiters=",")
+    f.seek(0)
+    reader = csv.reader(f, dialect)
+    next(reader)
 
+    for row in reader:
+        process_row(row, commit)
+
+class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--file', type=file)
+        parser.add_argument('--commit', type=bool, default=False)
 
     def handle(self, *args, **options):
         if not options.get('file'):
             return
 
-        import_css(options['file'])
+        import_css(options['file'], options['commit'])

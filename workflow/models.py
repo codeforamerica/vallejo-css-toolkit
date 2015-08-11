@@ -1,16 +1,27 @@
 from django.db import models
 
-from geo.models import Address
-
+from geo.utils.geocode import geocode
 
 class CaseStatus(models.Model):
     name = models.CharField(max_length=256)
 
-# dept -> 1 = PD
-class Case(models.Model):
+class CaseLocation(models.Model):
+    street_number = models.IntegerField(null=True)
+    street_name = models.CharField(max_length=256, null=True)
+    street_descriptor = models.CharField(max_length=256, null=True)
+
+    def geocode(self):
+        if self.street_number and self.street_name:
+            return geocode(self.street_number, self.street_name, street_descriptor=self.street_descriptor)
+
+class CSSCase(models.Model):
     description = models.CharField(max_length=1024, null=True)
-    status = models.ForeignKey(CaseStatus)
     resolution = models.CharField(max_length=1024, null=True)
-    lat = models.FloatField(null=True)
-    lng = models.FloatField(null=True)
-    dept = models.IntegerField(null=True)
+    status = models.ForeignKey(CaseStatus, null=True)
+    raw_address = models.CharField(max_length=256, null=True)
+    case_location = models.ForeignKey(CaseLocation, null=True)
+
+class PDCase(models.Model):
+    raw_address = models.CharField(max_length=256, null=True)
+    case_location = models.ForeignKey(CaseLocation, null=True)
+
