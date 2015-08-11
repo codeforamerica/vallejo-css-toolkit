@@ -6,6 +6,9 @@ from django.db import connection
 
 from psycopg2.extensions import AsIs
 
+NEARBY_THRESHOLD = 10  # how many street numbers away is 'close enough'
+
+VERSION = 0.1
 
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"
@@ -24,16 +27,16 @@ def geocode_try_nearby(street_number, street_name, street_descriptor=None):
     modulo = street_number % 2
 
     query = """
-        select lat, lng, street_number
-            from geo_address
-        where
-            lower(street_name) = lower(%s)
-            and abs(street_number - %s) < 10
-        order by
+        SELECT lat, lng
+            FROM geo_locationposition
+        WHERE
+            street_name = %s
+            AND abs(street_number - %s) < %s
+        ORDER BY
             abs(street_number - %s)
-        limit 1;
+        limit 1
         """
-    params = [street_name, street_number, street_number]
+    params = [street_name, street_number, NEARBY_THRESHOLD, street_number]
 
     # only supporting this case for now...
     if not street_descriptor:
@@ -44,7 +47,7 @@ def geocode_try_nearby(street_number, street_name, street_descriptor=None):
     results = dictfetchall(cursor)
 
     if results:
-        return [{'lat': results[0]['lat'], 'lng': results[0]['lng']}]
+        return {'version': VERSION, 'lat': results[0]['lat'], 'lng': results[0]['lng']}
 
 def geocode_try_interpolate(street_number, street_name, street_descriptor=None):
 
@@ -54,15 +57,15 @@ def geocode_try_interpolate(street_number, street_name, street_descriptor=None):
     modulo = street_number % 2
 
     query = """
-        select street_number, lat, lng
-            from geo_address
-        where
-            lower(street_name) = lower(%s)
-            and street_number %s %s
-            and street_number %% 2 = %s
-        order by
+        SELECT lat, lng, street_number
+            FROM geo_locationposition
+        WHERE
+            street_name = %s
+            AND street_number %s %s
+            AND street_number %% 2 = %s
+        ORDER BY
             street_number %s
-        limit 2
+        LIMIT 1
         """
     params = [street_name]
 
@@ -94,16 +97,16 @@ def geocode_try_interpolate(street_number, street_name, street_descriptor=None):
         interp_lat = (first_higher['lat'] - first_lower['lat']) * intersect + first_lower['lat']
         interp_lng = (first_higher['lng'] - first_lower['lng']) * intersect + first_lower['lng']
 
-        return [{'lat': interp_lat, 'lng': interp_lng}]
+        return {'version': VERSION, 'lat': interp_lat, 'lng': interp_lng}
 
 def geocode_try_exact(street_number, street_name, street_descriptor=None):
 
     query = """
-        select lat, lng
-            from geo_address
-        where
-            lower(street_name) = lower(%s)
-            and street_number = %s
+        SELECT lat, lng
+            FROM geo_locationposition
+        WHERE
+            street_name = %s
+            AND street_number = %s
         """
     params = [street_name, street_number]
 
@@ -116,51 +119,16 @@ def geocode_try_exact(street_number, street_name, street_descriptor=None):
     cursor.execute(query, params)
 
     results = dictfetchall(cursor)
-    return results
+    if results:
+        return {'version': VERSION, 'lat': results[0]['lat'], 'lng': results[0]['lng']}
 
-def geocode(street_number, street_name, street_descriptor=None):
+def geocode(street_number, street_name, street_descriptor=None, try_interpolate=True, try_nearby=True):
+    results =  geocode_try_exact(street_number, street_name, street_descriptor=None)
 
-    removals = [
-        'Ct',
-        ' St',
-        'Way',
-        'Cir',
-        'Place',
-        'East',
-        'Sr'
-    ]
+    if not results and try_interpolate:
+        results = geocode_try_interpolate(street_number, street_name, street_descriptor=None) \
 
-    replacements = [
-        ['Pennsylvanis', 'Pennsylvania'],
-        ['Sanat Clara', 'Santa Clara'],
-        ['Redwod', 'Redwood'],
-        ['Illinios', 'Illinois'],
-        ['Carsen', 'Carson'],
-        ['Alemeda', 'Alameda'],
-        ['Lousiana', 'Louisiana'],
-        ['Coughlin', 'Coughlan'],
-        ['Broadway D', 'Broadway'],
-        ['La Montanita', 'Lane Montanita'],
-        ['McClane', 'Mc Lane'],
-        ['Hazlewood', 'Hazelwood'],
-        ['Bergawall', 'Bergwall'],
-        ['McDougal', 'Mc Dougal'],
-        ['Elliot', 'Elliott']
-    ]
+        if not results and try_nearby:
+            results = geocode_try_nearby(street_number, street_name, street_descriptor=None)
 
-    # TODO: need to use regex replace and remove instead
-
-    street_name = street_name.strip()
-
-    for x in removals:
-        street_name = street_name.replace(x, '')
-        street_name = street_name.replace(x.lower(), '')
-
-    for x, y in replacements:
-        street_name = street_name.replace(x, y)
-
-    street_name = street_name.strip()
-
-    return geocode_try_exact(street_number, street_name, street_descriptor=None) \
-        or geocode_try_interpolate(street_number, street_name, street_descriptor=None) \
-        or geocode_try_nearby(street_number, street_name, street_descriptor=None)
+    return results        

@@ -1,9 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.http import JsonResponse
 
-from workflow.models import Case
+from geo.models import Location
 
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"
@@ -21,7 +21,7 @@ def map_data(request):
     cursor.execute(
         """
         SELECT lat, lng
-        from workflow_case
+        from workflow_csscase
         where
             lat is not null
             and lng is not null
@@ -40,7 +40,7 @@ def rms_data(request):
     cursor.execute(
         """
         SELECT lat, lng
-        from workflow_case
+        from workflow_pdcase
         where
             lat is not null
             and lng is not null
@@ -56,3 +56,9 @@ def rms_data(request):
 def map_view(request):
 
     return render(request, 'workflow/map.html')
+
+@login_required
+def location_view(request, location_id):
+    instance = get_object_or_404(Location, id=location_id)
+
+    return render(request, 'workflow/location.html', {'location': instance})
