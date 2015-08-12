@@ -21,7 +21,7 @@ urlpatterns = patterns('',
     url(r'^workflow/map/$', 'workflow.views.map_view', name='map_view'),
     url(r'^workflow/css_data/$', 'workflow.views.css_data', name='css_data'),
     url(r'^workflow/rms_data/$', 'workflow.views.rms_data', name='rms_data'),
-    # url(r'^workflow/location_data/?street_number=(?P<street_number>\d*)&street_name=(?P<street_name>.*)&street_descriptor=(?P<street_descriptor>.*)/$', 'workflow.views.location_data', name='lcoation_data'),
     url(r'^workflow/location_data/$', 'workflow.views.location_data', name='lcoation_data'),
+    url(r'^workflow/locations_data/$', 'workflow.views.locations_data', name='lcoations_data'),
 )
 

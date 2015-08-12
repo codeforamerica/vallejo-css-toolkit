@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 
 from workflow.models import PDCase, CSSCase
-from geo.utils.normalize_address import normalize_address_string
+from geo.utils.normalize_address import normalize_address_string, combine_address_parts
 from geo.utils.geocode import geocode
 
 import logging
@@ -71,5 +71,31 @@ def location_data(request):
         'street_number': street_number,
         'street_name': street_name,
         'street_descriptor': street_descriptor,
+        'data': results
+    })
+
+# @login_required
+def locations_data(request):
+    results = {}
+
+    css_casses = CSSCase.objects.filter()
+    for case in css_casses:
+        normalized = normalize_address_string(case.raw_address)
+        if normalized:
+            combined = combine_address_parts(normalized[0], normalized[1])
+            if combined not in results:
+                results[combined] = []
+            results[combined].append(case.id)
+
+    pd_casses = PDCase.objects.filter()
+    for case in pd_casses:
+        normalized = normalize_address_string(case.raw_address)
+        if normalized:
+            combined = combine_address_parts(normalized[0], normalized[1])
+            if combined not in results:
+                results[combined] = []
+            results[combined].append(case.id)
+
+    return JsonResponse({
         'data': results
     })
