@@ -42,8 +42,34 @@ def map_view(request):
 
     return render(request, 'workflow/map.html')
 
-@login_required
-def location_view(request, location_id):
-    instance = get_object_or_404(Location, id=location_id)
+def filter_location_data(case, street_number, street_name, street_descriptor):
+    normalized = normalize_address_string(case.raw_address)
+    if normalized and normalized[0] == street_number and normalized[1] == street_name:
+        return [case.id]
+    return []
 
-    return render(request, 'workflow/location.html', {'location': instance})
+# @login_required
+def location_data(request):
+    results = []
+
+    street_number = request.GET.get('street_number')
+    street_name = request.GET.get('street_name')
+    street_descriptor = request.GET.get('street_descriptor')
+
+    if street_number:
+        street_number = int(street_number)
+
+    css_casses = CSSCase.objects.filter()
+    for case in css_casses:
+        results += filter_location_data(case, street_number, street_name, street_descriptor)
+
+    pd_casses = PDCase.objects.filter()
+    for case in pd_casses:
+        results += filter_location_data(case, street_number, street_name, street_descriptor)
+
+    return JsonResponse({
+        'street_number': street_number,
+        'street_name': street_name,
+        'street_descriptor': street_descriptor,
+        'data': results
+    })
