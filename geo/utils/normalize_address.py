@@ -44,9 +44,14 @@ def normalize_name(street_name):
     return street_name.lower().strip()
 
 def normalize_address_by_number_and_street(street_number, street_name):
-    street_name = street_name.strip()
+    if type(street_number) == str:
+        if not street_number.isdigit():
+            return
+    elif not type(street_number) == int:
+        return
 
-    r = re.match('(?P<street_name>.*) (?P<street_descriptor>%s)\.?' % STREET_DESCRIPTOR_RE, street_name)
+    street_name = street_name.strip()
+    r = re.match('(?P<street_name>.*) (?P<street_descriptor>%s)\.?' % STREET_DESCRIPTOR_RE, street_name, re.IGNORECASE)
 
     if r:
         street_descriptor_raw = r.groupdict()['street_descriptor']

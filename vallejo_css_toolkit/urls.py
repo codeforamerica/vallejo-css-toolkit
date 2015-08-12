@@ -19,7 +19,7 @@ urlpatterns = patterns('',
     url(r'^intake/my_assignments_data/$', 'intake.views.assigned_to_current_user_data', name='assigned_to_current_user_data'),
     url(r'^sms_reply/$', 'intake.views.sms_reply', name='sms_reply'),
     url(r'^workflow/map/$', 'workflow.views.map_view', name='map_view'),
-    url(r'^workflow/map_data/$', 'workflow.views.map_data', name='map_data'),
+    url(r'^workflow/css_data/$', 'workflow.views.css_data', name='css_data'),
     url(r'^workflow/rms_data/$', 'workflow.views.rms_data', name='rms_data'),
     url(r'^workflow/location/(?P<location_id>\d*)/$', 'workflow.views.location_view', name='lcoation_view'),
 )

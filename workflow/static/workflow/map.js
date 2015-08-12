@@ -22,7 +22,7 @@ $(document).ready(function(){
     }});
 
     // load css data...
-    $.ajax({url: "/workflow/map_data", success: function(objs){
+    $.ajax({url: "/workflow/css_data", success: function(objs){
         for (i=0; i<objs.results.length; i++) {
             var circle = L.circle([objs.results[i].lat, objs.results[i].lng], 100, {
                 color: 'red',

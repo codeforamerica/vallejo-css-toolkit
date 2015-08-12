@@ -1,58 +1,43 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.db import connection
 from django.http import JsonResponse
 
-from geo.models import Location
+from workflow.models import PDCase, CSSCase
+from geo.utils.normalize_address import normalize_address_string
+from geo.utils.geocode import geocode
 
-def dictfetchall(cursor):
-    "Returns all rows from a cursor as a dict"
-    desc = cursor.description
+import logging
 
-    return [
-        dict(zip([col[0] for col in desc], row))
-        for row in cursor.fetchall()
-    ]
+logger = logging.getLogger('consolelogger')
 
-@login_required
-def map_data(request):
+def process_case_data(cases):
+    results = []
+    for case in cases:
+        normalized = normalize_address_string(case.raw_address)
+        if not normalized:
+            logger.info('NORMALIZER_MISS: {}'.format(case.raw_address))
+            continue
 
-    cursor = connection.cursor()
-    cursor.execute(
-        """
-        SELECT lat, lng
-        from workflow_csscase
-        where
-            lat is not null
-            and lng is not null
-            and dept is null
-        ;"""
-    )
-
-    results = dictfetchall(cursor)
+        street_number, street_name, street_descriptor = normalized
+        coords = geocode(street_number, street_name, street_descriptor)
+        if coords:
+            results.append({'lat': coords['lat'], 'lng': coords['lng']})
+        else:
+            logger.info('GEOCODE_MISS - {}|{}|{}'.format(street_number, street_name, street_descriptor))
 
     return JsonResponse({'results': results})
 
-@login_required
+# @login_required
+def css_data(request):
+    cases = CSSCase.objects.filter()
+    return process_case_data(cases)
+
+# @login_required
 def rms_data(request):
+    cases = PDCase.objects.filter()
+    return process_case_data(cases)
 
-    cursor = connection.cursor()
-    cursor.execute(
-        """
-        SELECT lat, lng
-        from workflow_pdcase
-        where
-            lat is not null
-            and lng is not null
-            and dept = 1
-        ;"""
-    )
-
-    results = dictfetchall(cursor)
-
-    return JsonResponse({'results': results})
-
-@login_required
+# @login_required
 def map_view(request):
 
     return render(request, 'workflow/map.html')
