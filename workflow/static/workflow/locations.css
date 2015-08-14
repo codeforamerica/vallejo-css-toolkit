@@ -117,3 +117,12 @@
 }
 
 .hidden-attr {visibility: hidden; }
+
+tr:nth-child(even) {background: #CCC}
+tr:nth-child(odd) {background: #FFF}
+
+th, td { padding: 10px 15px; }
+
+th, td { text-align: center; }
+
+table { width: 100%; }

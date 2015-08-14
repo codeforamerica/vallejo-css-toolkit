@@ -23,5 +23,6 @@ urlpatterns = patterns('',
     url(r'^workflow/rms_data/$', 'workflow.views.rms_data', name='rms_data'),
     url(r'^workflow/location_data/$', 'workflow.views.location_data', name='lcoation_data'),
     url(r'^workflow/locations_data/$', 'workflow.views.locations_data', name='lcoations_data'),
+    url(r'^workflow/locations/$', 'workflow.views.locations_view', name='lcoations_view'),
 )
 

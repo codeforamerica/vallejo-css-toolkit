@@ -1,3 +1,7 @@
+import operator
+import string
+from itertools import chain
+
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
@@ -78,24 +82,23 @@ def location_data(request):
 def locations_data(request):
     results = {}
 
-    css_casses = CSSCase.objects.filter()
-    for case in css_casses:
-        normalized = normalize_address_string(case.raw_address)
-        if normalized:
-            combined = combine_address_parts(normalized[0], normalized[1])
-            if combined not in results:
-                results[combined] = []
-            results[combined].append(case.id)
+    css_cases = CSSCase.objects.filter()
+    pd_cases = PDCase.objects.filter()
 
-    pd_casses = PDCase.objects.filter()
-    for case in pd_casses:
+    for case in list(chain(pd_cases, css_cases)):
         normalized = normalize_address_string(case.raw_address)
         if normalized:
-            combined = combine_address_parts(normalized[0], normalized[1])
+            combined = string.capwords(combine_address_parts(normalized[0], normalized[1]))
             if combined not in results:
-                results[combined] = []
-            results[combined].append(case.id)
+                results[combined] = 0
+            results[combined] += 1
 
     return JsonResponse({
-        'data': results
+        'results': sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
     })
+
+# @login_required
+def locations_view(request):
+
+    return render(request, 'workflow/locations.html')
+
