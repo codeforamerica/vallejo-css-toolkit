@@ -1,30 +1,18 @@
-import re
-import sys
-import csv
+from psycopg2.extensions import AsIs
 
 from django.db import connection
 
-from psycopg2.extensions import AsIs
+from common.utils import dictfetchall
 
 NEARBY_THRESHOLD = 10  # how many street numbers away is 'close enough'
 
 VERSION = 0.1
 
-def dictfetchall(cursor):
-    "Returns all rows from a cursor as a dict"
-    desc = cursor.description
-
-    return [
-        dict(zip([col[0] for col in desc], row))
-        for row in cursor.fetchall()
-    ]
 
 def geocode_try_nearby(street_number, street_name, street_descriptor=None):
 
     if not street_number or not street_name:
         return
-
-    modulo = street_number % 2
 
     query = """
         SELECT lat, lng

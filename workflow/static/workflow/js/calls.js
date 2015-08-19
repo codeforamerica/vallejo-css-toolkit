@@ -3,7 +3,7 @@ $(document).ready(function(){
     var table = $('#data-table').dataTable( {
         "processing": true,
         "serverSide": true,
-        "ajax": "/intake/calls_data",
+        "ajax": "/workflow/calls_data",
         "columnDefs": [
             {
                 "targets": [ 6 ],  // filtered count

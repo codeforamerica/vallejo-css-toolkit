@@ -56,7 +56,7 @@ CALLS_DATA_SQL = """
 
     WITH data AS (
         SELECT
-            COALESCE('<a href="/intake/call/' || c.id || '">' || TO_CHAR(c.call_time, 'YYYY-MM-DD HH24:MI:SS') || '</a>', '') AS call_time,
+            COALESCE('<a href="/workflow/call/' || c.id || '">' || TO_CHAR(c.call_time, 'YYYY-MM-DD HH24:MI:SS') || '</a>', '') AS call_time,
             c.caller_name::VARCHAR AS caller_name,
             c.caller_number::VARCHAR AS caller_number,
             c.problem_address::VARCHAR AS problem_address,

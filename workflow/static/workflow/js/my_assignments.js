@@ -2,7 +2,7 @@ $(document).ready(function(){
 
     var statusMap = {null: '', 1: 'Unreviewed', 2: 'Active', 3: 'Closed', 4: 'Suspended'};
 
-    $.ajax({url: "/intake/my_assignments_data", success: function(data){
+    $.ajax({url: "/workflow/my_assignments_data", success: function(data){
 
         for (i=0; i<data.results.length; i++) {
 

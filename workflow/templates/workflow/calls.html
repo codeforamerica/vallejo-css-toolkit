@@ -19,22 +19,15 @@
 
 {% load staticfiles %}
 
-<link rel="stylesheet" href="{% static "intake/calls.css" %}"/>
-<script src="{% static "intake/calls.js" %}"></script>
+<link rel="stylesheet" href="{% static "workflow/calls.css" %}"/>
+<script src="{% static "workflow/calls.js" %}"></script>
 
 <title>...placeholder...</title>
 </head>
 
 <body>
 
-    <div class="layout-breve">
-        <ul class="nav nav-pills pull-right">
-            <li role="presentation"><a href="#">All Locations</a></li>
-            <li role="presentation" class="active"><a href="/intake/calls">Unreviewed Calls</a></li>
-            <li role="presentation"><a href="/intake/my_assignments">My Assigned Cases</a></li>
-            <li role="presentation"><a href="/intake/audit_log">Audit Log</a></li>
-        </ul>
-    </div>
+    {% include "base/navbar.html" %}
 
     <div class="layout-breve">
         <table id="data-table" class="row-border">

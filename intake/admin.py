@@ -2,7 +2,6 @@ from django.contrib import admin
 from intake.models import Call, CallAuditItem
 from intake.widgets import NameRecordingFieldWidget, AddressRecordingFieldWidget, DescriptionRecordingFieldWidget
 
-from intake.forms import CallForm
 
 class CallAdmin(admin.ModelAdmin):
     fields = ('call_sid', 'caller_name', 'name_recording_url', 'call_time', 'caller_number', 'caller_preferred_contact', 'problem_address', 'address_recording_url', 'problem_description', 'description_recording_url',)
@@ -24,7 +23,6 @@ class CallAuditItemAdmin(admin.ModelAdmin):
     fields = ('call', 'user', 'timestamp', 'changed_field', 'old_value', 'new_value')
     readonly_fields = ('call', 'user', 'timestamp', 'changed_field', 'old_value', 'new_value')
     list_display = ('call', 'user', 'timestamp')
-
 
 admin.site.register(Call, CallAdmin)
 admin.site.register(CallAuditItem, CallAuditItemAdmin)
