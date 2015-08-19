@@ -1,6 +1,8 @@
+import re
 import json
 
 import twilio.twiml
+from psycopg2.extensions import AsIs
 
 from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse
@@ -14,6 +16,7 @@ from django_twilio.decorators import twilio_view
 from intake.models import Call, CallAuditItem, STATUS_CHOICES
 from intake.forms import CallForm
 from intake.utils import create_call, update_call
+from intake.sql import AUDIT_LOG_DATA_SQL, CURRENT_USER_ASSIGNMENTS_SQL, CALLS_DATA_SQL, TOTAL_CALLS_COUNT_SQL
 
 
 def dictfetchall(cursor):
@@ -211,27 +214,7 @@ def call(request, call_id):
 @login_required
 def audit_log_data(request):
     cursor = connection.cursor()
-    cursor.execute(
-        """
-        set time zone 'America/Los_Angeles';
-
-        select
-            COALESCE(u.first_name, '') as first_name,
-            COALESCE(u.last_name, '') as last_name,
-            c.id,
-            c.caller_number as caller_number,
-            COALESCE(to_char(cai.timestamp, 'MM-DD-YYYY HH24:MI:SS'), '') as timestamp,
-            replace(COALESCE(cai.changed_field, ''), '_', ' ') as changed_field,
-            COALESCE(cai.old_value, '') as old_value,
-            COALESCE(cai.new_value, '') as new_value
-        from intake_call c
-        join intake_callaudititem cai
-            on c.id = cai.call_id
-        left join auth_user u
-            on cai.user_id = u.id
-        order by timestamp desc;
-        ;"""
-    )
+    cursor.execute(AUDIT_LOG_DATA_SQL)
     
     results = dictfetchall(cursor)
 
@@ -248,46 +231,7 @@ def assigned_to_current_user_data(request):
     current_user = get_object_or_404(User, id=request.user.id)
 
     cursor = connection.cursor()
-    cursor.execute(
-        """
-        set time zone 'America/Los_Angeles';
-
-        select
-            a.caller_number,
-            a.id,
-            a.call_time,
-            a.caller_name,
-            a.problem_address,
-            a.status,
-            b.last_updated
-        from (
-            select
-                c.id,
-                c.caller_number as caller_number,
-                COALESCE(to_char(c.call_time, 'MM-DD-YYYY HH24:MI:SS'), '') as call_time,
-                COALESCE(c.caller_name, '') as caller_name,
-                COALESCE(c.problem_address, '') as problem_address,
-                c.status as status
-            from
-                intake_call c
-            where
-                assignee_id = %s
-            order by
-                c.call_time desc
-        ) a
-        left join (
-            select
-                COALESCE(to_char(max(cai.timestamp), 'MM-DD-YYYY HH24:MI:SS'), '') as last_updated,
-                cai.call_id as call_id
-            from
-                intake_callaudititem cai
-            group by
-                cai.call_id
-        ) b
-        on a.id = b.call_id
-        ;""",
-        [current_user.id]
-    )
+    cursor.execute(CURRENT_USER_ASSIGNMENTS_SQL, [current_user.id])
     
     results = dictfetchall(cursor)
 
@@ -297,3 +241,63 @@ def assigned_to_current_user_data(request):
 def assigned_to_current_user(request):
 
     return render(request, 'intake/my_assignments.html')
+
+@login_required
+def calls_data(request):
+    idx_column_map = ['call_time', 'caller_name', 'caller_number', 'problem_address', 'status', 'assignee', 'count']
+
+    searchable_columns = []
+    search = None
+    offset = 0
+    limit = 10
+    sort_by = 1
+    sort_dir = 'asc'
+
+    for k, v in request.GET.iteritems():
+        if k == 'start' and v.isdigit():
+            offset = int(v)
+
+        if k == 'length' and v.isdigit():
+            limit = int(v)
+
+        if k == 'order[0][column]' and v.isdigit():
+            sort_by = int(v) + 1  # psql column indicies start at 1
+
+        if k == 'order[0][dir]' and v in ('asc', 'desc'):
+            sort_dir = v
+
+        if k == 'search[value]':
+            search = v
+
+        r = re.match('columns\[(?P<idx>\d+)\]\[searchable\]', k)
+        if r and v == 'true':
+            searchable_idx = r.groupdict()['idx']
+            searchable_columns.append(idx_column_map[int(searchable_idx)])
+
+    search_string = ''
+    if search:
+        search_cols_modified = [" {} ilike '%{}%' ".format(searchable_column, search) for searchable_column in searchable_columns]
+        search_string = "WHERE {}".format(' OR '.join(search_cols_modified))
+
+    cursor = connection.cursor()
+    cursor.execute(CALLS_DATA_SQL, [AsIs(search_string), sort_by, AsIs(sort_dir), offset, limit])
+    
+    data_results = cursor.fetchall()
+    if data_results:
+        records_filtered = data_results[0][-1]
+    else:
+        records_filtered = 0
+
+    cursor.execute(TOTAL_CALLS_COUNT_SQL)
+    count_results = dictfetchall(cursor)
+    if count_results:
+        records_total = count_results[0].get('records_total', 0)
+    else:
+        records_total = 0
+
+    return JsonResponse({'data': data_results, 'recordsTotal': records_total, 'recordsFiltered': records_filtered})
+
+@login_required
+def calls(request):
+
+    return render(request, 'intake/calls.html')

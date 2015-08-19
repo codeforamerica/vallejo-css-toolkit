@@ -48,7 +48,7 @@ def process_row(row, commit=False):
         logger.info('Rejecting row because address could not be normalized: {}'.format(row))
         return
 
-    street_number, street_name, street_descrisptor = normalized
+    street_number, street_name, street_descriptor = normalized
 
     if commit:
 
@@ -79,7 +79,7 @@ def import_openaddresses(commit=False):
 
         for row in reader:
             total += 1
-            result = process_row(row)
+            result = process_row(row, commit)
             if result:
                 new_imports += result
 

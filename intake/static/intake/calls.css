@@ -117,3 +117,13 @@
 }
 
 .hidden-attr {visibility: hidden; }
+
+table.dataTable tr.odd { background-color: #CCC; }
+table.dataTable tr.even { background-color: #FFF; }
+
+
+th, td { padding: 10px 15px; }
+
+th, td { text-align: center; }
+
+table { width: 100%; }
