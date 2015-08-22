@@ -6,9 +6,16 @@ $(document).ready(function(){
     $("[name='crw']").bootstrapSwitch();
     $("[name='rms']").bootstrapSwitch();
 
-    var m = L.map("map").setView([38.113056, -122.235833], 13);
-    L.tileLayer("http://{s}.tile.stamen.com/toner-lite/{z}/{x}/{y}.jpg",{minZoom:4,maxZoom:18,opacity:0.75,attribution:'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'})
-    .addTo(m);
+    // var layer = new L.StamenTileLayer("toner-lite");
+    // var m = new L.Map("map", {
+    //     center: new L.LatLng(38.113056, -122.235833),
+    //     zoom: 13
+    // });
+    // m.addLayer(layer);
+
+    L.mapbox.accessToken = 'pk.eyJ1IjoiYWRzY2huZWlkZXIiLCJhIjoiSlcxbGd0NCJ9.9iU2iiEVRUSxpiQXkV_zFg';
+    var m = L.mapbox.map('map', 'mapbox.light')
+        .setView([38.113056, -122.235833], 13);
 
     // load see click fix data via api...
     $.ajax({url: "https://seeclickfix.com/api/v2/issues/?place_url=vallejo&per_page=100", success: function(result){

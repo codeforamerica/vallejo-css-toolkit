@@ -19,8 +19,8 @@ urlpatterns = patterns('',
     url(r'^sms_reply/$', 'intake.views.sms_reply', name='sms_reply'),
 
     # call audit related views
-    url(r'^workflow/call_audit_log/$', 'workflow.views.call_views.audit_log', name='audit_log'),
-    url(r'^workflow/call_audit_log_data/$', 'workflow.views.call_views.audit_log_data', name='audit_log_data'),
+    url(r'^workflow/call_audit_log/$', 'workflow.views.call_views.call_audit_log', name='call_audit_log'),
+    url(r'^workflow/call_audit_log_data/$', 'workflow.views.call_views.call_audit_log_data', name='call_audit_log_data'),
 
     # case audit related views
     # TODO:
