@@ -1,6 +1,5 @@
 from django.db import models
 
-from geo.utils.geocode import geocode
 
 class LocationPosition(models.Model):
     street_number = models.IntegerField(null=True)

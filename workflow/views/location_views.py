@@ -1,25 +1,26 @@
-import operator
 import string
+import operator
 from itertools import chain
 
-from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
+from geo.utils.geocode import geocode
 from workflow.models import PDCase, CSSCase
 from geo.utils.normalize_address import normalize_address_string, combine_address_parts
-from geo.utils.geocode import geocode
 
 import logging
 
-logger = logging.getLogger('consolelogger')
+log = logging.getLogger('consolelogger')
+
 
 def process_case_data(cases):
     results = []
     for case in cases:
         normalized = normalize_address_string(case.raw_address)
         if not normalized:
-            logger.info('NORMALIZER_MISS: {}'.format(case.raw_address))
+            log.info('NORMALIZER_MISS: {}'.format(case.raw_address))
             continue
 
         street_number, street_name, street_descriptor = normalized
@@ -27,21 +28,21 @@ def process_case_data(cases):
         if coords:
             results.append({'lat': coords['lat'], 'lng': coords['lng']})
         else:
-            logger.info('GEOCODE_MISS - {}|{}|{}'.format(street_number, street_name, street_descriptor))
+            log.info('GEOCODE_MISS - {}|{}|{}'.format(street_number, street_name, street_descriptor))
 
     return JsonResponse({'results': results})
 
-# @login_required
+@login_required
 def css_data(request):
     cases = CSSCase.objects.filter()
     return process_case_data(cases)
 
-# @login_required
+@login_required
 def rms_data(request):
     cases = PDCase.objects.filter()
     return process_case_data(cases)
 
-# @login_required
+@login_required
 def map_view(request):
 
     return render(request, 'workflow/map.html')
@@ -52,7 +53,7 @@ def filter_location_data(case, street_number, street_name, street_descriptor):
         return [case.id]
     return []
 
-# @login_required
+@login_required
 def location_data(request):
     results = []
 
@@ -78,7 +79,7 @@ def location_data(request):
         'data': results
     })
 
-# @login_required
+@login_required
 def locations_data(request):
     results = {}
 
@@ -97,7 +98,7 @@ def locations_data(request):
         'results': sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
     })
 
-# @login_required
+@login_required
 def locations_view(request):
 
     return render(request, 'workflow/locations.html')

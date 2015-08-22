@@ -2,11 +2,8 @@ import csv
 
 from django.core.management.base import BaseCommand
 
-from geo.utils.normalize_address import combine_address_parts
 from workflow.models import CSSCase, CaseStatus
-
-import logging
-logger = logging.getLogger('consolelogger')
+from geo.utils.normalize_address import combine_address_parts
 
 def process_row(row, commit=False):
     street_number = row[1]
@@ -15,30 +12,15 @@ def process_row(row, commit=False):
     resolution = row[6].strip()
     closed = row[9]
 
-    # normalized = normalize_address_by_number_and_street(street_number, street_name)
-
-    # if not normalized:
-    #     logger.info('Unable to normalize address: {}'.format(combine_address_parts(street_number, street_name)))
-    #     return
-
-    # normalized_street_number, normalized_street_name, normalized_street_descriptor = normalized
-
     if commit:
         closed_status, _ = CaseStatus.objects.get_or_create(name='Closed')
         active_status, _ = CaseStatus.objects.get_or_create(name='Active')
-
-        # case_location, _ = CaseLocation.objects.get_or_create(
-        #     street_number=normalized_street_number,
-        #     street_name=normalized_street_name,
-        #     street_descriptor=normalized_street_descriptor
-        # )
 
         CSSCase.objects.get_or_create(
             description=description,
             resolution=resolution,
             status=closed and closed_status or active_status,
             raw_address=combine_address_parts(street_number, street_name),
-            # case_location=case_location
         )
 
 def import_css(f, commit=False):

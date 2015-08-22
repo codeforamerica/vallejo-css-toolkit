@@ -2,12 +2,12 @@ import os
 import re
 import csv
 import urllib
+import logging
 import zipfile
 import tempfile
 
 from django.core.management.base import BaseCommand
-
-import logging
+import usaddress
 
 from geo.models import LocationPosition
 from geo.utils.normalize_address import normalize_address_by_number_and_street

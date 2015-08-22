@@ -3,7 +3,7 @@ import os
 from django.core.management.base import BaseCommand
 
 import logging
-logger = logging.getLogger('consolelogger')
+log = logging.getLogger('consolelogger')
 
 def remove_migrations():
     cwd = os.getcwd()
@@ -13,7 +13,7 @@ def remove_migrations():
             if filepath != '__init__.py':
                 to_remove = os.path.join(dirpath, filepath)
                 os.remove(to_remove)
-                logger.info('removed {}'.format(to_remove))
+                log.info('removed {}'.format(to_remove))
 
 class Command(BaseCommand):
 

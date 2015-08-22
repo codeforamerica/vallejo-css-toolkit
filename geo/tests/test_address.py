@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from geo.utils.normalize_address import *
+from geo.utils.normalize_address import normalize_descriptor, normalize_name, normalize_address_string
 
 class AddressTestCase(TestCase):
 
@@ -23,4 +23,3 @@ class AddressTestCase(TestCase):
 
         results = normalize_address_string("100  Broadway ")
         self.assertEqual(results, (100, "broadway", None))
-

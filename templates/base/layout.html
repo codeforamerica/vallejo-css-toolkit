@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <!-- Mobile viewport optimized: h5bp.com/viewport -->
+  <meta name="viewport" content="width=device-width">
+
+  <title>
+    {% block page_title %}
+    Vallejo CSS Toolkit
+    {% endblock %}
+  </title>
+
+  <link href='http://fonts.googleapis.com/css?family=Roboto:400,400italic,100,100italic,300italic,300,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
+  {% block assets %}
+  {% endblock %}
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+</head>
+
+<body>
+    {% include "base/navbar.html" %}
+
+    {% block body %}
+    {% endblock %}
+
+</body>
+</html>
