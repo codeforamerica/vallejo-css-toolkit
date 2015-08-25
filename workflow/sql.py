@@ -34,6 +34,7 @@ AUDIT_LOG_DATA_SQL = """
     ;
     """
 
+# TODO: determine where we need this...
 CURRENT_USER_ASSIGNMENTS_SQL = """
     SET TIME ZONE 'America/Los_Angeles';
 

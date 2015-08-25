@@ -32,17 +32,17 @@ def process_case_data(cases):
 
     return JsonResponse({'results': results})
 
-@login_required
+@login_required(login_url='/admin/login/')
 def css_data(request):
     cases = CSSCase.objects.filter()
     return process_case_data(cases)
 
-@login_required
+@login_required(login_url='/admin/login/')
 def rms_data(request):
     cases = PDCase.objects.filter()
     return process_case_data(cases)
 
-@login_required
+@login_required(login_url='/admin/login/')
 def map_view(request):
 
     return render(request, 'workflow/map.html')
@@ -53,7 +53,7 @@ def filter_location_data(case, street_number, street_name, street_descriptor):
         return [case.id]
     return []
 
-@login_required
+@login_required(login_url='/admin/login/')
 def location_data(request):
     results = []
 
@@ -79,7 +79,7 @@ def location_data(request):
         'data': results
     })
 
-@login_required
+@login_required(login_url='/admin/login/')
 def locations_data(request):
     results = {}
 
@@ -98,7 +98,7 @@ def locations_data(request):
         'results': sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
     })
 
-@login_required
+@login_required(login_url='/admin/login/')
 def locations_view(request):
 
     return render(request, 'workflow/locations.html')

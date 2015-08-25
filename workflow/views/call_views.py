@@ -1,7 +1,6 @@
 import traceback
 import logging
 
-from django.db import connection
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
@@ -10,16 +9,15 @@ from django.http import HttpResponseRedirect, JsonResponse
 
 from intake.models import Call
 from intake.forms import CallForm
-from common.utils import dictfetchall
 from workflow.sql import CALLS_DATA_SQL
 from common.datatables import get_datatables_data
 from intake.models import CallAuditItem, STATUS_CHOICES
-from workflow.sql import AUDIT_LOG_DATA_SQL, CURRENT_USER_ASSIGNMENTS_SQL
+from workflow.sql import AUDIT_LOG_DATA_SQL
 
 log = logging.getLogger('consolelogger')
 
 
-@login_required
+@login_required(login_url='/admin/login/')
 def call(request, call_id):
     instance = get_object_or_404(Call, id=call_id)
     form = CallForm(request.POST or None, instance=instance)
@@ -55,59 +53,38 @@ def call(request, call_id):
 
     return render(request, 'workflow/call.html', {'form': form})
 
-@login_required
+@login_required(login_url='/admin/login/')
 def call_audit_log_data(request):
     request_dict = dict(request.GET.items())
     idx_column_map = ['call_time', 'timestamp', 'name', 'changed_field', 'old_value', 'new_value', 'count', 'tcount']
 
     try:
         results = get_datatables_data(request_dict, AUDIT_LOG_DATA_SQL, idx_column_map)
-    except Exception as e:        
+    except Exception:        
         # messages.add()
         log.error('Error encountered fetching from database: {}'.format(traceback.format_exc().replace('\n', '\t')))
-        results = {'data': [], 'filteredRecords': 0, 'totalRecords': 0}
+        results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
 
     return JsonResponse(results)
 
-@login_required
+@login_required(login_url='/admin/login/')
 def call_audit_log(request):
     return render(request, 'workflow/call_audit_log.html')
 
-@login_required
+@login_required(login_url='/admin/login/')
 def calls_data(request):
     request_dict = dict(request.GET.items())
     idx_column_map = ['call_time', 'caller_name', 'caller_number', 'problem_address', 'status', 'assignee', 'count', 'tcount']
 
     try:
         results = get_datatables_data(request_dict, CALLS_DATA_SQL, idx_column_map)
-    except Exception as e:        
+    except Exception:        
         # messages.add()
         log.error('Error encountered fetching from database: {}'.format(traceback.format_exc().replace('\n', '\t')))
-        results = {'data': [], 'filteredRecords': 0, 'totalRecords': 0}
+        results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
 
     return JsonResponse(results)
 
-@login_required
+@login_required(login_url='/admin/login/')
 def calls(request):
     return render(request, 'workflow/calls.html')
-
-@login_required
-def assigned_to_current_user_data(request):
-    current_user = get_object_or_404(User, id=request.user.id)
-    cursor = connection.cursor()
-
-    try:
-        cursor.execute(CURRENT_USER_ASSIGNMENTS_SQL, [current_user.id])
-        results = dictfetchall(cursor)
-    except Exception as e:
-        results = []
-        log.error('Error encountered fetching from database: {}'.format(e))
-        # messages.add()
-    finally:
-        cursor.close()
-
-    return JsonResponse({'results': results})
-
-@login_required
-def assigned_to_current_user(request):
-    return render(request, 'workflow/my_assignments.html')
