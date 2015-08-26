@@ -1,5 +1,5 @@
-from django.conf.urls import patterns, include, url
 from django.contrib import admin
+from django.conf.urls import patterns, include, url
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
@@ -18,19 +18,21 @@ urlpatterns = patterns('',
     # one-off for people to text in questions
     url(r'^sms_reply/$', 'intake.views.sms_reply', name='sms_reply'),
 
+    # TODO: add case audit items to audit log
+
     # call audit related views
     url(r'^workflow/call_audit_log/$', 'workflow.views.call_views.call_audit_log', name='call_audit_log'),
     url(r'^workflow/call_audit_log_data/$', 'workflow.views.call_views.call_audit_log_data', name='call_audit_log_data'),
 
-    # case audit related views
+    # case related views
     # TODO:
     # url(r'^workflow/case/(?P<call_id>\d*)/$', 'workflow.views.case_views.case', name='case'),
-    # url(r'^workflow/cases/$', 'workflow.views.case_views.cases', name='cases'),
-    # url(r'^workflow/cases_data/$', 'workflow.views.case_views.cases_data', name='cases_data'),
+    url(r'^workflow/cases/$', 'workflow.views.case_views.cases', name='cases'),
+    url(r'^workflow/cases_data/$', 'workflow.views.case_views.cases_data', name='cases_data'),
 
-    # my assigned calls -- TODO: not actively supported, change this to represent *cases* assigned to current user, or maybe search is fine
-    url(r'^workflow/my_assignments/$', 'workflow.views.call_views.assigned_to_current_user', name='assigned_to_current_user'),
-    url(r'^workflow/my_assignments_data/$', 'workflow.views.call_views.assigned_to_current_user_data', name='assigned_to_current_user_data'),
+    # visit-queue related views
+    url(r'^workflow/visit_queue/$', 'workflow.views.case_views.visit_queue', name='visit_queue'),
+    url(r'^workflow/visit_queue_data/$', 'workflow.views.case_views.visit_queue_data', name='visit_queue_data'),
 
     # map-related views
     url(r'^workflow/map/$', 'workflow.views.location_views.map_view', name='map_view'),

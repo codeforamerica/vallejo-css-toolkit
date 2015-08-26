@@ -1,119 +1,16 @@
-[class*="layout-minor"] {
-    width: 26%;
-    float: left;
-    }
+.detail-modal {
+    background-color: lightgrey;
+}
 
-[class*="block-"][class*="layout-minor"] {
-    width: calc(26% - 36px);
-    }
-    
-.layout-minor-invert {
-    float: right;
-    clear: none;
-    }
+#map {
+    height: 280px;
+}
 
-[class*="layout-major"] {
-    float: right;
-    width: 70%;
-    clear: none;
-    }
-
-[class*="block-"][class*="layout-major"] {
-    width: calc(70% - 36px);
-    }
-
-.layout-major-invert {
-    float: left;
-    clear: both;
-    }
-
-
-.layout-breve {
-    width: 96%;
-    padding: 3em 2%;
-    max-width: 80em;
-    margin: 0 auto;
-    float: none;
-    }
-
-[class*="block-"][class*="layout-breve"] {
-    width: calc(96% - 36px);
-    }
-
-[class*="block-"][class*="layout-breve-thin"] {
-    width: calc(96% - 36px);
-    }
-
-.detail-modal { background-color: lightgrey; }
-#map { height: 280px; }
-
-#saveForm {
+#save-form {
     margin-left: auto;
     margin-right: auto;
-
 }
 
-.layout-breve-thin {
-    padding: 1em 2%;
-    }
-
-.messages {
-    font-size: 0.95em;
+.hidden-attr {
+    visibility: hidden;
 }
-
-.messages ul {
-    list-style: none;
-    margin: 10px 0;
-    padding-left: 0;
-}
-
-.messages ul li {
-    padding: 0.1em;
-}
-
-.info,
-.success,
-.warning,
-.error,
-.validation {
-    border: 2px solid;
-    margin: 10px 0px;
-    padding:0 0 0 41px;
-    background-repeat: no-repeat;
-    background-position: 5px center;
-}
-
-.info {
-    color: #00529B;
-    border-color: #789FCC;
-    background-color: #CDEAF7;
-    background-image: url('/static/images/info.png');
-}
-
-.success {
-    color: #264409;
-    border-color: #C6D880;
-    background-color: #E6EFC2;
-/*        background-image:url('/static/images/success.png');*/
-    text-align: center;
-}
-
-.warning {
-    color: #514721;
-    border-color: #FFD324;
-    background-color: #FFF6BF;
-    background-image: url('/static/images/warning.png');
-}
-
-.error {
-    color: #8A1F11;
-    border-color: #FBC2C4; 
-    background-color: #FBE3E4;
-    background-image: url('/static/images/error.png');
-}
-
-.message-item {
-    text-align: center;
-}
-
-.hidden-attr {visibility: hidden; }
