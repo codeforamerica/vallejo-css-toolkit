@@ -1,8 +1,43 @@
-table.dataTable tr.odd { background-color: #CCC; }
-table.dataTable tr.even { background-color: #FFF; }
+/*table.dataTable tr.odd { background-color: #CCC; }
+table.dataTable tr.even { background-color: #FFF; }*/
 
-th, td { padding: 10px 15px; }
 
-th, td { text-align: center; }
+table {
+  border-radius:4px;
+  border:1px solid #ddd;
+}
 
-table { width: 100%; }
+
+
+/**Table header**/
+
+table.dataTable thead th, table.dataTable thead td{
+  border-bottom: 1px solid #ddd;
+}
+
+table.dataTable thead th, table.dataTable tfoot th{
+  font-weight: normal;
+}
+
+thead{
+  background-color:#ddd;
+}
+
+table.dataTable thead th{
+  padding:20px 15px 10px;
+}
+
+th:hover, th:active{
+  background:#696969;
+  color:#ffffff;
+}
+
+
+/**Table rows**/
+table.dataTable tbody th, table.dataTable tbody td{
+  padding:15px;
+}
+
+table.dataTable.row-border tbody td {
+  border-color:#eee;
+}
