@@ -1,15 +1,37 @@
-<div class="layout-breve">
-    <ul class="nav nav-pills pull-right">
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">CSS-tool</a>
+    </div>
+
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav navbar-right">
+
         <li class="dropdown" role="presentation" id="props-nav-tab" >
-            <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-map-marker"></i>&nbsp; Properties <span class="caret"></span></a>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Properties <span class="caret"></span></a>
             <ul class="dropdown-menu">
                 <li><a href="/workflow/visit_queue"><i class="fa fa-list"></i>&nbsp; Visit List</a></li>
                 <li><a href="/workflow/map"><i class="fa fa-map"></i>&nbsp; Map</a></li>
             </ul>
         </li>
+
         <li role="presentation" id="calls-nav-tab"><a href="/workflow/calls"><i class="fa fa-phone"></i>&nbsp; Calls</a></li>
         <li role="presentation" id="cases-nav-tab"><a href="/workflow/cases"><i class="fa fa-file"></i>&nbsp; Cases</a></li>
         <li role="presentation" id="audit-nav-tab"><a href="/workflow/call_audit_log"><i class="fa fa-eraser"></i>&nbsp; Audit Log</a></li>
         <li role="presentation" id="users-nav-tab"><a href="#"><i class="fa fa-users"></i>&nbsp; Users</a></li>
-    </ul>
-</div>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+
+
+  </div><!-- /.container-fluid -->
+</nav>
