@@ -18,17 +18,18 @@ log = logging.getLogger('consolelogger')
 def process_case_data(cases):
     results = []
     for case in cases:
-        normalized = normalize_address_string(case.raw_address)
-        if not normalized:
-            log.info('NORMALIZER_MISS: {}'.format(case.raw_address))
-            continue
+        # normalized = normalize_address_string(case.raw_address)
+        # if not normalized:
+        #     log.info('NORMALIZER_MISS: {}'.format(case.raw_address))
+        #     continue
 
-        street_number, street_name, street_descriptor = normalized
-        coords = geocode(street_number, street_name, street_descriptor)
+        # street_number, street_name, street_descriptor = normalized
+        # coords = geocode(street_number, street_name, street_descriptor)
+        coords = geocode(case.address_number, case.street_name)
         if coords:
             results.append({'lat': coords['lat'], 'lng': coords['lng']})
         else:
-            log.info('GEOCODE_MISS - {}|{}|{}'.format(street_number, street_name, street_descriptor))
+            log.info('GEOCODE_MISS - {}|{}'.format(case.address_number, case.street_name))
 
     return JsonResponse({'results': results})
 
@@ -47,9 +48,9 @@ def map_view(request):
 
     return render(request, 'workflow/map.html')
 
-def filter_location_data(case, street_number, street_name, street_descriptor):
-    normalized = normalize_address_string(case.raw_address)
-    if normalized and normalized[0] == street_number and normalized[1] == street_name:
+def filter_location_data(case, address_number, street_name):
+    # normalized = normalize_address_string(case.raw_address)
+    if case.address_number == address_number and case.street_name == street_name:
         return [case.id]
     return []
 
@@ -57,25 +58,23 @@ def filter_location_data(case, street_number, street_name, street_descriptor):
 def location_data(request):
     results = []
 
-    street_number = request.GET.get('street_number')
+    address_number = request.GET.get('address_number')
     street_name = request.GET.get('street_name')
-    street_descriptor = request.GET.get('street_descriptor')
 
-    if street_number:
-        street_number = int(street_number)
+    if address_number:
+        street_number = int(address_number)
 
     css_casses = CSSCase.objects.filter()
     for case in css_casses:
-        results += filter_location_data(case, street_number, street_name, street_descriptor)
+        results += filter_location_data(case, address_number, street_name)
 
     pd_casses = PDCase.objects.filter()
     for case in pd_casses:
-        results += filter_location_data(case, street_number, street_name, street_descriptor)
+        results += filter_location_data(case, address_number, street_name)
 
     return JsonResponse({
-        'street_number': street_number,
+        'address_number': address_number,
         'street_name': street_name,
-        'street_descriptor': street_descriptor,
         'data': results
     })
 
@@ -87,19 +86,14 @@ def locations_data(request):
     pd_cases = PDCase.objects.filter()
 
     for case in list(chain(pd_cases, css_cases)):
-        normalized = normalize_address_string(case.raw_address)
-        if normalized:
-            combined = string.capwords(combine_address_parts(normalized[0], normalized[1]))
-            if combined not in results:
-                results[combined] = 0
-            results[combined] += 1
+        # normalized = normalize_address_string(case.raw_address)
+        # if normalized:
+        #     combined = string.capwords(combine_address_parts(normalized[0], normalized[1]))
+        combined = "{} {}".format(case.address_number, case.street_name)
+        if combined not in results:
+            results[combined] = 0
+        results[combined] += 1
 
     return JsonResponse({
         'results': sorted(results.iteritems(), key=operator.itemgetter(1), reverse=True)
     })
-
-@login_required(login_url='/admin/login/')
-def locations_view(request):
-
-    return render(request, 'workflow/locations.html')
-

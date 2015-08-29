@@ -1,12 +1,13 @@
 import csv
 
+import usaddress
 from django.core.management.base import BaseCommand
 
 from workflow.models import CSSCase, CaseStatus
-from geo.utils.normalize_address import combine_address_parts
+# from geo.utils.normalize_address import combine_address_parts
 
 def process_row(row, commit=False):
-    street_number = row[1]
+    address_number = row[1]
     street_name = row[2]
     description = row[5].strip()
     resolution = row[6].strip()
@@ -16,12 +17,28 @@ def process_row(row, commit=False):
         closed_status, _ = CaseStatus.objects.get_or_create(name='Closed')
         active_status, _ = CaseStatus.objects.get_or_create(name='Active')
 
-        CSSCase.objects.get_or_create(
-            description=description,
-            resolution=resolution,
-            status=closed and closed_status or active_status,
-            raw_address=combine_address_parts(street_number, street_name),
-        )
+        address = "{} {}".format(address_number, street_name)
+        tagged = usaddress.tag(address)
+
+        address_type = tagged[1]
+        if address_type == 'Street Address':
+            address_number = tagged[0].get('AddressNumber')
+            street_name = tagged[0].get('StreetName')
+
+            try:
+                address_number = int(address_number)
+            except ValueError:
+                # malformed address_number
+                return
+
+            if address_number and street_name:
+                CSSCase.objects.get_or_create(
+                    description=description,
+                    resolution=resolution,
+                    status=closed and closed_status or active_status,
+                    address_number=address_number,
+                    street_name=street_name.upper()
+                )
 
 def import_css(f, commit=False):
     dialect = csv.Sniffer().sniff(f.read(1048576), delimiters=",")

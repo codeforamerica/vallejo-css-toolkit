@@ -42,11 +42,12 @@ urlpatterns = patterns('',
     # location-related views
     url(r'^workflow/location_data/$', 'workflow.views.location_views.location_data', name='lcoation_data'),
     url(r'^workflow/locations_data/$', 'workflow.views.location_views.locations_data', name='lcoations_data'),
-    url(r'^workflow/locations/$', 'workflow.views.location_views.locations_view', name='lcoations_view'),
 
     # call admin-related views
     url(r'^workflow/call/(?P<call_id>\d*)/$', 'workflow.views.call_views.call', name='call'),
     url(r'^workflow/calls/$', 'workflow.views.call_views.calls', name='calls'),
     url(r'^workflow/calls_data/$', 'workflow.views.call_views.calls_data', name='calls_data'),
+    url(r'^workflow/add_call/$', 'workflow.views.call_views.add_call', name='add_call'),
+
 
 )

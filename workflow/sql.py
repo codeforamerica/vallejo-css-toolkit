@@ -69,30 +69,66 @@ CURRENT_USER_ASSIGNMENTS_SQL = """
     ;
     """
 
+# CALLS_DATA_SQL = """
+#     SET TIME ZONE 'America/Los_Angeles';
+
+#     WITH data AS (
+#         SELECT
+#             COALESCE('<a href="/workflow/call/' || c.id || '">' || TO_CHAR(c.call_time, 'YYYY-MM-DD HH24:MI') || '</a>', '') AS call_time,
+#             c.caller_name::VARCHAR AS caller_name,
+#             c.caller_number::VARCHAR AS caller_number,
+#             c.problem_address::VARCHAR AS problem_address,
+#             c.status::VARCHAR AS status,
+#             COALESCE(u.first_name::VARCHAR || ' ', '') || COALESCE(u.last_name, '') AS assignee
+#         FROM intake_call c
+#         LEFT JOIN auth_user u
+#         ON c.assignee_id = u.id
+#     ), total_count as (
+#         SELECT COUNT(*) as tcount FROM intake_call
+#     )
+#     SELECT
+#         data.call_time,
+#         data.caller_name,
+#         data.caller_number,
+#         data.problem_address,
+#         data.status,
+#         data.assignee,
+#         COUNT(*) OVER(),
+#         total_count.tcount
+#     FROM data, total_count
+#     %s
+#     ORDER BY %s %s
+#     OFFSET %s
+#     LIMIT %s
+#     ;
+#     """
+
 CALLS_DATA_SQL = """
     SET TIME ZONE 'America/Los_Angeles';
 
     WITH data AS (
         SELECT
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || TO_CHAR(c.call_time, 'YYYY-MM-DD HH24:MI') || '</a>', '') AS call_time,
-            c.caller_name::VARCHAR AS caller_name,
-            c.caller_number::VARCHAR AS caller_number,
-            c.problem_address::VARCHAR AS problem_address,
-            c.status::VARCHAR AS status,
-            COALESCE(u.first_name::VARCHAR || ' ', '') || COALESCE(u.last_name, '') AS assignee
-        FROM intake_call c
-        LEFT JOIN auth_user u
-        ON c.assignee_id = u.id
+            '<a href="/workflow/call/' || c.id || '">' || c.id || '</a>'AS id,
+            c.id AS raw_id,
+            c.date AS call_time,
+            c.name::VARCHAR AS caller_name,
+            c.phone::VARCHAR AS caller_number,
+            c.address::VARCHAR AS problem_address,
+            c.problem::VARCHAR AS status,
+            c.resolution AS assignee
+        FROM workflow_csscall as c
     ), total_count as (
-        SELECT COUNT(*) as tcount FROM intake_call
+        SELECT COUNT(*) as tcount FROM workflow_csscall
     )
     SELECT
+        data.id,
         data.call_time,
         data.caller_name,
         data.caller_number,
         data.problem_address,
         data.status,
         data.assignee,
+        data.raw_id,
         COUNT(*) OVER(),
         total_count.tcount
     FROM data, total_count

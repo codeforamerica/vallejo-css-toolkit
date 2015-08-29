@@ -6,8 +6,8 @@ import logging
 import zipfile
 import tempfile
 
-from django.core.management.base import BaseCommand
 import usaddress
+from django.core.management.base import BaseCommand
 
 from geo.models import LocationPosition
 from geo.utils.normalize_address import normalize_address_by_number_and_street
@@ -26,53 +26,85 @@ def process_row(row, commit=False):
         return
 
     else:
-        lng, lat, street_number, street_address, zipcode = row
+        lng, lat, address_number, street_address, zipcode = row
 
     r = re.match(VALLEJO_LINE_MATCH, street_address)
     if not r:
         return
 
-    street_name = r.groupdict()['street_name']
+    # street_name = r.groupdict()['street_name']
 
-    lat = float(lat)
-    lng = float(lng)
+    # lat = float(lat)
+    # lng = float(lng)
 
-    if not street_number.isdigit():
-        logger.info('Rejecting row because street number is not numeric: {}'.format(row))
-        return
+    # if not street_number.isdigit():
+    #     logger.info('Rejecting row because street number is not numeric: {}'.format(row))
+    #     return
 
-    street_number = int(street_number)
-    normalized = normalize_address_by_number_and_street(street_number, street_name)
+    # street_number = int(street_number)
+    # normalized = normalize_address_by_number_and_street(street_number, street_name)
 
-    if not normalized:
-        logger.info('Rejecting row because address could not be normalized: {}'.format(row))
-        return
+    # if not normalized:
+    #     logger.info('Rejecting row because address could not be normalized: {}'.format(row))
+    #     return
 
-    street_number, street_name, street_descriptor = normalized
+    # street_number, street_name, street_descriptor = normalized
 
-    if commit:
+    # if commit:
 
-        _, created = LocationPosition.objects.get_or_create(
-            street_number=street_number,
-            street_name=street_name,
-            street_descriptor=street_descriptor,
-            lat=lat,
-            lng=lng,
-        )
+    #     _, created = LocationPosition.objects.get_or_create(
+    #         street_number=street_number,
+    #         street_name=street_name,
+    #         street_descriptor=street_descriptor,
+    #         lat=lat,
+    #         lng=lng,
+    #     )
 
-        return created
+    #     return created
 
-def import_openaddresses(commit=False):
+    # print usaddress.tag("{} {}".format(street_number, street_address))
+
+    # LocationPosition.objects.all().delete()
+
+    address = "{} {}".format(address_number, street_address)
+    tagged = usaddress.tag(address)
+
+    address_type = tagged[1]
+    if address_type == 'Street Address':
+        address_number = tagged[0].get('AddressNumber')
+        street_name = tagged[0].get('StreetName')
+
+        if address_number and street_name:
+            try:
+                lat = float(lat)
+                lng = float(lng)
+                address_number = int(address_number)
+            except ValueError:
+                # malformed lat and/or lng
+                return
+
+            if commit:
+                LocationPosition.objects.get_or_create(
+                    address_number=address_number,
+                    street_name=street_name.upper(),
+                    lng=lng,
+                    lat=lat
+                )
+
+def import_openaddresses(commit=False, filepath=''):
     new_imports = 0
     total = 0
 
-    filename, _ = urllib.urlretrieve(OPEN_ADDRESS_URL)
+    if filepath:
+        fpath = filepath
+    else:
+        filename, _ = urllib.urlretrieve(OPEN_ADDRESS_URL)
+        td = tempfile.gettempdir()
+        zf = zipfile.ZipFile(filename)
+        zf.extractall(td)
+        fpath = os.path.join(td, EXPECTED_FILENAME)
 
-    td = tempfile.gettempdir()
-    zf = zipfile.ZipFile(filename)
-    zf.extractall(td)
-
-    with open(os.path.join(td, EXPECTED_FILENAME), 'rb') as f:
+    with open(fpath, 'rb') as f:
         dialect = csv.Sniffer().sniff(f.read(1048576), delimiters=",")
         f.seek(0)
         reader = csv.reader(f, dialect)
@@ -89,9 +121,11 @@ def import_openaddresses(commit=False):
 class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument('--commit', type=bool, default=False)
+        parser.add_argument('--filepath', type=str)
 
     def handle(self, *args, **options):
         commit = options.get('commit')
-        new_imports, total = import_openaddresses(commit)
+        filepath = options.get('filepath')
+        new_imports, total = import_openaddresses(commit, filepath)
 
         logger.info('Imported %d new locations of %d total' % (new_imports, total))

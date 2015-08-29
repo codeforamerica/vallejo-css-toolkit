@@ -29,13 +29,20 @@ class Call(models.Model):
     call_sid = models.CharField(max_length=256, null=True)
     caller_name = models.CharField(max_length=256, null=True, blank=True)
     name_recording_url = models.CharField(max_length=256, null=True, blank=True)
-    caller_number = models.BigIntegerField(null=True, blank=True)
+
+    caller_number = models.CharField(max_length=256, null=True, blank=True)
     call_time = models.DateTimeField(null=True)
+
     caller_preferred_contact = models.IntegerField(null=True, blank=True, choices=CONTACT_PREFERENCES_CHOICES)
+
     problem_address = models.CharField(max_length=256, null=True, blank=True)
     address_recording_url = models.CharField(max_length=256, null=True, blank=True)
+
     problem_description = models.TextField(max_length=1024, null=True, blank=True)
     description_recording_url = models.CharField(max_length=256, null=True, blank=True)
+
+    resolution = models.CharField(max_length=256, null=True, blank=True)
+
     status = models.IntegerField(null=True, blank=True, choices=STATUS_CHOICES)
     assignee = models.ForeignKey(User, null=True, blank=True)
     property_owner = models.CharField(max_length=256, null=True, blank=True)
