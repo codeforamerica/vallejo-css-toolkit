@@ -50,7 +50,7 @@ th, td { text-align: center; }
             <tr><th>Date</th><th>Street Number</th><th>Street Name</th><th>Type</th><th>Deptartment</th></tr>
             {% for pd_case in pd_cases %}
                 <tr>
-                    <td>Jan. 1, 2015</td>
+                    <td>Jan. 17, 2015</td>
                     <td>{{ pd_case.address_number }}</td>
                     <td>{{ pd_case.street_name }}</td>
                     <td>Burglary</td><td>Police Department</td>
@@ -58,18 +58,18 @@ th, td { text-align: center; }
             {% endfor %}
             {% for crw_case in crw_cases %}
                 <tr>
-                    <td>Jan. 1, 2015</td>
+                    <td>Feb. 12, 2015</td>
                     <td>{{ crw_case.address_number }}</td>
                     <td>{{ crw_case.street_name }}</td>
-                    <td>Burglary</td><td>Code Enforcement</td>
+                    <td>Inop Vehicle</td><td>Code Enforcement</td>
                 </tr>
             {% endfor %}
             {% for css_case in css_cases %}
                 <tr>
-                    <td>Jan. 1, 2015</td>
+                    <td>Apr. 9, 2015</td>
                     <td>{{ css_case.address_number }}</td>
                     <td>{{ css_case.street_name }}</td>
-                    <td>Burglary</td><td>Community Services Section</td>
+                    <td>H+S; Squatters</td><td>Community Services Section</td>
                 </tr>
             {% endfor %}
         </table>

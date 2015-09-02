@@ -6,14 +6,20 @@ $(document).ready(function(){
         "processing": true,
         "serverSide": true,
         "ajax": "/workflow/cases_data",
+        "order": [[ 0, "desc" ]],
         "columnDefs": [
             {
-                "targets": [ 5 ],  // filtered count
+                "targets": [ 5 ],  // status
                 "visible": false,
                 "searchable": false
             },
             {
-                "targets": [ 6 ],  // total count
+                "targets": [ 6 ],  // filtered count
+                "visible": false,
+                "searchable": false
+            },
+            {
+                "targets": [ 7 ],  // total count
                 "visible": false,
                 "searchable": false
             }

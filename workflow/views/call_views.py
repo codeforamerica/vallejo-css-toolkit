@@ -114,7 +114,7 @@ def call_audit_log(request):
 @login_required(login_url='/admin/login/')
 def calls_data(request):
     request_dict = dict(request.GET.items())
-    idx_column_map = ['id', 'raw_id', 'call_time', 'caller_name', 'caller_number', 'problem_address', 'status', 'assignee', 'count', 'tcount']
+    idx_column_map = ['id', 'call_time', 'caller_name', 'caller_number', 'problem_address', 'status', 'assignee', 'raw_id', 'count', 'tcount']
 
     try:
         results = get_datatables_data(request_dict, CALLS_DATA_SQL, idx_column_map)

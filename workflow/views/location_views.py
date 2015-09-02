@@ -40,7 +40,7 @@ def css_data(request):
 
 @login_required(login_url='/admin/login/')
 def rms_data(request):
-    cases = PDCase.objects.filter()
+    cases = PDCase.objects.filter()[:1000]
     return process_case_data(cases)
 
 @login_required(login_url='/admin/login/')

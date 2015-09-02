@@ -12,25 +12,26 @@ from common.datatables import get_datatables_data
 @login_required(login_url='/admin/login/')
 def cases_data(request):
     request_dict = dict(request.GET.items())
-    idx_column_map = ['description', 'resolution', 'status_id', 'address_number', 'street_name']
+    idx_column_map = ['id', 'description', 'resolution', 'status_id', 'address_number', 'street_name']
 
     CSS_CASES_DATA_SQL = """
         select
+            c.id,
+            c.address_number,
+            c.street_name,
             c.description,
             c.resolution,
             c.status_id,
-            c.address_number,
-            c.street_name,
             count(*) over(),
             100
         from
             workflow_csscase c
+        order by 1 desc
         limit 10;
     """
 
     try:
         results = get_datatables_data(request_dict, CSS_CASES_DATA_SQL, idx_column_map)
-        print results
     except Exception:
         # messages.add()
         log.error('Error encountered fetching from database: {}'.format(traceback.format_exc()))
