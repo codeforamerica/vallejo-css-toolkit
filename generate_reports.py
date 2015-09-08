@@ -1,4 +1,4 @@
-from intake.models import Call
+from workflow.models import CSSCall
 from datetime import datetime, timedelta
 import random
 from django.contrib.auth.models import User
@@ -9,11 +9,9 @@ phones = [u'9165051208', u'6553322', u'5102676056', u'7077048872', u'', u'655816
 
 for i in xrange(0, 10):
 
-    Call.objects.create(
-        call_time=datetime.now() - timedelta(days=random.random() * 100),
-        caller_name=random.choice(names),
-        caller_number=random.choice(phones),
-        problem_address=random.choice(addresses),
-        status=1,
-        assignee=User.objects.get(id=1)
+    CSSCall.objects.create(
+        date=str(datetime.now() - timedelta(days=random.random() * 100)),
+        name=random.choice(names),
+        phone=random.choice(phones),
+        address=random.choice(addresses)
     )
