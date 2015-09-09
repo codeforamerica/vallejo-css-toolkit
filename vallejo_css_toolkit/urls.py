@@ -49,5 +49,7 @@ urlpatterns = patterns('',
     url(r'^workflow/calls_data/$', 'workflow.views.call_views.calls_data', name='calls_data'),
     url(r'^workflow/add_call/$', 'workflow.views.call_views.add_call', name='add_call'),
 
+    # dataload-related views
+    url(r'^data_load/import_css_calls/$', 'data_load.views.import_css_calls', name='import_css_calls'),
 
 )

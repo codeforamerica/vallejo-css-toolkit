@@ -38,14 +38,14 @@ def process_row(row, commit=False):
             resolution=resolution
         )
 
-def import_crw_cases(f, commit=False):
+def process_csv(f, commit=False):
     dialect = csv.Sniffer().sniff(f.read(104857600), delimiters=",")
     f.seek(0)
     reader = csv.reader(f, dialect)
     next(reader)
 
     for row in reader:
-        process_row(row, commit)        
+        process_row(row, commit)
 
 class Command(BaseCommand):
 
@@ -57,4 +57,4 @@ class Command(BaseCommand):
         if not options.get('file'):
             return
 
-        import_crw_cases(options['file'], options['commit'])
+        process_csv(options['file'], options['commit'])

@@ -1,0 +1,6 @@
+<form enctype="multipart/form-data" method="post" action="/data_load/import_css_calls/">
+{%csrf_token %}
+<table>
+{{ form.as_table }}
+</table>
+<input type="submit" value="Submit" />
