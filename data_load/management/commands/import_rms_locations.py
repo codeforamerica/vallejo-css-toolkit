@@ -39,8 +39,8 @@ def process_row(row, commit=False):
                     lat=lat
                 )
 
-def import_rms_locations(f, commit=False):
-    dialect = csv.Sniffer().sniff(f.read(104857600), delimiters=",")
+def process_csv(f, commit=False):
+    dialect = csv.Sniffer().sniff(f.read(1073741824), delimiters=",")
     f.seek(0)
     reader = csv.reader(f, dialect)
     next(reader)
@@ -60,4 +60,4 @@ class Command(BaseCommand):
         if not options.get('file'):
             return
 
-        import_rms_locations(options['file'], options['commit'])
+        process_csv(options['file'], options['commit'])
