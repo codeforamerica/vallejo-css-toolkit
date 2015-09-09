@@ -40,7 +40,7 @@ def process_row(row, commit=False):
                     street_name=street_name.upper()
                 )
 
-def import_css(f, commit=False):
+def process_csv(f, commit=False):
     dialect = csv.Sniffer().sniff(f.read(1048576), delimiters=",")
     f.seek(0)
     reader = csv.reader(f, dialect)
@@ -58,4 +58,4 @@ class Command(BaseCommand):
         if not options.get('file'):
             return
 
-        import_css(options['file'], options['commit'])
+        process_csv(options['file'], options['commit'])

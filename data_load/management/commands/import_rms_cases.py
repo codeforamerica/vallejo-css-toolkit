@@ -35,12 +35,13 @@ def process_row(row, commit=False):
                     street_name=street_name.upper()
                 )
 
-def import_rms_cases(f, commit=False, delete_existing=False):
-    dialect = csv.Sniffer().sniff(f.read(104857600), delimiters=",")
+def process_csv(f, commit=False, delete_existing=False):
+    dialect = csv.Sniffer().sniff(f.read(), delimiters=",")
     f.seek(0)
     reader = csv.reader(f, dialect)
     # next(reader)
 
+    print commit, delete_existing
     if commit and delete_existing:
         PDCase.objects.all().delete()
 
@@ -60,4 +61,4 @@ class Command(BaseCommand):
         if not options.get('file'):
             return
 
-        import_rms_cases(options['file'], options['commit'], options['delete_existing'])
+        process_csv(options['file'], options['commit'], options['delete_existing'])
