@@ -6,8 +6,8 @@ from common.utils import dictfetchall
 
 NEARBY_THRESHOLD = 10  # how many street numbers away is 'close enough'
 
-VERSION = 0.1
 
+# TODO: need to implement elastic search
 
 def geocode_try_nearby(address_number, street_name):
 
@@ -30,7 +30,7 @@ def geocode_try_nearby(address_number, street_name):
     results = dictfetchall(cursor)
 
     if results:
-        return {'version': VERSION, 'lat': results[0]['lat'], 'lng': results[0]['lng']}
+        return {'lat': results[0]['lat'], 'lng': results[0]['lng']}
 
 def geocode_try_interpolate(address_number, street_name):
 
@@ -75,7 +75,7 @@ def geocode_try_interpolate(address_number, street_name):
         interp_lat = (first_higher['lat'] - first_lower['lat']) * intersect + first_lower['lat']
         interp_lng = (first_higher['lng'] - first_lower['lng']) * intersect + first_lower['lng']
 
-        return {'version': VERSION, 'lat': interp_lat, 'lng': interp_lng}
+        return {'lat': interp_lat, 'lng': interp_lng}
 
 def geocode_try_exact(address_number, street_name):
 
@@ -92,10 +92,10 @@ def geocode_try_exact(address_number, street_name):
 
     results = dictfetchall(cursor)
     if results:
-        return {'version': VERSION, 'lat': results[0]['lat'], 'lng': results[0]['lng']}
+        return {'lat': results[0]['lat'], 'lng': results[0]['lng']}
 
 def geocode(address_number, street_name, try_interpolate=True, try_nearby=True):
-    results =  geocode_try_exact(address_number, street_name)
+    results = geocode_try_exact(address_number, street_name)
 
     if not results and try_interpolate:
         results = geocode_try_interpolate(address_number, street_name)

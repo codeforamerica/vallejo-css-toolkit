@@ -1,5 +1,6 @@
 import re
 
+# TODO: deprecate this module
 
 DESC_REPLACEMENT_MAP = {
     'st': ['street', 'st', 'st.', 'str'],
