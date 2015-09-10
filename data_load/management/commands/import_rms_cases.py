@@ -36,10 +36,12 @@ def process_row(row, commit=False):
                 )
 
 def process_csv(f, commit=False, delete_existing=False):
-    dialect = csv.Sniffer().sniff(f.read(), delimiters=",")
-    f.seek(0)
-    reader = csv.reader(f, dialect)
+    # dialect = csv.Sniffer().sniff(f.read(), delimiters=",")
+    # f.seek(0)
+    # reader = csv.reader(f, dialect)
     # next(reader)
+
+    reader = csv.reader(f)
 
     print commit, delete_existing
     if commit and delete_existing:
