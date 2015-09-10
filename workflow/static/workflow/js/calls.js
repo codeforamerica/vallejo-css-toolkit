@@ -11,7 +11,7 @@ $(document).ready(function(){
         "columnDefs": [
             {
                 "targets": [ 0 ],  // id w/ link
-                "visible": true,
+                "visible": false,
                 "searchable": false,
                 "orderData": [ 7 ]
             },
