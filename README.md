@@ -42,7 +42,6 @@ export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/9.4/bin
 Create the database and role:
 ```
 psql -c 'CREATE DB vallejo_css_toolkit; CREATE ROLE vallejo_css_toolkit WITH LOGIN;'
-
 ```
 
 Set up Django base tables:
