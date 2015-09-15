@@ -1,5 +1,8 @@
 import traceback
 import logging
+from itertools import chain
+
+import usaddress
 
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -37,27 +40,28 @@ def add_call(request):
 def call(request, call_id):
     instance = get_object_or_404(CSSCall, id=call_id)
     form = CSSCallForm(request.POST or None, instance=instance)
-
+    print form
     pd_cases = []
     crw_cases = []
     css_cases = []
-    import usaddress
+
     tagged = usaddress.tag(instance.address)
     if tagged and tagged[1] == 'Street Address':
         address_number = tagged[0].get('AddressNumber')
         street_name = tagged[0].get('StreetName')
         if address_number and address_number.isdigit() and street_name:
-            pd_cases = PDCase.objects.filter(address_number=int(address_number), street_name=street_name.upper())
-            crw_cases = CRWCase.objects.filter(address_number=int(address_number), street_name=street_name.upper())
-            css_cases = CSSCase.objects.filter(address_number=int(address_number), street_name=street_name.upper())
+            pd_cases = PDCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
+            crw_cases = CRWCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
+            css_cases = CSSCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
 
+    print css_cases, pd_cases
     if form.is_valid():
         call = form.save()
         messages.add_message(request, messages.SUCCESS, 'Call successfully updated.')
 
         return HttpResponseRedirect('/workflow/call/%d' % call.id)
 
-    return render(request, 'workflow/css_call.html', {'form': form, 'pd_cases': pd_cases, 'crw_cases': crw_cases, 'css_cases': css_cases})
+    return render(request, 'workflow/css_call.html', {'form': form, 'css_cases': css_cases, 'external_cases': list(chain(pd_cases, css_cases, crw_cases))})
 
 # @login_required(login_url='/admin/login/')
 # def call(request, call_id):

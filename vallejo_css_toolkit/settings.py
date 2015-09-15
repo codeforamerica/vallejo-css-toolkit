@@ -35,7 +35,8 @@ INSTALLED_APPS = (
     'intake',
     'geo',
     'workflow',
-    'data_load'
+    'data_load',
+    'widget_tweaks',
 )
 
 MIDDLEWARE_CLASSES = (

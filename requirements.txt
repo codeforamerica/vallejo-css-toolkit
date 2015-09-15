@@ -5,6 +5,7 @@ dj-static==0.0.6
 django-phonenumber-field==0.7.2
 django-toolbelt==0.0.1
 django-twilio==0.8.0
+django-widget-tweaks==1.4.1
 future==0.15.0
 gunicorn==19.3.0
 httplib2==0.9.1
