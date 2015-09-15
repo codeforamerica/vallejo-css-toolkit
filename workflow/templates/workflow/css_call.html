@@ -9,72 +9,158 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
-
-<style>
-th, td { padding: 10px 15px; }
-
-th, td { text-align: center; }
-
-</style>
+<link rel="stylesheet" href="{% static "workflow/css/css_call2.css" %}"/>
 {% endblock %}
 
 {% block body %}
 
-<div class="layout-breve">
-    <form class="form-contact" action="" method="POST">
+{% load widget_tweaks %}
 
-    {% csrf_token %} 
-    {% for field in form %}
+<div class="container">
 
-    <fieldset class="form-group">
-        <label class="control-label" for="id_{{ field.name }}">{{ field.label }}</label>
-        <input type="text" class="form-control"
-            name="{{ field.name }}"
-            id="id_{{ field.name }}"
-            value="{{ field.value|default_if_none:"" }}">
-        {{ field.errors }}
-    </fieldset>
+    <div class="row subnav">
+        <div class="col-md-8">
+            <h1>{{ form.address.value }}</h1>
+        </div>
+        <div class="col-md-4">
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation" class="active"><a href="#">Reports</a></li>
+                <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
+                <li role="presentation" class="disabled"><a href="#">Case</a></li>
+            </ul>
+        </div>
+    </div>
 
-    {% endfor %}
-    <input id="save-form" class="btn btn-primary" type="submit" value="Save"/>
-    <a class="btn btn-success" href="#"><i class="fa fa-plus"></i>&nbsp; Create Case</a>
-    </form>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="list-group">
+                <a href="#" class="list-group-item active">8/30/15</a>
+                <a href="#" class="list-group-item">8/1/15</a>
+                <a href="#" class="list-group-item">4/3/14</a>
+                <a href="#" class="list-group-item">2/28/15</a>
+            </div>
+        </div>
 
-    <br/>
+        <div class="col-md-8 col-md-offset-1 report">
+            <h4> Reported on {{ form.date.value }} by {{ form.name.value }} </h4>
 
-    {% if not pd_cases and not crw_cases and not css_cases %}
-        <h4>No Location History Found</h4>
-    {% else %}
-        <h4>Location History</h4>
-        <table>
-            <tr><th>Date</th><th>Street Number</th><th>Street Name</th><th>Type</th><th>Deptartment</th></tr>
-            {% for pd_case in pd_cases %}
-                <tr>
-                    <td>Jan. 17, 2015</td>
-                    <td>{{ pd_case.address_number }}</td>
-                    <td>{{ pd_case.street_name }}</td>
-                    <td>Burglary</td><td>Police Department</td>
-                </tr>
-            {% endfor %}
-            {% for crw_case in crw_cases %}
-                <tr>
-                    <td>Feb. 12, 2015</td>
-                    <td>{{ crw_case.address_number }}</td>
-                    <td>{{ crw_case.street_name }}</td>
-                    <td>Inop Vehicle</td><td>Code Enforcement</td>
-                </tr>
-            {% endfor %}
-            {% for css_case in css_cases %}
-                <tr>
-                    <td>Apr. 9, 2015</td>
-                    <td>{{ css_case.address_number }}</td>
-                    <td>{{ css_case.street_name }}</td>
-                    <td>H+S; Squatters</td><td>Community Services Section</td>
-                </tr>
-            {% endfor %}
-        </table>
-    {% endif %}
+            <form class="form-contact" method="POST">
+                {% csrf_token %}
 
+                {{ form.non_field_errors }}
+
+                <div class="fieldWrapper form-group">
+                    {{ form.name.errors }}
+                    <label for="{{ form.name.id_for_label }}">Reporter name:</label>
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.phone.errors }}
+                    <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
+                    {{ form.phone|add_class:"form-control" }}
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.address.errors }}
+                    <label for="{{ form.address.id_for_label }}">Address of problem:</label>
+                    {{ form.address|add_class:"form-control" }}
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.problem.errors }}
+                    <label for="{{ form.problem.id_for_label }}">Description of problem:</label>
+                    <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{{ form.problem.value }}</textarea>
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.resolution.errors }}
+                    <label for="{{ form.resolution.id_for_label }}">Notes:</label>
+                    {{ form.resolution|add_class:"form-control" }}
+                </div>
+
+                <div hidden="true" class="fieldWrapper form-group">
+                    {{ form.date|add_class:"form-control" }}
+                </div>
+
+<!--         TODO: fix the history section at db and view level-->
+                {% if external_cases %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">History lookup:</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Source</th>
+                                            <th>Notes</th>
+                                        </tr>
+                                    </thead>
+                                    {% for external_case in external_cases %}
+                                        <tr>
+                                            <td>{{ external_case.0 }}</td>
+                                            <td>{{ external_case.1 }}</td>
+                                            <td>{{ external_case.2 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+<!--            TODO: need to implement this at view and db level -->
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select class="form-control">
+                        <option>Location</option>
+                        <option>Communication</option>
+                    </select>
+                </div>
+
+<!--            TODO: need to implement this at view and db level -->
+                <div class="form-group">
+                    <label for="tags">Tags:</label>
+                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.assignee.errors }}
+                    <label for="{{ form.assignee.id_for_label }}">Assignee:</label>
+                    {{ form.assignee|add_class:"form-control" }}
+                </div>
+
+<!--            TODO: need to implement this at database level -->
+                <div class="form-group">
+                    <label for="next_action">Next Action:</label>
+                    <select class="form-control">
+                        <option>Investigate</option>
+                        <option>Forward</option>
+                        <option>Reoslve</option>
+                    </select>
+                </div>
+
+                <!-- <div class="dropdown pull-right">
+                    <button type="submit" class="btn btn-success btn-lg pull-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        Next Action
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                        <li><a href="/workflow/call/180">Investigate</a></li>
+                        <li><a href="#">Forward</a></li>
+                        <li><a href="#">Resolve</a></li>
+                    </ul>
+                </div> -->
+
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Save</button>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
 </div>
 
 {% endblock %}

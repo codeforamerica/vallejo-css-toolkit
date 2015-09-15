@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.contrib.auth.models import User
 
 class CaseStatus(models.Model):
     name = models.CharField(max_length=256)
@@ -26,3 +26,4 @@ class CSSCall(models.Model):
     problem = models.CharField(max_length=256, null=True, blank=True)
     date = models.CharField(max_length=256, null=True, blank=True)
     resolution = models.CharField(max_length=256, null=True, blank=True)
+    assignee = models.ForeignKey(User, null=True, blank=True)

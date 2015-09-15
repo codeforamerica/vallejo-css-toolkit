@@ -110,7 +110,7 @@ CALLS_DATA_SQL = """
         SELECT
             '<a href="/workflow/call/' || c.id || '">' || c.id || '</a>'AS id,
             c.id AS raw_id,
-            c.date AS call_time,
+            '<a href="/workflow/call/' || c.id || '">' || c.date  || '</a>' AS call_time,
             c.name::VARCHAR AS caller_name,
             c.phone::VARCHAR AS caller_number,
             c.address::VARCHAR AS problem_address,
