@@ -15,7 +15,7 @@ virtualenv env
 ```
 
 Define Twilio auth variables:
-If needed, create an account here: https://www.twilio.com/try-twilio
+If needed, create an account [here](https://www.twilio.com/try-twilio).
 
 Add the following to `env/bin/activate`:
 ```
@@ -34,7 +34,7 @@ Set the Django settings module:
 export DJANGO_SETTINGS_MODULE=vallejo_css_toolkit.development
 ```
 
-The development and test environments use Postgres. If you're on OS X, it's recommended to install it with the (http://postgresapp.com/)[Postgres App]. You'll also need to configire your `$PATH`, using your version of psql, e.g.:
+The development and test environments use Postgres. If you're on OS X, it's recommended to install it with the [Postgres App](http://postgresapp.com/). You'll also need to configire your `$PATH`, using your version of psql, e.g.:
 ```
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/9.4/bin
 ```
@@ -70,10 +70,10 @@ Tests can be run with:
 python manage.py test
 ```
 
-Launch an instance on Heroku:
-Purchase a Twilio phone number: https://www.twilio.com/user/account/phone-numbers/search
+####Launch an instance on Heroku:
+Purchase a Twilio phone number [here](https://www.twilio.com/user/account/phone-numbers/search).
 
-Create a heroku account if needed: https://signup.heroku.com/www-header
+If needed, create a heroku account [here](https://signup.heroku.com/www-header).
 ```
 heroku create
 git push heroku master
