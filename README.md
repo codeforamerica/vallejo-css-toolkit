@@ -25,8 +25,24 @@ export TWILIO_AUTH_TOKEN=XXXXXXXXXXXXXX
 
 Activate environment and install dependencies:
 ```
-source env bin activate
-pip install 
+source env/bin/activate
+pip install -r requirements.txt
+```
+
+Set the Django settings module:
+```
+export DJANGO_SETTINGS_MODULE=vallejo_css_toolkit.development
+```
+
+The development and test environments use Postgres. If you're on OS X, it's recommended to install it with the (http://postgresapp.com/)[Postgres App]. You'll also need to configire your `$PATH`, using your version of psql, e.g.:
+```
+export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/9.4/bin
+```
+
+Create the database and role:
+```
+psql -c 'CREATE DB vallejo_css_toolkit; CREATE ROLE vallejo_css_toolkit WITH LOGIN;'
+
 ```
 
 Set up Django base tables:
@@ -45,9 +61,9 @@ python manage.py runserver
 ```
 
 ####Running tests
-In psql, allow the default user to create a test database (one-time setup):
+Allow the default user to create a test database (one-time setup):
 ```
-ALTER ROLE vallejo_css_toolkit CREATEDB;
+psql -c 'ALTER ROLE vallejo_css_toolkit CREATEDB;'
 ```
 Tests can be run with:
 ```
@@ -66,10 +82,7 @@ heroku run python manage.py syncdb
 heroku run python manage.py migrate
 heroku config:set TWILIO_ACCOUNT_SID=XXXXXXXXXXXXX
 heroku config:set TWILIO_AUTH_TOKEN=XXXXXXXXXXXXXX
+heroku config:set DJANGO_SETTINGS_MODULE=vallejo_css_toolkit.[development|staging|production]
 ```
 
-Finally, route incoming calls to your Twilio phone number to your Heroku app url
-
-[TODO: attach screenshot]
-
-
+Finally, route incoming calls to your Twilio phone number to your Heroku app url.
