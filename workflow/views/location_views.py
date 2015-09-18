@@ -35,7 +35,7 @@ def process_case_data(cases):
 
 @login_required(login_url='/admin/login/')
 def css_data(request):
-    cases = CSSCase.objects.filter()
+    cases = CSSCase.objects.filter()[:10]
     return process_case_data(cases)
 
 @login_required(login_url='/admin/login/')

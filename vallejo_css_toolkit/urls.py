@@ -20,6 +20,9 @@ urlpatterns = patterns('',
 
     # TODO: add case audit items to audit log
 
+    # landing page view
+    url(r'^$', 'workflow.views.landing', name='landing'),
+
     # call audit related views
     url(r'^workflow/call_audit_log/$', 'workflow.views.call_views.call_audit_log', name='call_audit_log'),
     url(r'^workflow/call_audit_log_data/$', 'workflow.views.call_views.call_audit_log_data', name='call_audit_log_data'),

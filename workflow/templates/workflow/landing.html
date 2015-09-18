@@ -1,0 +1,103 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script src='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
+
+
+<link rel="stylesheet" href="{% static "base/base.css" %}"/>
+
+<style>
+    td {padding: 15px;}
+
+    li {padding: 15px;}
+
+    .row, .container-fluid {
+        margin-right: auto;
+        margin-left: auto;
+        width: 80%;
+    }
+    h3, h4 {
+        padding: 15px;
+
+    }
+    #map { height: 320px; }
+
+</style>
+
+{% endblock %}
+
+{% block body %}
+
+
+<div class="container-fluid">
+    <div clas="row">
+          <div id="add-new-case">
+            <a class="btn btn-success" href="/workflow/add_call"><i class="fa fa-plus"></i>&nbsp; New Report</a>
+          </div>
+
+        <h3>
+            In the past 24 hours, there have been {{ new_report_count }} new reports.
+        </h3>
+
+        <div class="col-md-4">
+            <h4>
+                Here are the most recent reports:
+            </h4>
+
+            <table>
+                <thead><tr>
+                    <th>Date</th>
+                    <th>Name</th>
+                    <th>Address</th>
+                </tr></thead>
+                {% for newest_call in newest_calls %}
+                    <tr>
+                        <td><a href="/workflow/call/{{ newest_call.4 }}">{{ newest_call.0 }}</a></td>
+                        <td>{{ newest_call.1 }}</td>
+                        <td>{{ newest_call.2 }}</td>
+                    </tr>
+                {% endfor %}
+                </table>
+        </div>
+
+
+        <div class="col-md-4">
+            <h4>
+                Here is where recent activity is located:
+            </h4>
+            <div id="map">
+                <script src="{% static "workflow/js/landing.js" %}"></script>
+            </div>
+            <a href="/workflow/map">view the full map here</a>
+        </div>
+
+        <div class="col-md-4">
+            <h4>
+                Here is the most recent activity:
+            </h4>
+
+            <ul>
+            {% for recent_activity in recent_activities %}
+
+                <li>{{ recent_activity }}</li>
+
+            {% endfor %}
+            </ul>
+        </div>
+
+
+
+    </div>
+</div>
+
+
+
+{% endblock %}

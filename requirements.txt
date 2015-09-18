@@ -19,3 +19,4 @@ static3==0.6.1
 twilio==4.4.0
 usaddress==0.5.4
 wsgiref==0.1.2
+requests
