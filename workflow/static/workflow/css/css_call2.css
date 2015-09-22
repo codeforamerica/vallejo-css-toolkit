@@ -19,3 +19,7 @@
 th, td { padding: 10px 15px; }
 
 th, td { text-align: center; }
+
+.fa-list-item {
+    float: right;
+}

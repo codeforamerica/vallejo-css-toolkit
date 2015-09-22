@@ -34,7 +34,7 @@
  -->    </div>
 
     <div class="row">
-        <div class="col-md-3">
+<!--         <div class="col-md-3">
             <div class="list-group">
                 <a href="#" class="list-group-item active">8/30/15</a>
                 <a href="#" class="list-group-item">8/1/15</a>
@@ -42,6 +42,19 @@
                 <a href="#" class="list-group-item">2/28/15</a>
             </div>
         </div>
+ -->
+        <div class="col-md-3 pane-selectors">
+            <div class="list-group">
+                <h5 class="list-group-item">All reports for this address</h5>
+                {% if form.date.value %}
+                    <a href="#case-details" class="list-group-item active">{{ form.date.value }}<span class="fa fa-list-item fa-angle-right"></span></a>
+                {% endif %}
+                <a href="#" class="list-group-item">4/5/15<span class="fa fa-list-item fa-angle-right"></span></a>
+                <a href="#" class="list-group-item">2/17/15<span class="fa fa-list-item fa-angle-right"></span></a>
+
+            </div>
+        </div>
+
 
         <div class="col-md-8 col-md-offset-1 report">
             {% if form.date.value and form.name.value %}
@@ -124,11 +137,11 @@
                 </div>
 
 <!--            TODO: need to implement this at view and db level -->
-                <div class="form-group">
+<!--                 <div class="form-group">
                     <label for="tags">Tags:</label>
                     <input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
                 </div>
-
+ -->
                 <div class="fieldWrapper form-group">
                     {{ form.assignee.errors }}
                     <label for="{{ form.assignee.id_for_label }}">Assignee:</label>
