@@ -26,16 +26,16 @@ def process_case_data(cases):
         # street_number, street_name, street_descriptor = normalized
         # coords = geocode(street_number, street_name, street_descriptor)
         coords = geocode(case.address_number, case.street_name)
-        if coords:
-            results.append({'lat': coords['lat'], 'lng': coords['lng']})
-        else:
-            log.info('GEOCODE_MISS - {}|{}'.format(case.address_number, case.street_name))
+        # if coords:
+        #     results.append({'lat': coords['lat'], 'lng': coords['lng']})
+        # else:
+        #     log.info('GEOCODE_MISS - {}|{}'.format(case.address_number, case.street_name))
 
     return JsonResponse({'results': results})
 
 @login_required(login_url='/admin/login/')
 def css_data(request):
-    cases = CSSCase.objects.filter()[:10]
+    cases = CSSCase.objects.filter()
     return process_case_data(cases)
 
 @login_required(login_url='/admin/login/')

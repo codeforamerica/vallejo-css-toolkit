@@ -11,8 +11,8 @@ def landing(request):
 
     # TODO: fetch this from the case audit log when it's implemented
     recent_activities = [
-        'Tina contacted the owner of 2 Florida Street.',
-        'Kenny Park closed a case at 555 Santa Clara Street.',
+        'Tina Encarnacion contacted the owner of 2 Florida Street.',
+        'Lt. Park closed a case at 555 Santa Clara Street.',
         'Cpl. Garcia conducted a site visit at 111 Amador Street.'
     ]
 

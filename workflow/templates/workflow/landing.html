@@ -15,7 +15,10 @@
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 
 <style>
-    td {padding: 15px;}
+    td, th {
+        padding: 15px;
+        text-align: left;
+    }
 
     .recent-activity {padding: 15px;}
 
@@ -39,9 +42,6 @@
 
 <div class="container-fluid main">
     <div clas="row">
-          <div id="add-new-case">
-            <a class="btn btn-success" href="/workflow/add_call"><i class="fa fa-plus"></i>&nbsp; New Report</a>
-          </div>
 
         <h3>
             In the past 24 hours, there have been {{ new_report_count }} new reports.
@@ -66,6 +66,12 @@
                     </tr>
                 {% endfor %}
                 </table>
+
+          <div id="add-new-case">
+            <a class="btn btn-success" href="/workflow/add_call"><i class="fa fa-plus"></i>&nbsp; New Report</a>
+          </div>
+
+
         </div>
 
 
@@ -81,7 +87,7 @@
 
         <div class="col-md-4">
             <h4>
-                Here is the most recent activity:
+                Here are the most recent staff actions:
             </h4>
 
             <ul>
