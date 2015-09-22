@@ -28,8 +28,7 @@ urlpatterns = patterns('',
     url(r'^workflow/call_audit_log_data/$', 'workflow.views.call_views.call_audit_log_data', name='call_audit_log_data'),
 
     # case related views
-    # TODO:
-    # url(r'^workflow/case/(?P<call_id>\d*)/$', 'workflow.views.case_views.case', name='case'),
+    url(r'^workflow/case/(?P<case_id>\d*)/$', 'workflow.views.case_views.case', name='case'),
     url(r'^workflow/cases/$', 'workflow.views.case_views.cases', name='cases'),
     url(r'^workflow/cases_data/$', 'workflow.views.case_views.cases_data', name='cases_data'),
 

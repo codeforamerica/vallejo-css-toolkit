@@ -5,6 +5,7 @@ $(document).ready(function(){
     var table = $('#data-table').dataTable( {
         "iDisplayLength": 25,
         "processing": true,
+        "bLengthChange": false,
         "serverSide": true,
         "ajax": "/workflow/calls_data",
         "order": [[ 0, "desc" ]],

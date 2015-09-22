@@ -58,3 +58,8 @@ table.dataTable.row-border tbody td {
 .dataTables_wrapper .dataTables_paginate{
   padding-top:20px;
 }
+
+th.sorting_asc, th.sorting_desc {
+  background-color: #696969;
+  color: #ffffff;
+}

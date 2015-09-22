@@ -22,6 +22,8 @@
 </head>
 
 <body>
+    {% include "base/navbar.html" %}
+
     {% if messages %}
     <div class="messages">
         {% for message in messages %}
@@ -29,8 +31,6 @@
         {% endfor %}
     </div>
     {% endif %}
-
-    {% include "base/navbar.html" %}
 
     {% block body %}
     {% endblock %}

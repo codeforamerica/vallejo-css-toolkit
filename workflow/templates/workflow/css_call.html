@@ -20,16 +20,18 @@
 
     <div class="row subnav">
         <div class="col-md-8">
-            <h1>{{ form.address.value }}</h1>
-        </div>
-        <div class="col-md-4">
+            {% if form.address.value %}
+                <h1>{{ form.address.value }}</h1>
+            {% endif %}    
+    </div>
+<!--         <div class="col-md-4">
             <ul class="nav nav-pills pull-right">
                 <li role="presentation" class="active"><a href="#">Reports</a></li>
                 <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
                 <li role="presentation" class="disabled"><a href="#">Case</a></li>
             </ul>
         </div>
-    </div>
+ -->    </div>
 
     <div class="row">
         <div class="col-md-3">
@@ -42,7 +44,9 @@
         </div>
 
         <div class="col-md-8 col-md-offset-1 report">
-            <h4> Reported on {{ form.date.value }} by {{ form.name.value }} </h4>
+            {% if form.date.value and form.name.value %}
+                <h4> Reported on {{ form.date.value }} by {{ form.name.value }} </h4>
+            {% endif %}
 
             <form class="form-contact" method="POST">
                 {% csrf_token %}
@@ -70,7 +74,7 @@
                 <div class="fieldWrapper form-group">
                     {{ form.problem.errors }}
                     <label for="{{ form.problem.id_for_label }}">Description of problem:</label>
-                    <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{{ form.problem.value }}</textarea>
+                    <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
                 </div>
 
                 <div class="fieldWrapper form-group">

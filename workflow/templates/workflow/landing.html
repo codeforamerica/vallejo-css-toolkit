@@ -17,9 +17,9 @@
 <style>
     td {padding: 15px;}
 
-    li {padding: 15px;}
+    .recent-activity {padding: 15px;}
 
-    .row, .container-fluid {
+    .row, .main {
         margin-right: auto;
         margin-left: auto;
         width: 80%;
@@ -37,7 +37,7 @@
 {% block body %}
 
 
-<div class="container-fluid">
+<div class="container-fluid main">
     <div clas="row">
           <div id="add-new-case">
             <a class="btn btn-success" href="/workflow/add_call"><i class="fa fa-plus"></i>&nbsp; New Report</a>
@@ -87,7 +87,7 @@
             <ul>
             {% for recent_activity in recent_activities %}
 
-                <li>{{ recent_activity }}</li>
+                <li class="recent-activity">{{ recent_activity }}</li>
 
             {% endfor %}
             </ul>

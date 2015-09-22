@@ -72,7 +72,7 @@ body {
 .error,
 .validation {
     border: 2px solid;
-    margin: 10px 33%;
+    margin: 10px 0px;
     padding: 0px;
     background-repeat: no-repeat;
     background-position: 5px center;
