@@ -34,15 +34,6 @@
  -->    </div>
 
     <div class="row">
-<!--         <div class="col-md-3">
-            <div class="list-group">
-                <a href="#" class="list-group-item active">8/30/15</a>
-                <a href="#" class="list-group-item">8/1/15</a>
-                <a href="#" class="list-group-item">4/3/14</a>
-                <a href="#" class="list-group-item">2/28/15</a>
-            </div>
-        </div>
- -->
         <div class="col-md-3 pane-selectors">
             <div class="list-group">
                 <h5 class="list-group-item">All reports for this address</h5>
@@ -56,12 +47,35 @@
         </div>
 
 
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Send message to complainant</h4>
+      </div>
+      <div class="modal-body">
+        <textarea maxlength="256" class="form-control" rows="3"></textarea>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+<!--         <button type="button" class="btn btn-primary">Save changes</button> -->
+        <button type="submit" form="css-call-form" class="btn btn-primary" aria-haspopup="true" aria-expanded="true">Save and Send</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+
         <div class="col-md-8 col-md-offset-1 report">
             {% if form.date.value and form.name.value %}
                 <h4> Reported on {{ form.date.value }} by {{ form.name.value }} </h4>
             {% endif %}
 
-            <form class="form-contact" method="POST">
+            <form class="form-contact" id="css-call-form" method="POST">
                 {% csrf_token %}
 
                 {{ form.non_field_errors }}
@@ -137,21 +151,22 @@
                 </div>
 
 <!--            TODO: need to implement this at view and db level -->
-<!--                 <div class="form-group">
+                <div class="form-group">
                     <label for="tags">Tags:</label>
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="">
+                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="">
                 </div>
- -->
-                <div class="fieldWrapper form-group">
+
+<!--                 <div class="fieldWrapper form-group">
                     {{ form.assignee.errors }}
                     <label for="{{ form.assignee.id_for_label }}">Assignee:</label>
                     {{ form.assignee|add_class:"form-control" }}
                 </div>
-
+ -->
 <!--            TODO: need to implement this at database level -->
                 <div class="form-group">
                     <label for="next_action">Next Action:</label>
                     <select class="form-control">
+                        <option>----------</option>
                         <option>Investigate</option>
                         <option>Forward</option>
                         <option>Reoslve</option>
@@ -171,7 +186,11 @@
                 </div> -->
 
                 <div class="pull-right">
-                    <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Save</button>
+<!--                     <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button> -->
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                        Save
+                    </button>
+
                 </div>
 
             </form>

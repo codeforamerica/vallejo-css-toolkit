@@ -3,15 +3,100 @@
 {% load staticfiles %}
 
 {% block assets %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script type='text/javascript' src="{% static "workflow/js/typeahead.bundle.js" %}"></script>
+
 
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/css_case.css" %}"/>
 
-<script src="{% static "workflow/js/css_case.js" %}"></script>
+<script type='text/javascript' src="{% static "workflow/js/css_case.js" %}"></script>
+
+<style>
+.tt-menu {
+  text-align: left;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+  width: 396px;
+  height: 30px;
+  padding: 8px 12px;
+  line-height: 30px;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  outline: none;
+}
+
+.typeahead {
+  background-color: #fff;
+}
+
+.typeahead:focus {
+  border: 2px solid #0097cf;
+}
+
+.tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.twitter-typeahead {
+    display: block !important;
+}
+
+.tt-menu {
+  width: 422px;
+  margin: 12px 0;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.tt-suggestion:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: #0097cf;
+}
+
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+</style>
+
 
 {% endblock %}
 
@@ -111,12 +196,25 @@
                         {{ case_details_form.resolution.errors }}
                     </div>
 
-                    <div class="fieldWrapper form-group">
+                    <div class="form-group">
+                        <label>Assignees:</label>
+                        <table id="assignee-table">
+                            <tr id="case-assignees"></tr>
+                        </table>
+                    </div>
+
+                    <div class="form-group" id="assignee-selector">
+                        <label>Add Assignees:</label>
+                        <input id="assignee-selection" name="assignee" class="typeahead form-control" type="text" placeholder="">
+                        <button id="add-assignee-submit" style="margin-top: 10px;" class="btn btn-primary">Add</button>
+                    </div>
+
+<!--                     <div class="fieldWrapper form-group">
                         <label for="{{ form.assignee.id_for_label }}">Assignee:</label>
                         {{ case_details_form.assignee|add_class:"form-control" }}
                         {{ case_details_form.assignee.errors }}
                     </div>
-
+ -->
                     <div class="fieldWrapper form-group">
                         <label for="{{ form.status.id_for_label }}">Status:</label>
                         {{ case_details_form.status|add_class:"form-control" }}

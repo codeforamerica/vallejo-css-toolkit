@@ -53,6 +53,7 @@ def call(request, call_id):
             crw_cases = CRWCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
             css_cases = CSSCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
 
+    messages.add_message(request, messages.SUCCESS, form.is_valid())
     if form.is_valid():
         call = form.save()
         messages.add_message(request, messages.SUCCESS, 'Call successfully updated.')

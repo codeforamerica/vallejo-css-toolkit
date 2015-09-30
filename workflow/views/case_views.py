@@ -48,6 +48,9 @@ def case(request, case_id):
 
     contact_owner_form = CSSCaseOwnerForm(request.POST or None, instance=instance)
 
+    print request.POST
+    print case_details_form
+
     uploaded_docs = [
         {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
         {"name": 'Deed with signature', "filename": 'deed_updated.pdf', "added": "Sep, 16, 2015", "thumbnail_url": "http://placehold.it/120x120"},
