@@ -32,3 +32,7 @@ class CSSCall(models.Model):
     date = models.CharField(max_length=256, null=True, blank=True)
     resolution = models.CharField(max_length=256, null=True, blank=True)
     assignee = models.ForeignKey(User, null=True, blank=True)
+
+class CSSCaseAssignee(models.Model):
+    case = models.ForeignKey(CSSCase, null=True, blank=True)
+    assignee_name = models.CharField(max_length=256, null=True, blank=True)

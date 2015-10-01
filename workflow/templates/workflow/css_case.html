@@ -199,7 +199,11 @@
                     <div class="form-group">
                         <label>Assignees:</label>
                         <table id="assignee-table">
-                            <tr id="case-assignees"></tr>
+                            <tr id="case-assignees">
+                                {% for case_assignee in case_assignees %}
+                                    <td class='assignee-row-cell'>{{ case_assignee }}&nbsp&nbsp&nbsp<a class='unassign' onclick='removeAssignee(event, this.parentElement, "{{case_assignee}}")' href='#'><i class='fa fa-close'></i></a></td>
+                                {% endfor %}
+                            </tr>
                         </table>
                     </div>
 

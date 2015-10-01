@@ -7,7 +7,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
 from common.datatables import get_datatables_data
-from workflow.models import CSSCase
+from workflow.models import CSSCase, CSSCaseAssignee
 
 from workflow.forms import CSSCaseDetailsForm, CSSCaseOwnerForm
 from workflow.sql import CSS_CASES_DATA_SQL
@@ -48,9 +48,6 @@ def case(request, case_id):
 
     contact_owner_form = CSSCaseOwnerForm(request.POST or None, instance=instance)
 
-    print request.POST
-    print case_details_form
-
     uploaded_docs = [
         {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
         {"name": 'Deed with signature', "filename": 'deed_updated.pdf', "added": "Sep, 16, 2015", "thumbnail_url": "http://placehold.it/120x120"},
@@ -73,6 +70,7 @@ def case(request, case_id):
         request,
         'workflow/css_case.html',
         {
+            'case_assignees': CSSCaseAssignee.objects.filter(case=instance).values_list('assignee_name', flat=True),
             'case_details_form': case_details_form,
             'contact_owner_form': contact_owner_form,
             'uploaded_docs': uploaded_docs,
@@ -80,6 +78,28 @@ def case(request, case_id):
         }
     )
 
+@login_required(login_url='/admin/login/')
+def add_case_assignee(request):
+    case_id = request.POST.get('case_id').split('/')[5]
+    assignee = request.POST.get('assignee')
 
+   # add to the database
+    CSSCaseAssignee.objects.get_or_create(assignee_name=assignee, case=get_object_or_404(CSSCase, id=case_id))
 
+    return JsonResponse({'status': 'OK'})
 
+@login_required(login_url='/admin/login/')
+def remove_case_assignee(request):
+    case_id = request.POST.get('case_id').split('/')[5]
+    assignee = request.POST.get('assignee')
+
+   # remove from the database
+    CSSCaseAssignee.objects.filter(
+        assignee_name=assignee,
+        case=get_object_or_404(
+            CSSCase,
+            id=case_id
+        )
+    ).delete()
+
+    return JsonResponse({'status': 'OK'})
