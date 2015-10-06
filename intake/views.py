@@ -17,7 +17,13 @@ def welcome(request):
     Call.objects.create(call_sid=call_sid)
 
     resp.say("Please say your name, ending with the pound key.")
-    resp.record(action="/intake/handle-name/", transcribe=True, transcribeCallback="/intake/handle-name-transcription/", finishOnKey="#", method="POST")
+    resp.record(
+        action="/intake/handle-name/",
+        transcribe=True,
+        transcribeCallback="/intake/handle-name-transcription/",
+        finishOnKey="#",
+        method="POST"
+    )
 
     return resp
 
@@ -90,7 +96,13 @@ def handle_feedback_number(request):
     resp = twilio.twiml.Response()
 
     resp.say("Please say the address you're calling to report, ending with the pound key.")
-    resp.record(action="/intake/handle-problem-address/", transcribe=True, transcribeCallback="/intake/handle-problem-address-transcription/", finishOnKey="#", method="POST")
+    resp.record(
+        action="/intake/handle-problem-address/",
+        transcribe=True,
+        transcribeCallback="/intake/handle-problem-address-transcription/",
+        finishOnKey="#",
+        method="POST"
+    )
 
     return resp
 
@@ -107,7 +119,14 @@ def handle_problem_address(request):
     resp = twilio.twiml.Response()
 
     resp.say("Please briefly describe the issue, ending with the pound key.")
-    resp.record(action="/intake/handle-problem-description/", transcribe=True, transcribeCallback="/intake/handle-problem-description-transcription/", finishOnKey="#", timeout=30, method="POST")
+    resp.record(
+        action="/intake/handle-problem-description/",
+        transcribe=True,
+        transcribeCallback="/intake/handle-problem-description-transcription/",
+        finishOnKey="#",
+        timeout=30,
+        method="POST"
+    )
 
     return resp
 

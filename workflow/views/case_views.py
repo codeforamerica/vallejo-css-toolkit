@@ -75,12 +75,13 @@ def case(request, case_id):
             'contact_owner_form': contact_owner_form,
             'uploaded_docs': uploaded_docs,
             'property_address': "{} {}".format(instance.address_number, instance.street_name.capitalize()),
+            'case_id': instance.pk
         }
     )
 
 @login_required(login_url='/admin/login/')
 def add_case_assignee(request):
-    case_id = request.POST.get('case_id').split('/')[5]
+    case_id = request.POST.get('case_id')
     assignee = request.POST.get('assignee')
 
    # add to the database
@@ -90,7 +91,7 @@ def add_case_assignee(request):
 
 @login_required(login_url='/admin/login/')
 def remove_case_assignee(request):
-    case_id = request.POST.get('case_id').split('/')[5]
+    case_id = request.POST.get('case_id')
     assignee = request.POST.get('assignee')
 
    # remove from the database

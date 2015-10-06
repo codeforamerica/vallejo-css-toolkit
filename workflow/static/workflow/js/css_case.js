@@ -1,14 +1,12 @@
 function removeAssignee (e, tableCell, assignee) {
     e.preventDefault();
-
     $.ajax({
         "url": "/workflow/remove_case_assignee/",
         "type": "POST",
-        "data": {"assignee": assignee, "case_id": window.location.href},
+        "data": {"assignee": assignee, "case_id": $("#case_id").val()},
     }).done( function() {
         tableCell.remove();
     });
-
 };
 
 $(document).ready(function(){
@@ -51,23 +49,21 @@ $(document).ready(function(){
 
     $("#add-assignee-submit").click(function (e) {
         e.preventDefault();
-        var assignee = $("#case-details-form")[0][6].value;
+        var assignee = $("#case-details-form")[0][7].value;
         if (assignee != "") {
-
             $.ajax({
-
                 "url": "/workflow/add_case_assignee/",
                 "type": "POST",
-                "data": {"assignee": assignee, "case_id": window.location.href},
-
+                "data": {"assignee": assignee, "case_id": $("#case_id").val()},
             }).done( function() {
-
-                var newCell = $("<td class='assignee-row-cell'>" + assignee + "&nbsp&nbsp&nbsp<a class='unassign' onclick='removeAssignee(event, this.parentElement, '" + assignee + "')' href='#'><i class='fa fa-close'></i></a></td>");
+                // var onclickString = "removeAssignee(event, this.parentElement, '" + assignee + "')";
+                var tableCellString = "<td class='assignee-row-cell'>" + assignee + '&nbsp&nbsp&nbsp<a class="unassign" onclick="' +
+                                        "removeAssignee(event, this.parentElement, '" + assignee + "')" +
+                                        '" href="#"><i class="fa fa-close"></i></a></td>';
+                var newCell = $(tableCellString);
                 newCell.appendTo("#case-assignees");
                 $("#case-details-form")[0][6].value = "";
-
             });
-
         }
     });
 
@@ -94,6 +90,7 @@ $(document).ready(function(){
         };
     };
 
+    // TODO: get these names and departments from the db:
     var userList = ['Ofc. Hans Williams (CSS)', 'Cpl. John Garcia (CSS)', 'Eli Flushman (CAO)'];
 
 
