@@ -49,7 +49,7 @@
                     {% if css_call.0 == id %}
                         <a href="/workflow/call/{{ css_call.0 }}" class="list-group-item active">{{ css_call.1|date }}<span class="fa fa-list-item fa-angle-right"></span></a>
                     {% else %}
-                        <a href="/workflow/call/{{ css_call.0 }}" class="list-group-item">{{ css_call.1 }}<span class="fa fa-list-item fa-angle-right"></span></a>
+                        <a href="/workflow/call/{{ css_call.0 }}" class="list-group-item">{{ css_call.1|date }}<span class="fa fa-list-item fa-angle-right"></span></a>
                     {% endif %}
                 {% endfor %}
             </div>
