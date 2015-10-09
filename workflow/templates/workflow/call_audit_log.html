@@ -13,23 +13,29 @@
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
 
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
-<link rel="stylesheet" href="{% static "workflow/css/call_audit_log.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/table_page.css" %}"/>
 <script src="{% static "workflow/js/call_audit_log.js" %}"></script>
 {% endblock %}
 
 {% block body %}
-<div class="layout-breve">
-    <table id="data-table" class="row-border">
-        <thead>
-        <tr>
-            <th>Call Time</th>
-            <th>Change Timestamp</th>
-            <th>User</th>
-            <th>Changed Field</th>
-            <th>Original Value</th>
-            <th>Updated Value</th>
-        </tr>
-        </thead>
-    </table>
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-12">
+        <table id="data-table" class="table table-hover row-border">
+          <thead>
+            <tr>
+                <th>Call Time</th>
+                <th>Change Timestamp</th>
+                <th>User</th>
+                <th>Changed Field</th>
+                <th>Original Value</th>
+                <th>Updated Value</th>
+            </tr>
+          </thead>
+        </table>
+    </div>
+  </div>
+  
 </div>
 {% endblock %}

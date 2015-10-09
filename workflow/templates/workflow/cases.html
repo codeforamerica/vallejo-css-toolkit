@@ -1,0 +1,40 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<link href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet">
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
+
+<link rel="stylesheet" href="{% static "base/base.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/table_page.css" %}"/>
+<script src="{% static "workflow/js/cases.js" %}"></script>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+
+  <div class="row">
+    <div class="col-md-12">
+        <table id="data-table" class="table table-hover row-border">
+          <thead>
+            <tr>
+<!--                 Same weird bug stripping the first column header... -->
+                <th>Address</th>
+                <th>Address</th>
+                <th>Description</th>
+                <th>Resolution</th>
+            </tr>
+          </thead>
+      </table>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

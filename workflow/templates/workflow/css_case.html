@@ -1,0 +1,231 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script type='text/javascript' src="{% static "workflow/js/typeahead.bundle.js" %}"></script>
+
+
+<link rel="stylesheet" href="{% static "base/base.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/css_case.css" %}"/>
+
+<script type='text/javascript' src="{% static "workflow/js/css_case.js" %}"></script>
+
+{% endblock %}
+
+{% block body %}
+
+{% load widget_tweaks %}
+
+<div class="container">
+
+    <div class="row subnav">
+        <div class="col-md-8">
+            <h1>{{ property_address }}</h1>
+        </div>
+
+        <div class="col-md-4">
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation" class="disabled"><a href="#">Reports</a></li>
+                <li role="presentation" class="active"><a href="#">Investigation</a></li>
+                <li role="presentation" class="disabled"><a href="#">Case</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 pane-selectors">
+            <div class="list-group">
+                <h5 class="list-group-item">Investigation</h5>
+                <a href="#case-details" class="list-group-item active">Case Details<span class="fa fa-list-item fa-angle-right"></span></a>
+                <a href="#contact-sheet" class="list-group-item">Contact Sheet<span class="fa fa-list-item fa-angle-right"></span></a>
+                <a href="#prop-details" class="list-group-item">Property Details<span class="fa fa-list-item fa-angle-right"></span></a>
+                <a href="#docs" class="list-group-item">Documents<span class="fa fa-list-item fa-angle-right"></span></a>
+
+            </div>
+        </div>
+
+        <div class="col-md-8 col-md-offset-1 report">
+
+            <div class="tab-pane" id="prop-details">
+                <h4>Property Details</h4>
+                <p>(coming soon)</p>
+            </div>
+
+            <div class="tab-pane" id="docs">
+                <h4>Documents</h4>
+
+                {% for uploaded_doc in uploaded_docs %}
+                    <hr>
+                    <div class="row uploaded-doc">
+                        <img class="inline" src="{{ uploaded_doc.thumbnail_url }}">
+                        <ul class="inline doc-attrs">
+                            <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.name }}</h5></li>
+                            <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
+                            <li></li>
+                            <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.added }}</p></li>
+                        </ul>
+                    </div>
+
+                {% endfor %}
+
+                <hr>
+
+                <form id="file-upload-form">
+                    <h5>Upload a new file</h5>
+                    <input type="file" name="uploadDoc">
+                    <button class="btn btn-primary upload-submit-button" type="submit" form="file-upload-form" value="Submit">Submit</button>
+                </form>
+            </div>
+
+            <div class="tab-pane" id="case-details">
+                <h4>Case Details</h4>
+
+                <form id="case-details-form" method="POST">
+                    {% csrf_token %}
+
+                    {{ case_details_form.non_field_errors }}
+
+                    <input id="case_id" type="hidden" value="{{case_id}}">
+
+                    <div class="fieldWrapper form-group owner-phone">
+                        <label for="{{ form.address_number.id_for_label }}">Address Number:</label>
+                        {{ case_details_form.address_number|add_class:"form-control" }}
+                        {{ case_details_form.address_number.errors }}
+                    </div>
+
+                    <div class="fieldWrapper form-group owner-email">
+                        <label for="{{ form.street_name.id_for_label }}">Street Name:</label>
+                        {{ case_details_form.street_name|add_class:"form-control" }}
+                        {{ case_details_form.street_name.errors }}
+                    </div>
+
+                    <div class="fieldWrapper form-group">
+                        <label for="{{ form.description.id_for_label }}">Description:</label>
+                        {{ case_details_form.description|add_class:"form-control" }}
+                        {{ case_details_form.description.errors }}
+                    </div>
+
+                    <div class="fieldWrapper form-group">
+                        <label for="{{ form.resolution.id_for_label }}">Resolution:</label>
+                        {{ case_details_form.resolution|add_class:"form-control" }}
+                        {{ case_details_form.resolution.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Assignees:</label>
+                        <table id="assignee-table">
+                            <tr id="case-assignees">
+                                {% for case_assignee in case_assignees %}
+                                    <td class='assignee-row-cell'>
+                                        {{ case_assignee }}&nbsp&nbsp&nbsp
+                                        <a class='unassign' onclick="removeAssignee(event, this.parentElement, '{{case_assignee}}')" href='#'>
+                                            <i class='fa fa-close'></i>
+                                        </a>
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="form-group" id="assignee-selector">
+                        <label>Add Assignees:</label>
+                        <input id="assignee-selection" name="assignee" class="typeahead form-control" type="text" placeholder="">
+                        <button id="add-assignee-submit" style="margin-top: 10px;" class="btn btn-primary">Add</button>
+                    </div>
+
+<!--                     <div class="fieldWrapper form-group">
+                        <label for="{{ form.assignee.id_for_label }}">Assignee:</label>
+                        {{ case_details_form.assignee|add_class:"form-control" }}
+                        {{ case_details_form.assignee.errors }}
+                    </div>
+ -->
+                    <div class="fieldWrapper form-group">
+                        <label for="{{ form.status.id_for_label }}">Status:</label>
+                        {{ case_details_form.status|add_class:"form-control" }}
+                        {{ case_details_form.status.errors }}
+                    </div>
+
+                    <button class="btn btn-primary case-details-submit-button" type="submit" form="case-details-form" value="Submit">Save</button>
+                </form>
+            </div>
+
+            <div class="tab-pane" id="contact-sheet">
+                <h4>Contact Sheet</h4>
+
+                <form id="owner-contact-form" method="POST">
+                    {% csrf_token %}
+
+                    {{ contact_owner_form.non_field_errors }}
+
+                    <div class="fieldWrapper form-group">
+                        <label for="{{ form.owner_name.id_for_label }}">Property Owner:</label>
+                        {{ contact_owner_form.owner_name|add_class:"form-control" }}
+                        {{ contact_owner_form.owner_name.errors }}
+                    </div>
+
+                    <div class="fieldWrapper form-group">
+                        <label for="{{ form.owner_address.id_for_label }}">Owner Address:</label>
+                        {{ contact_owner_form.owner_address|add_class:"form-control" }}
+                        {{ contact_owner_form.owner_address.errors }}
+                    </div>
+
+                    <div class="fieldWrapper form-group owner-phone">
+                        <label for="{{ form.owner_phone.id_for_label }}">Phone:</label>
+                        {{ contact_owner_form.owner_phone|add_class:"form-control" }}
+                        {{ contact_owner_form.owner_phone.errors }}
+                    </div>
+
+                    <div class="fieldWrapper form-group owner-email">
+                        <label for="{{ form.owner_email.id_for_label }}">Email:</label>
+                        {{ contact_owner_form.owner_email|add_class:"form-control" }}
+                        {{ contact_owner_form.owner_email.errors }}
+                    </div>
+
+                    <button class="btn btn-primary owner-info-submit-button" type="submit" form="owner-contact-form" value="Submit">Save</button>
+                </form>
+
+                <div class="contact-log-section">
+                    <label>Contact Log</label>
+                    <div class="contact-log-table">
+                        <table class="contact-log">
+                            <thead>
+                            <tr>
+                                <th class="contact-log-cell">Date</th>
+                                <th class="contact-log-cell">Type</th>
+                                <th class="contact-log-cell">Notes</th>
+                            </tr>
+                            </thead>
+                            <tr class="contact-log-row">
+                                <td class="contact-log-cell">8/15/15</td>
+                                <td class="contact-log-cell">Email</td>
+                                <td class="contact-log-cell">First contact informing owner of squatters</td>
+                            </tr>
+                            <tr class="contact-log-row">
+                                <td class="contact-log-cell">8/29/15</td>
+                                <td class="contact-log-cell">Phone</td>
+                                <td class="contact-log-cell">No answer; left voicemail</td>
+                            </tr>
+                            <tr class="contact-log-row">
+                                <td class="contact-log-cell">8/15/15</td>
+                                <td class="contact-log-cell">Email</td>
+                                <td class="contact-log-cell">First contact informing owner of squatters</td>
+                            </tr>
+                        </table>
+                        <button class="btn btn-default btn-lg add-new-contact-button"><span class="fa fa-plus"></span>&nbspAdd Contact</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

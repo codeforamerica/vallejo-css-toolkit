@@ -1,5 +1,6 @@
 body {
     font-family: "Roboto", sans-serif;
+    padding-bottom: 100px;
 }
 
 [class*="layout-minor"] {
@@ -57,7 +58,7 @@ body {
 
 .messages ul {
     list-style: none;
-    margin: 10px 0;
+    margin: 10px 0px;
     padding-left: 0;
 }
 
@@ -72,7 +73,7 @@ body {
 .validation {
     border: 2px solid;
     margin: 10px 0px;
-    padding:0 0 0 41px;
+    padding: 0px;
     background-repeat: no-repeat;
     background-position: 5px center;
 }
@@ -81,14 +82,12 @@ body {
     color: #00529B;
     border-color: #789FCC;
     background-color: #CDEAF7;
-/*    background-image: url('/static/images/info.png');*/
 }
 
 .success {
     color: #264409;
     border-color: #C6D880;
     background-color: #E6EFC2;
-/*        background-image:url('/static/images/success.png');*/
     text-align: center;
 }
 
@@ -96,14 +95,13 @@ body {
     color: #514721;
     border-color: #FFD324;
     background-color: #FFF6BF;
-/*    background-image: url('/static/images/warning.png');*/
 }
 
 .error {
     color: #8A1F11;
     border-color: #FBC2C4; 
     background-color: #FBE3E4;
-/*    background-image: url('/static/images/error.png');*/
+    text-align: center;
 }
 
 .message-item {

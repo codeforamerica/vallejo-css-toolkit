@@ -1,0 +1,212 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="{% static "base/base.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/css_call2.css" %}"/>
+{% endblock %}
+
+{% block body %}
+
+{% load widget_tweaks %}
+
+<div class="container">
+
+    <div class="row subnav">
+        <div class="col-md-8">
+            {% if form.address.value %}
+                <h1>{{ form.address.value }}</h1>
+            {% endif %}    
+    </div>
+
+        <div class="col-md-4">
+            <ul class="nav nav-pills pull-right">
+                <li role="presentation" class="active"><a href="#">Reports</a></li>
+
+                {% if css_cases %}
+                    <li role="presentation"><a href="/workflow/case/{{css_cases.0.0}}">Investigation</a></li>
+                {% else %}
+                    <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
+                {% endif %}
+
+                <li role="presentation" class="disabled"><a href="#">Case</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 pane-selectors">
+            <div class="list-group">
+                <h5 class="list-group-item">All reports for this address</h5>
+                {% for css_call in css_calls %}
+                    {% if css_call.0 == id %}
+                        <a href="/workflow/call/{{ css_call.0 }}" class="list-group-item active">{{ css_call.1|date }}<span class="fa fa-list-item fa-angle-right"></span></a>
+                    {% else %}
+                        <a href="/workflow/call/{{ css_call.0 }}" class="list-group-item">{{ css_call.1 }}<span class="fa fa-list-item fa-angle-right"></span></a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+<!--         TODO: reimplement modal -->
+        <!-- Modal -->
+<!--         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Send message to complainant</h4>
+              </div>
+              <div class="modal-body">
+                <textarea maxlength="256" class="form-control" rows="3"></textarea>
+
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" form="css-call-form" class="btn btn-primary" aria-haspopup="true" aria-expanded="true">Save and Send</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+ -->
+        <div class="col-md-8 col-md-offset-1 report">
+            {% if form.reported_datetime.value and form.name.value %}
+                <h4> Reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h4>
+            {% endif %}
+
+            <form class="form-contact" id="css-call-form" method="POST">
+                {% csrf_token %}
+
+                {{ form.non_field_errors }}
+
+                <div class="fieldWrapper form-group">
+                    <label for="{{ form.name.id_for_label }}">Date and time reported:</label>
+                    <input class="form-control" id="{{ form.reported_datetime.id_for_label }}" maxlength="256" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'Y-m-d'}} {{form.reported_datetime.value|time:'H:i'}}">
+                    {{ form.reported_datetime.errors }}
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.name.errors }}
+                    <label for="{{ form.name.id_for_label }}">Reporter name:</label>
+                    {{ form.name|add_class:"form-control" }}
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.phone.errors }}
+                    <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
+                    {{ form.phone|add_class:"form-control" }}
+                </div>
+
+
+
+                    <div class="fieldWrapper form-group owner-phone">
+                        <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
+                        {{ form.reporter_address_number|add_class:"form-control" }}
+                        {{ form.reporter_address_number.errors }}
+                    </div>
+
+                    <div class="fieldWrapper form-group owner-email">
+                        <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
+                        {{ form.reporter_street_name|add_class:"form-control" }}
+                        {{ form.reporter_street_name.errors }}
+                    </div>
+
+
+
+
+                <div class="fieldWrapper form-group">
+                    {{ form.address.errors }}
+                    <label for="{{ form.address.id_for_label }}">Address of problem:</label>
+                    {{ form.address|add_class:"form-control" }}
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.problem.errors }}
+                    <label for="{{ form.problem.id_for_label }}">Description:</label>
+                    <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    {{ form.resolution.errors }}
+                    <label for="{{ form.resolution.id_for_label }}">Notes:</label>
+                    {{ form.resolution|add_class:"form-control" }}
+                </div>
+
+                <div hidden="true" class="fieldWrapper form-group">
+                    {{ form.date|add_class:"form-control" }}
+                </div>
+
+<!--         TODO: fix the history section at db and view level-->
+                {% if external_cases %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">History lookup:</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Source</th>
+                                        </tr>
+                                    </thead>
+                                    {% for external_case in external_cases %}
+                                        <tr>
+                                            <td>{{ external_case.0 }}</td>
+                                            <td>{{ external_case.3 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+<!--            TODO: need to implement this at view and db level -->
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select class="form-control">
+                        <option>Location</option>
+                        <option>Information</option>
+                    </select>
+                </div>
+
+                <div class="fieldWrapper form-group">
+                    <label for="{{ form.resolution.id_for_label }}">Tags:</label>
+                    {{ form.tags|add_class:"form-control" }}
+                    {{ form.tags.errors }}
+                </div>
+
+<!--            TODO: need to implement this at database level -->
+                <div class="form-group">
+                    <label for="next_action">Next Action:</label>
+                    <select class="form-control">
+                        <option>----------</option>
+                        <option>Investigate</option>
+<!--                         <option>Forward</option> -->
+                        <option>Resolve</option>
+                    </select>
+                </div>
+
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
+<!--                     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                        Save
+                    </button>
+ -->
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

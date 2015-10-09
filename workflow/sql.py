@@ -34,6 +34,7 @@ AUDIT_LOG_DATA_SQL = """
     ;
     """
 
+# TODO: determine where we need this...
 CURRENT_USER_ASSIGNMENTS_SQL = """
     SET TIME ZONE 'America/Los_Angeles';
 
@@ -73,25 +74,27 @@ CALLS_DATA_SQL = """
 
     WITH data AS (
         SELECT
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || TO_CHAR(c.call_time, 'YYYY-MM-DD HH24:MI') || '</a>', '') AS call_time,
-            c.caller_name::VARCHAR AS caller_name,
-            c.caller_number::VARCHAR AS caller_number,
-            c.problem_address::VARCHAR AS problem_address,
-            c.status::VARCHAR AS status,
-            COALESCE(u.first_name::VARCHAR || ' ', '') || COALESCE(u.last_name, '') AS assignee
-        FROM intake_call c
-        LEFT JOIN auth_user u
-        ON c.assignee_id = u.id
-    ), total_count as (
-        SELECT COUNT(*) as tcount FROM intake_call
+            '<a href="/workflow/call/' || c.id || '">' || c.id || '</a>'AS id,
+            c.id AS raw_id,
+            '<a href="/workflow/call/' || c.id || '">' || c.date  || '</a>' AS call_time,
+            c.name::VARCHAR AS caller_name,
+            c.phone::VARCHAR AS caller_number,
+            c.address::VARCHAR AS problem_address,
+            c.problem::VARCHAR AS status,
+            c.resolution AS assignee
+        FROM workflow_csscall as c
+    ), total_count AS (
+        SELECT COUNT(*) as tcount FROM workflow_csscall
     )
     SELECT
+        data.id,
         data.call_time,
         data.caller_name,
         data.caller_number,
         data.problem_address,
         data.status,
         data.assignee,
+        data.raw_id,
         COUNT(*) OVER(),
         total_count.tcount
     FROM data, total_count
@@ -105,3 +108,35 @@ CALLS_DATA_SQL = """
 TOTAL_CALLS_COUNT_SQL = """
     SELECT COUNT(*) AS records_total FROM intake_call;
     """
+
+CSS_CASES_DATA_SQL = """
+    WITH data AS (
+        SELECT
+            c.id as raw_id,
+            c.address_number || '&nbsp' || c.street_name AS full_address,
+            c.description,
+            c.resolution,
+            c.status_id,
+            count(*) over()
+        FROM workflow_csscase c
+    ), total_count AS (
+        SELECT COUNT(*) AS tcount FROM workflow_csscase
+    )
+    SELECT
+        '<a href="/workflow/case/' || data.raw_id || '">' || data.full_address || '</a>'AS address,
+        data.raw_id as id,
+        data.description as description,
+        data.resolution as resolution,
+        data.status_id as status_id,
+        data.full_address as full_address,
+        COUNT(*) OVER(),
+        total_count.tcount
+    FROM
+        data, total_count
+    %s
+    ORDER BY %s %s
+    OFFSET %s
+    LIMIT %s
+    ;
+    """
+
