@@ -24,61 +24,74 @@
                 <h1>{{ form.address.value }}</h1>
             {% endif %}    
     </div>
-<!--         <div class="col-md-4">
+
+        <div class="col-md-4">
             <ul class="nav nav-pills pull-right">
                 <li role="presentation" class="active"><a href="#">Reports</a></li>
-                <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
+
+                {% if css_cases %}
+                    <li role="presentation"><a href="/workflow/case/{{css_cases.0.0}}">Investigation</a></li>
+                {% else %}
+                    <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
+                {% endif %}
+
                 <li role="presentation" class="disabled"><a href="#">Case</a></li>
             </ul>
         </div>
- -->    </div>
+
+    </div>
 
     <div class="row">
         <div class="col-md-3 pane-selectors">
             <div class="list-group">
                 <h5 class="list-group-item">All reports for this address</h5>
-                {% if form.date.value %}
-                    <a href="#case-details" class="list-group-item active">{{ form.date.value }}<span class="fa fa-list-item fa-angle-right"></span></a>
-                {% endif %}
-                <a href="#" class="list-group-item">4/5/15<span class="fa fa-list-item fa-angle-right"></span></a>
-                <a href="#" class="list-group-item">2/17/15<span class="fa fa-list-item fa-angle-right"></span></a>
-
+                {% for css_call in css_calls %}
+                    {% if css_call.0 == id %}
+                        <a href="/workflow/call/{{ css_call.0 }}" class="list-group-item active">{{ css_call.1|date }}<span class="fa fa-list-item fa-angle-right"></span></a>
+                    {% else %}
+                        <a href="/workflow/call/{{ css_call.0 }}" class="list-group-item">{{ css_call.1 }}<span class="fa fa-list-item fa-angle-right"></span></a>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
 
+<!--         TODO: reimplement modal -->
+        <!-- Modal -->
+<!--         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Send message to complainant</h4>
+              </div>
+              <div class="modal-body">
+                <textarea maxlength="256" class="form-control" rows="3"></textarea>
 
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="submit" form="css-call-form" class="btn btn-primary" aria-haspopup="true" aria-expanded="true">Save and Send</button>
 
-<!-- Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="myModalLabel">Send message to complainant</h4>
-      </div>
-      <div class="modal-body">
-        <textarea maxlength="256" class="form-control" rows="3"></textarea>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-<!--         <button type="button" class="btn btn-primary">Save changes</button> -->
-        <button type="submit" form="css-call-form" class="btn btn-primary" aria-haspopup="true" aria-expanded="true">Save and Send</button>
-
-      </div>
-    </div>
-  </div>
-</div>
-
+              </div>
+            </div>
+          </div>
+        </div>
+ -->
         <div class="col-md-8 col-md-offset-1 report">
-            {% if form.date.value and form.name.value %}
-                <h4> Reported on {{ form.date.value }} by {{ form.name.value }} </h4>
+            {% if form.reported_datetime.value and form.name.value %}
+                <h4> Reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h4>
             {% endif %}
 
             <form class="form-contact" id="css-call-form" method="POST">
                 {% csrf_token %}
 
                 {{ form.non_field_errors }}
+
+                <div class="fieldWrapper form-group">
+                    <label for="{{ form.name.id_for_label }}">Date and time reported:</label>
+                    <input class="form-control" id="{{ form.reported_datetime.id_for_label }}" maxlength="256" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'Y-m-d'}} {{form.reported_datetime.value|time:'H:i'}}">
+                    {{ form.reported_datetime.errors }}
+                </div>
 
                 <div class="fieldWrapper form-group">
                     {{ form.name.errors }}
@@ -92,6 +105,23 @@
                     {{ form.phone|add_class:"form-control" }}
                 </div>
 
+
+
+                    <div class="fieldWrapper form-group owner-phone">
+                        <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
+                        {{ form.reporter_address_number|add_class:"form-control" }}
+                        {{ form.reporter_address_number.errors }}
+                    </div>
+
+                    <div class="fieldWrapper form-group owner-email">
+                        <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
+                        {{ form.reporter_street_name|add_class:"form-control" }}
+                        {{ form.reporter_street_name.errors }}
+                    </div>
+
+
+
+
                 <div class="fieldWrapper form-group">
                     {{ form.address.errors }}
                     <label for="{{ form.address.id_for_label }}">Address of problem:</label>
@@ -100,7 +130,7 @@
 
                 <div class="fieldWrapper form-group">
                     {{ form.problem.errors }}
-                    <label for="{{ form.problem.id_for_label }}">Description of problem:</label>
+                    <label for="{{ form.problem.id_for_label }}">Description:</label>
                     <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
                 </div>
 
@@ -123,16 +153,14 @@
                                 <table class="table table-hover table-bordered">
                                     <thead>
                                         <tr>
-                                            <th>Date</th>
+                                            <th>ID</th>
                                             <th>Source</th>
-                                            <th>Notes</th>
                                         </tr>
                                     </thead>
                                     {% for external_case in external_cases %}
                                         <tr>
                                             <td>{{ external_case.0 }}</td>
-                                            <td>{{ external_case.1 }}</td>
-                                            <td>{{ external_case.2 }}</td>
+                                            <td>{{ external_case.3 }}</td>
                                         </tr>
                                     {% endfor %}
                                 </table>
@@ -146,51 +174,33 @@
                     <label for="type">Type:</label>
                     <select class="form-control">
                         <option>Location</option>
-                        <option>Communication</option>
+                        <option>Information</option>
                     </select>
                 </div>
 
-<!--            TODO: need to implement this at view and db level -->
-                <div class="form-group">
-                    <label for="tags">Tags:</label>
-                    <input type="text" class="form-control" id="exampleInputEmail1" placeholder="">
+                <div class="fieldWrapper form-group">
+                    <label for="{{ form.resolution.id_for_label }}">Tags:</label>
+                    {{ form.tags|add_class:"form-control" }}
+                    {{ form.tags.errors }}
                 </div>
 
-<!--                 <div class="fieldWrapper form-group">
-                    {{ form.assignee.errors }}
-                    <label for="{{ form.assignee.id_for_label }}">Assignee:</label>
-                    {{ form.assignee|add_class:"form-control" }}
-                </div>
- -->
 <!--            TODO: need to implement this at database level -->
                 <div class="form-group">
                     <label for="next_action">Next Action:</label>
                     <select class="form-control">
                         <option>----------</option>
                         <option>Investigate</option>
-                        <option>Forward</option>
-                        <option>Reoslve</option>
+<!--                         <option>Forward</option> -->
+                        <option>Resolve</option>
                     </select>
                 </div>
 
-                <!-- <div class="dropdown pull-right">
-                    <button type="submit" class="btn btn-success btn-lg pull-right dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        Next Action
-                        <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                        <li><a href="/workflow/call/180">Investigate</a></li>
-                        <li><a href="#">Forward</a></li>
-                        <li><a href="#">Resolve</a></li>
-                    </ul>
-                </div> -->
-
                 <div class="pull-right">
-<!--                     <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button> -->
-                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                    <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
+<!--                     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
                         Save
                     </button>
-
+ -->
                 </div>
 
             </form>

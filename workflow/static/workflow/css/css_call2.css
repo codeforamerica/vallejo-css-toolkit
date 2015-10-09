@@ -23,3 +23,17 @@ th, td { text-align: center; }
 .fa-list-item {
     float: right;
 }
+
+.owner-phone, .owner-email {
+    width: 48%;
+    float: right;
+    display: inline-block;
+}
+
+.owner-email {
+    float: right;
+}
+
+.owner-phone {
+    float: left;
+}

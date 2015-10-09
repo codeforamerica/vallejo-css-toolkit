@@ -1,6 +1,7 @@
-import traceback
 import logging
+import traceback
 from itertools import chain
+from datetime import datetime
 
 import usaddress
 
@@ -10,15 +11,15 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
 
-from intake.models import Call
-from intake.forms import CallForm
-from workflow.sql import CALLS_DATA_SQL
 from common.datatables import get_datatables_data
-from intake.models import CallAuditItem, STATUS_CHOICES
-from workflow.sql import AUDIT_LOG_DATA_SQL
 
-from workflow.models import CSSCall, PDCase, CRWCase, CSSCase
+# from intake.models import Call
+# from intake.forms import CallForm
+# from intake.models import CallAuditItem, STATUS_CHOICES
+
 from workflow.forms import CSSCallForm
+from workflow.sql import CALLS_DATA_SQL, AUDIT_LOG_DATA_SQL
+from workflow.models import CSSCall, PDCase, CRWCase, CSSCase
 
 log = logging.getLogger('consolelogger')
 
@@ -27,10 +28,10 @@ CALLS_IDX_COLUMN_MAP = ['id', 'call_time', 'caller_name', 'caller_number', 'prob
 
 @login_required(login_url='/admin/login/')
 def add_call(request):
-    form = CSSCallForm(request.POST or None)
+    form = CSSCallForm(request.POST or None, initial={'reported_datetime': datetime.now()})
     if form.is_valid():
         call = form.save()
-        messages.add_message(request, messages.SUCCESS, 'Call successfully updated.')
+        messages.add_message(request, messages.SUCCESS, 'Report successfully added.')
 
         return HttpResponseRedirect('/workflow/call/%d' % call.id)
 
@@ -40,10 +41,12 @@ def add_call(request):
 def call(request, call_id):
     instance = get_object_or_404(CSSCall, id=call_id)
     form = CSSCallForm(request.POST or None, instance=instance)
+
     pd_cases = []
     crw_cases = []
     css_cases = []
 
+    # TODO, join this on the actual csscall address number and street name
     tagged = usaddress.tag(instance.address)
     if tagged and tagged[1] == 'Street Address':
         address_number = tagged[0].get('AddressNumber')
@@ -51,16 +54,37 @@ def call(request, call_id):
         if address_number and address_number.isdigit() and street_name:
             pd_cases = PDCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
             crw_cases = CRWCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
-            css_cases = CSSCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
+            # css_cases = CSSCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
 
-    messages.add_message(request, messages.SUCCESS, form.is_valid())
+            pd_cases = [list(c) + ['RMS'] for c in pd_cases]
+            crw_cases = [list(c) + ['CRW'] for c in crw_cases]
+
+    # TODO, join this on the actual csscall address number and street name
+    if instance.address:
+        css_calls = CSSCall.objects.filter(address=instance.address).values_list('id', 'reported_datetime')
+    else:
+        css_calls = [(instance.id, instance.reported_datetime)]
+
+    if form.errors:
+        messages.add_message(request, messages.ERROR, form.errors)
+
     if form.is_valid():
         call = form.save()
-        messages.add_message(request, messages.SUCCESS, 'Call successfully updated.')
+        messages.add_message(request, messages.SUCCESS, 'Report successfully updated.')
 
         return HttpResponseRedirect('/workflow/call/%d' % call.id)
 
-    return render(request, 'workflow/css_call.html', {'form': form, 'css_cases': css_cases, 'external_cases': list(chain(pd_cases, css_cases, crw_cases))})
+    return render(
+        request,
+        'workflow/css_call.html',
+        {
+            'id': instance.id,
+            'form': form,
+            'css_cases': css_cases,
+            'external_cases': list(chain(pd_cases, crw_cases)),
+            'css_calls': css_calls
+        }
+    )
 
 # @login_required(login_url='/admin/login/')
 # def call(request, call_id):

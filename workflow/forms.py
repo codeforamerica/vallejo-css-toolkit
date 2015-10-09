@@ -14,20 +14,20 @@ class StatusModelChoiceField(forms.ModelChoiceField):
 
 class CSSCallForm(forms.ModelForm):
 
-    assignee = UserModelChoiceField(queryset=User.objects.all())
-
     class Meta:
         model = CSSCall
 
         fields = (
-            'id',
             'name',
             'address',
             'phone',
             'problem',
             'date',
             'resolution',
-            'assignee'
+            'reported_datetime',
+            'tags',
+            'reporter_address_number',
+            'reporter_street_name'
         )
 
 class CSSCaseDetailsForm(forms.ModelForm):
