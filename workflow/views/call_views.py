@@ -54,7 +54,7 @@ def call(request, call_id):
         if address_number and address_number.isdigit() and street_name:
             pd_cases = PDCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
             crw_cases = CRWCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
-            # css_cases = CSSCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
+            css_cases = CSSCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
 
             pd_cases = [list(c) + ['RMS'] for c in pd_cases]
             crw_cases = [list(c) + ['CRW'] for c in crw_cases]
