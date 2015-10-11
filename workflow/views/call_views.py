@@ -23,7 +23,23 @@ from workflow.models import CSSCall, PDCase, CRWCase, CSSCase
 
 log = logging.getLogger('consolelogger')
 
-CALLS_IDX_COLUMN_MAP = ['id', 'call_time', 'caller_name', 'caller_number', 'problem_address', 'status', 'assignee', 'raw_id', 'count', 'tcount']
+CALLS_IDX_COLUMN_MAP = [
+    'id',
+    'reported_datetime',
+    'reported_datetime_link',
+    'caller_name',
+    'caller_name_link'
+    'caller_number',
+    'caller_number_link',
+    'problem_address',
+    'problem_address_link',
+    'status',
+    'status_link',
+    'resolution',
+    'resolution_link',
+    'count',
+    'tcount'
+]
 
 
 @login_required(login_url='/admin/login/')
@@ -41,6 +57,8 @@ def add_call(request):
 def call(request, call_id):
     instance = get_object_or_404(CSSCall, id=call_id)
     form = CSSCallForm(request.POST or None, instance=instance)
+
+    print form
 
     pd_cases = []
     crw_cases = []
