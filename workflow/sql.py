@@ -70,33 +70,56 @@ CURRENT_USER_ASSIGNMENTS_SQL = """
     """
 
 CALLS_DATA_SQL = """
-    SET TIME ZONE 'America/Los_Angeles';
-
     WITH data AS (
         SELECT
-            '<a href="/workflow/call/' || c.id || '">' || c.id || '</a>'AS id,
-            c.id AS raw_id,
-            '<a href="/workflow/call/' || c.id || '">' || c.date  || '</a>' AS call_time,
-            c.name::VARCHAR AS caller_name,
-            c.phone::VARCHAR AS caller_number,
-            c.address::VARCHAR AS problem_address,
-            c.problem::VARCHAR AS status,
-            c.resolution AS assignee
+            c.id AS id,
+
+            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.reported_datetime AT TIME ZONE 'America/Los_Angeles'  || '</a>', '') AS reported_datetime_link,
+            c.reported_datetime AT TIME ZONE 'America/Los_Angeles' AS reported_datetime,
+
+            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.name  || '</a>', '') AS caller_name_link,
+            c.name AS caller_name,
+
+            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.phone  || '</a>', '') AS caller_number_link,
+            c.phone AS caller_number,
+
+            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.address  || '</a>', '') AS problem_address_link,
+            c.address AS problem_address,
+
+            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.problem  || '</a>', '') AS status_link,
+            c.problem AS status,
+
+            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.resolution  || '</a>', '') AS resolution_link,
+            c.resolution AS resolution
+
         FROM workflow_csscall as c
     ), total_count AS (
         SELECT COUNT(*) as tcount FROM workflow_csscall
     )
     SELECT
         data.id,
-        data.call_time,
+
+        data.reported_datetime,
+        data.reported_datetime_link,
+
         data.caller_name,
+        data.caller_name_link,
+
         data.caller_number,
+        data.caller_number_link,
+
         data.problem_address,
+        data.problem_address_link,
+
         data.status,
-        data.assignee,
-        data.raw_id,
+        data.status_link,
+
+        data.resolution,
+        data.resolution_link,
+
         COUNT(*) OVER(),
         total_count.tcount
+
     FROM data, total_count
     %s
     ORDER BY %s %s
