@@ -58,8 +58,6 @@ def call(request, call_id):
     instance = get_object_or_404(CSSCall, id=call_id)
     form = CSSCallForm(request.POST or None, instance=instance)
 
-    print form
-
     pd_cases = []
     crw_cases = []
     css_cases = []
