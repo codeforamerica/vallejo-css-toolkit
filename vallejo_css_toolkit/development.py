@@ -12,3 +12,9 @@ DATABASES = {
 }
 
 DEBUG = True
+
+STATIC_LIB_BASE = "/static/libs/"
+
+SETTINGS_EXPORT = [
+    'STATIC_LIB_BASE',
+]
