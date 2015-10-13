@@ -6,3 +6,4 @@ dataload.sh
 us-ca-solano_county*
 TODO.txt
 data/*
+static/libs
