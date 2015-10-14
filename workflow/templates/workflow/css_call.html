@@ -11,8 +11,14 @@
 <script src="{{ settings.STATIC_LIB_BASE }}moment/min/moment.min.js"></script>
 <script src="{{ settings.STATIC_LIB_BASE }}eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 
+<script type='text/javascript' src="{% static "workflow/js/typeahead.bundle.js" %}"></script>
+
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/css_call2.css" %}"/>
+
+<script type='text/javascript' src="{% static "workflow/js/street_names.js" %}"></script>
+<script type='text/javascript' src="{% static "workflow/js/call.js" %}"></script>
+
 {% endblock %}
 
 {% block body %}
@@ -134,10 +140,15 @@
                     {{ form.reporter_address_number.errors }}
                 </div>
 
-                <div class="fieldWrapper form-group owner-email">
+<!--                 <div class="fieldWrapper form-group owner-email">
                     <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
                     {{ form.reporter_street_name|add_class:"form-control" }}
                     {{ form.reporter_street_name.errors }}
+                </div>
+ -->
+                <div class="form-group owner-email" id="reporter-street-name-selector">
+                    <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
+                    <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="typeahead form-control" type="text" placeholder="">
                 </div>
 
                 <div class="fieldWrapper form-group">

@@ -93,7 +93,6 @@ $(document).ready(function(){
     // TODO: get these names and departments from the db:
     var userList = ['Ofc. Hans Williams (CSS)', 'Cpl. John Garcia (CSS)', 'Eli Flushman (CAO)'];
 
-
     $('#assignee-selector .typeahead').typeahead({
         hint: true,
         highlight: true,
