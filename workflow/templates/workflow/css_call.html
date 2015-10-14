@@ -102,25 +102,25 @@
                 </div>
  -->
 
-            <div class="form-group">
-                <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
-                <div class='input-group date' id='datetimepicker'>
-                    <input type='text' class="form-control" id="{{ form.reported_datetime.id_for_label }}" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'m/d/Y'}} {{form.reported_datetime.value|time:'H:i'}}"/>
-                    <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                    </span>
+                <div class="fieldWrapper form-group">
+                    <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
+                    <div class='input-group date' id='datetimepicker'>
+                        <input type='text' class="form-control" id="{{ form.reported_datetime.id_for_label }}" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'m/d/Y'}} {{form.reported_datetime.value|time:'H:i'}}"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                    {{ form.reported_datetime.errors }}
                 </div>
-                {{ form.reported_datetime.errors }}
-            </div>
-            <script type="text/javascript">
-                $(function () {
-                    $('#datetimepicker').datetimepicker({
-                        'collapse': true,
-                        'format': 'MM/DD/YYYY HH:mm',
-                        'useCurrent': false
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker').datetimepicker({
+                            'collapse': true,
+                            'format': 'MM/DD/YYYY HH:mm',
+                            'useCurrent': false
+                        });
                     });
-                });
-            </script>
+                </script>
 
                 <div class="fieldWrapper form-group">
                     {{ form.name.errors }}
@@ -146,12 +146,12 @@
                     {{ form.reporter_street_name.errors }}
                 </div>
  -->
-                <div class="form-group owner-email" id="reporter-street-name-selector">
+                <div class="fieldWrapper form-group owner-email" id="reporter-street-name-selector">
                     <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
-                    <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="typeahead form-control" type="text" placeholder="">
+                    <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="form-control typeahead" type="text" value="{{ form.reporter_street_name.value }}">
                 </div>
 
-                <div class="fieldWrapper form-group">
+                <div class="fieldWrapper form-group" id="problem-address-formfield">
                     {{ form.address.errors }}
                     <label for="{{ form.address.id_for_label }}">Address of problem:</label>
                     {{ form.address|add_class:"form-control" }}

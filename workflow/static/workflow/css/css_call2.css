@@ -24,18 +24,27 @@ th, td { text-align: center; }
     float: right;
 }
 
-.owner-phone, .owner-email {
-    width: 48%;
-    float: right;
+#problem-address-formfield{
+  width: 100%;
+  margin-top: 10px;
     display: inline-block;
-}
 
-.owner-email {
-    float: right;
 }
 
 .owner-phone {
+    width: 40%;
     float: left;
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+.owner-email {
+/*    overflow: hidden;*/
+    width: 40%;
+    float: left;
+    display: inline-block;
+    margin-bottom: 10px;
+    margin-left: 7%;
 }
 
 .tt-menu {
@@ -46,13 +55,13 @@ th, td { text-align: center; }
 .tt-query,
 .tt-hint {
   width: 396px;
-  height: 30px;
+  height: 34px;
   padding: 8px 12px;
   line-height: 30px;
   border: 1px solid #ccc;
-  -webkit-border-radius: 8px;
-     -moz-border-radius: 8px;
-          border-radius: 8px;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
   outline: none;
 }
 
