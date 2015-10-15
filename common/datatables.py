@@ -44,7 +44,7 @@ def get_datatables_data(request_dict, sql_base_query, column_map):
         cursor.execute(sql_base_query, [AsIs(search_string), sort_by, AsIs(sort_dir), offset, limit])
         data_results = cursor.fetchall()
     finally:
-        cursor.close()    
+        cursor.close()
 
     if data_results:
         records_filtered = data_results[0][-2]

@@ -1,3 +1,14 @@
+AUDIT_LOG_IDX_COLUMN_MAP = [
+    'call_time',
+    'timestamp',
+    'name',
+    'changed_field',
+    'old_value',
+    'new_value',
+    'count',
+    'tcount'
+]
+
 AUDIT_LOG_DATA_SQL = """
     SET TIME ZONE 'America/Los_Angeles';
 
@@ -34,40 +45,23 @@ AUDIT_LOG_DATA_SQL = """
     ;
     """
 
-# TODO: determine where we need this...
-CURRENT_USER_ASSIGNMENTS_SQL = """
-    SET TIME ZONE 'America/Los_Angeles';
-
-    SELECT
-        call_data.caller_number,
-        call_data.id,
-        call_data.call_time,
-        call_data.caller_name,
-        call_data.problem_address,
-        call_data.status,
-        update_data.last_updated
-    FROM (
-        SELECT
-            c.id,
-            c.caller_number AS caller_number,
-            COALESCE(TO_CHAR(c.call_time, 'MM-DD-YYYY HH24:MI'), '') AS call_time,
-            COALESCE(c.caller_name, '') AS caller_name,
-            COALESCE(c.problem_address, '') AS problem_address,
-            c.status AS status
-        FROM intake_call c
-        WHERE assignee_id = %s
-        ORDER BY c.call_time DESC
-    ) call_data
-    LEFT JOIN (
-        SELECT
-            COALESCE(TO_CHAR(MAX(cai.timestamp), 'MM-DD-YYYY HH24:MI:SS'), '') AS last_updated,
-            cai.call_id AS call_id
-        FROM intake_callaudititem cai
-        GROUP BY cai.call_id
-    ) update_data
-    ON call_data.id = update_data.call_id
-    ;
-    """
+CALLS_IDX_COLUMN_MAP = [
+    'id',
+    'reported_datetime',
+    'reported_datetime_link',
+    'caller_name',
+    'caller_name_link'
+    'caller_number',
+    'caller_number_link',
+    'problem_address',
+    'problem_address_link',
+    'status',
+    'status_link',
+    'resolution',
+    'resolution_link',
+    'count',
+    'tcount'
+]
 
 CALLS_DATA_SQL = """
     WITH data AS (
@@ -128,9 +122,16 @@ CALLS_DATA_SQL = """
     ;
     """
 
-TOTAL_CALLS_COUNT_SQL = """
-    SELECT COUNT(*) AS records_total FROM intake_call;
-    """
+CSS_CASES_IDX_COLUMN_MAP = [
+    'address',
+    'id',
+    'description',
+    'resolution',
+    'status_id',
+    'full_address',
+    'count',
+    'tcount'
+]
 
 CSS_CASES_DATA_SQL = """
     WITH data AS (
@@ -162,4 +163,3 @@ CSS_CASES_DATA_SQL = """
     LIMIT %s
     ;
     """
-

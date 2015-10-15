@@ -10,17 +10,17 @@ from common.datatables import get_datatables_data
 from workflow.models import CSSCase, CSSCaseAssignee
 
 from workflow.forms import CSSCaseDetailsForm, CSSCaseOwnerForm
-from workflow.sql import CSS_CASES_DATA_SQL
+from workflow.sql import CSS_CASES_DATA_SQL, CSS_CASES_IDX_COLUMN_MAP
 
 log = logging.getLogger('consolelogger')
+
 
 @login_required(login_url='/admin/login/')
 def cases_data(request):
     request_dict = dict(request.GET.items())
-    idx_column_map = ['address', 'id', 'description', 'resolution', 'status_id', 'full_address', 'count', 'tcount']
 
     try:
-        results = get_datatables_data(request_dict, CSS_CASES_DATA_SQL, idx_column_map)
+        results = get_datatables_data(request_dict, CSS_CASES_DATA_SQL, CSS_CASES_IDX_COLUMN_MAP)
     except Exception:
         # messages.add()
         log.error('Error encountered fetching from database: {}'.format(traceback.format_exc()))
@@ -28,18 +28,22 @@ def cases_data(request):
 
     return JsonResponse(results)
 
+
 @login_required(login_url='/admin/login/')
 def cases(request):
     return render(request, 'workflow/cases.html')
+
 
 @login_required(login_url='/admin/login/')
 def visit_queue_data(request):
     results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
     return JsonResponse(results)
 
+
 @login_required(login_url='/admin/login/')
 def visit_queue(request):
     return render(request, 'workflow/visit_queue.html')
+
 
 @login_required(login_url='/admin/login/')
 def case(request, case_id):
@@ -64,7 +68,7 @@ def case(request, case_id):
         case = contact_owner_form.save()
         messages.add_message(request, messages.SUCCESS, 'Case successfully updated.')
 
-        return HttpResponseRedirect('/workflow/case/%d' % case.id)        
+        return HttpResponseRedirect('/workflow/case/%d' % case.id)
 
     return render(
         request,
@@ -79,6 +83,7 @@ def case(request, case_id):
         }
     )
 
+
 @login_required(login_url='/admin/login/')
 def add_case_assignee(request):
     case_id = request.POST.get('case_id')
@@ -88,6 +93,7 @@ def add_case_assignee(request):
     CSSCaseAssignee.objects.get_or_create(assignee_name=assignee, case=get_object_or_404(CSSCase, id=case_id))
 
     return JsonResponse({'status': 'OK'})
+
 
 @login_required(login_url='/admin/login/')
 def remove_case_assignee(request):

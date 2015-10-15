@@ -4,13 +4,16 @@ from workflow.models import CSSCall, CSSCase, CaseStatus
 
 from django.contrib.auth.models import User
 
+
 class UserModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.get_full_name()
 
+
 class StatusModelChoiceField(forms.ModelChoiceField):
     def label_from_instance(self, obj):
         return obj.name
+
 
 class CSSCallForm(forms.ModelForm):
 
@@ -30,10 +33,11 @@ class CSSCallForm(forms.ModelForm):
             'reporter_street_name'
         )
 
+
 class CSSCaseDetailsForm(forms.ModelForm):
 
     assignee = UserModelChoiceField(queryset=User.objects.all())
-    status =  StatusModelChoiceField(queryset=CaseStatus.objects.all())
+    status = StatusModelChoiceField(queryset=CaseStatus.objects.all())
 
     class Meta:
         model = CSSCase
@@ -46,6 +50,7 @@ class CSSCaseDetailsForm(forms.ModelForm):
             'street_name'
         )
 
+
 class CSSCaseOwnerForm(forms.ModelForm):
 
     class Meta:
@@ -57,5 +62,3 @@ class CSSCaseOwnerForm(forms.ModelForm):
             'owner_phone',
             'owner_email'
         )
-
-

@@ -6,7 +6,7 @@ from datetime import datetime
 import usaddress
 
 from django.contrib import messages
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
@@ -18,28 +18,10 @@ from common.datatables import get_datatables_data
 # from intake.models import CallAuditItem, STATUS_CHOICES
 
 from workflow.forms import CSSCallForm
-from workflow.sql import CALLS_DATA_SQL, AUDIT_LOG_DATA_SQL
 from workflow.models import CSSCall, PDCase, CRWCase, CSSCase
+from workflow.sql import CALLS_DATA_SQL, AUDIT_LOG_DATA_SQL, CALLS_IDX_COLUMN_MAP, AUDIT_LOG_IDX_COLUMN_MAP
 
 log = logging.getLogger('consolelogger')
-
-CALLS_IDX_COLUMN_MAP = [
-    'id',
-    'reported_datetime',
-    'reported_datetime_link',
-    'caller_name',
-    'caller_name_link'
-    'caller_number',
-    'caller_number_link',
-    'problem_address',
-    'problem_address_link',
-    'status',
-    'status_link',
-    'resolution',
-    'resolution_link',
-    'count',
-    'tcount'
-]
 
 
 @login_required(login_url='/admin/login/')
@@ -52,6 +34,7 @@ def add_call(request):
         return HttpResponseRedirect('/workflow/call/%d' % call.id)
 
     return render(request, 'workflow/css_call.html', {'form': form})
+
 
 @login_required(login_url='/admin/login/')
 def call(request, call_id):
@@ -90,6 +73,7 @@ def call(request, call_id):
 
         return HttpResponseRedirect('/workflow/call/%d' % call.id)
 
+    # TODO: fix the history section at db and view level
     return render(
         request,
         'workflow/css_call.html',
@@ -118,7 +102,7 @@ def call(request, call_id):
 #                     old_assignee = get_object_or_404(User, id=old_value)
 #                     old_value = old_assignee.get_full_name()
 
-#                 if new_value:    
+#                 if new_value:
 #                     new_assignee = get_object_or_404(User, username=new_value)
 #                     new_value = new_assignee.get_full_name()
 
@@ -138,23 +122,25 @@ def call(request, call_id):
 
 #     return render(request, 'workflow/call.html', {'form': form})
 
+
 @login_required(login_url='/admin/login/')
 def call_audit_log_data(request):
     request_dict = dict(request.GET.items())
-    idx_column_map = ['call_time', 'timestamp', 'name', 'changed_field', 'old_value', 'new_value', 'count', 'tcount']
 
     try:
-        results = get_datatables_data(request_dict, AUDIT_LOG_DATA_SQL, idx_column_map)
-    except Exception:        
+        results = get_datatables_data(request_dict, AUDIT_LOG_DATA_SQL, AUDIT_LOG_IDX_COLUMN_MAP)
+    except Exception:
         # messages.add()
         log.error('Error encountered fetching from database: {}'.format(traceback.format_exc().replace('\n', '\t')))
         results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
 
     return JsonResponse(results)
 
+
 @login_required(login_url='/admin/login/')
 def call_audit_log(request):
     return render(request, 'workflow/call_audit_log.html')
+
 
 @login_required(login_url='/admin/login/')
 def calls_data(request):
@@ -168,6 +154,7 @@ def calls_data(request):
         results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
 
     return JsonResponse(results)
+
 
 @login_required(login_url='/admin/login/')
 def calls(request):

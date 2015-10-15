@@ -3,11 +3,10 @@
 {% load staticfiles %}
 
 {% block assets %}
+<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}jquery/dist/jquery.min.js"></script>
 
-<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<link href="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/js/bootstrap.min.js"></script>
 
 <script type='text/javascript' src="{% static "workflow/js/typeahead.bundle.js" %}"></script>
 
@@ -140,12 +139,6 @@
                         <button id="add-assignee-submit" style="margin-top: 10px;" class="btn btn-primary">Add</button>
                     </div>
 
-<!--                     <div class="fieldWrapper form-group">
-                        <label for="{{ form.assignee.id_for_label }}">Assignee:</label>
-                        {{ case_details_form.assignee|add_class:"form-control" }}
-                        {{ case_details_form.assignee.errors }}
-                    </div>
- -->
                     <div class="fieldWrapper form-group">
                         <label for="{{ form.status.id_for_label }}">Status:</label>
                         {{ case_details_form.status|add_class:"form-control" }}

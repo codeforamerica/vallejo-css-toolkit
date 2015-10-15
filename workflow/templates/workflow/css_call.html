@@ -3,13 +3,13 @@
 {% load staticfiles %}
 
 {% block assets %}
-<script src="{{ settings.STATIC_LIB_BASE }}jquery/dist/jquery.min.js"></script>
+<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}jquery/dist/jquery.min.js"></script>
 
 <link href="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/js/bootstrap.min.js"></script>
 
-<script src="{{ settings.STATIC_LIB_BASE }}moment/min/moment.min.js"></script>
-<script src="{{ settings.STATIC_LIB_BASE }}eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}moment/min/moment.min.js"></script>
+<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
 
 <script type='text/javascript' src="{% static "workflow/js/typeahead.bundle.js" %}"></script>
 
@@ -63,28 +63,6 @@
             </div>
         </div>
 
-<!--         TODO: reimplement modal -->
-        <!-- Modal -->
-<!--         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Send message to complainant</h4>
-              </div>
-              <div class="modal-body">
-                <textarea maxlength="256" class="form-control" rows="3"></textarea>
-
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" form="css-call-form" class="btn btn-primary" aria-haspopup="true" aria-expanded="true">Save and Send</button>
-
-              </div>
-            </div>
-          </div>
-        </div>
- -->
         <div class="col-md-8 col-md-offset-1 report">
             {% if form.reported_datetime.value and form.name.value %}
                 <h4> Reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h4>
@@ -94,13 +72,6 @@
                 {% csrf_token %}
 
                 {{ form.non_field_errors }}
-
-<!--                 <div class="fieldWrapper form-group">
-                    <label for="{{ form.name.id_for_label }}">Date and time reported:</label>
-                    <input class="form-control" id="{{ form.reported_datetime.id_for_label }}" maxlength="256" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'Y-m-d'}} {{form.reported_datetime.value|time:'H:i'}}">
-                    {{ form.reported_datetime.errors }}
-                </div>
- -->
 
                 <div class="fieldWrapper form-group">
                     <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
@@ -140,12 +111,6 @@
                     {{ form.reporter_address_number.errors }}
                 </div>
 
-<!--                 <div class="fieldWrapper form-group owner-email">
-                    <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
-                    {{ form.reporter_street_name|add_class:"form-control" }}
-                    {{ form.reporter_street_name.errors }}
-                </div>
- -->
                 <div class="fieldWrapper form-group owner-email" id="reporter-street-name-selector">
                     <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
                     <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="form-control typeahead" type="text" value="{{ form.reporter_street_name.value }}">
@@ -173,7 +138,6 @@
                     {{ form.date|add_class:"form-control" }}
                 </div>
 
-<!--         TODO: fix the history section at db and view level-->
                 {% if external_cases %}
                     <div class="form-group">
                         <label for="exampleInputEmail1">History lookup:</label>
@@ -213,24 +177,8 @@
                     {{ form.tags.errors }}
                 </div>
 
-<!--            TODO: need to implement this at database level -->
-
-<!--                 <div class="form-group">
-                    <label for="next_action">Next Action:</label>
-                    <select class="form-control">
-                        <option></option>
-                        <option>Investigate</option>
-                        <option>Forward</option>
-                        <option>Resolve</option>
-                    </select>
-                </div>
- -->
                 <div class="pull-right">
                     <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
-<!--                     <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-                        Save
-                    </button>
- -->
                 </div>
 
             </form>
