@@ -1,3 +1,4 @@
+import json
 import logging
 
 import twilio.twiml
@@ -7,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django_twilio.decorators import twilio_view
 
-from intake.models import Call
+from intake.models import Call, TypeformSubmission
 # from intake.utils import create_call, update_call
 
 log = logging.getLogger('consolelogger')
@@ -33,12 +34,14 @@ def welcome(request):
 
     return resp
 
+
 @twilio_view
 def sms_reply(request):
     resp = twilio.twiml.Response()
     resp.message("Thank you for your message. We appreciate your input.")
 
     return resp
+
 
 @twilio_view
 def handle_name(request):
@@ -57,6 +60,7 @@ def handle_name(request):
 
     return resp
 
+
 @twilio_view
 def handle_name_transcription(request):
     call_sid = request.POST.get('CallSid', None)
@@ -68,6 +72,7 @@ def handle_name_transcription(request):
     call.save()
 
     return JsonResponse({'status': 'OK'})
+
 
 @twilio_view
 def handle_feedback_pref(request):
@@ -88,6 +93,7 @@ def handle_feedback_pref(request):
         g.say("Please enter your preferred phone number to receive updates, beginning with the area code.")
 
     return resp
+
 
 @twilio_view
 def handle_feedback_number(request):
@@ -111,6 +117,7 @@ def handle_feedback_number(request):
     )
 
     return resp
+
 
 @twilio_view
 def handle_problem_address(request):
@@ -136,6 +143,7 @@ def handle_problem_address(request):
 
     return resp
 
+
 @twilio_view
 def handle_problem_address_transcription(request):
     call_sid = request.POST.get('CallSid', None)
@@ -147,6 +155,7 @@ def handle_problem_address_transcription(request):
     call.save()
 
     return JsonResponse({'status': 'OK'})
+
 
 @twilio_view
 def handle_problem_description(request):
@@ -163,6 +172,7 @@ def handle_problem_description(request):
 
     return resp
 
+
 @twilio_view
 def handle_problem_description_transcription(request):
     call_sid = request.POST.get('CallSid', None)
@@ -175,8 +185,11 @@ def handle_problem_description_transcription(request):
 
     return JsonResponse({'status': 'OK'})
 
+
 @csrf_exempt
 def handle_typeform(request):
     log.info(request.POST)
+
+    TypeformSubmission.objects.create(typeform_json=json.dumps(request.POST))
 
     return JsonResponse({'status': 'OK'})

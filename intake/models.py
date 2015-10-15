@@ -25,6 +25,7 @@ CONTACT_PREFERENCES_CHOICES = (
     (CALL_CONTACT_PREFERENCE, 'Call'),
 )
 
+
 class Call(models.Model):
     call_sid = models.CharField(max_length=256, null=True)
     caller_name = models.CharField(max_length=256, null=True, blank=True)
@@ -53,6 +54,7 @@ class Call(models.Model):
             self.call_time = datetime.datetime.utcnow()
         super(Call, self).save(*args, **kwargs)
 
+
 class CallAuditItem(models.Model):
     user = models.ForeignKey(User)
     call = models.ForeignKey(Call)
@@ -60,3 +62,7 @@ class CallAuditItem(models.Model):
     changed_field = models.CharField(max_length=256, null=True, blank=True)
     old_value = models.CharField(max_length=256, null=True, blank=True)
     new_value = models.CharField(max_length=256, null=True, blank=True)
+
+
+class TypeformSubmission(models.Model):
+    typeform_json = models.TextField(null=True)
