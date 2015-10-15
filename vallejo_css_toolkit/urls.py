@@ -18,6 +18,9 @@ urlpatterns = patterns('',
     # one-off for people to text in questions
     url(r'^sms_reply/$', 'intake.views.sms_reply', name='sms_reply'),
 
+    # endpoint for zapier to post typeform submissions to
+    url(r'^handle_typeform/$', 'intake.views.handle_typeform', name='handle_typeform'),
+
     # TODO: add case audit items to audit log
 
     # landing page view

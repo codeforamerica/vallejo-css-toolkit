@@ -1,3 +1,5 @@
+import logging
+
 import twilio.twiml
 
 from django.http import JsonResponse
@@ -5,6 +7,8 @@ from django_twilio.decorators import twilio_view
 
 from intake.models import Call
 # from intake.utils import create_call, update_call
+
+log = logging.getLogger('consolelogger')
 
 
 @twilio_view
@@ -166,5 +170,10 @@ def handle_problem_description_transcription(request):
     call.problem_description = description_transcription
 
     call.save()
+
+    return JsonResponse({'status': 'OK'})
+
+def handle_typeform(request):
+    log.info(request.POST)
 
     return JsonResponse({'status': 'OK'})
