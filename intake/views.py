@@ -3,6 +3,8 @@ import logging
 import twilio.twiml
 
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+
 from django_twilio.decorators import twilio_view
 
 from intake.models import Call
@@ -173,6 +175,7 @@ def handle_problem_description_transcription(request):
 
     return JsonResponse({'status': 'OK'})
 
+@csrf_exempt
 def handle_typeform(request):
     log.info(request.POST)
 
