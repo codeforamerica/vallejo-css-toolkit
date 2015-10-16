@@ -212,7 +212,7 @@ def handle_typeform(request):
         time_of_day_occurs = request.POST.get("What time of day does the problem occur?")[0]
 
         num_people_involved = request.POST.get("How many people are involved?")[0]
-        safety_concerns = request.POST.get("Are there any safety concerns at the property that we should know about?")[0]
+        safety_concerns = request.POST.get("Are there safety concerns at the location you are reporting?")[0]
 
         reported_datetime = datetime.utcnow()
 
