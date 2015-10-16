@@ -3,6 +3,66 @@ body {
     padding-bottom: 100px;
 }
 
+.navbar-default .container-fluid{
+  padding-right:50px;
+  padding-left:50px;
+}
+.navbar-default{
+  border-color:#e8e8e8;
+  border-width: 2px;
+  background-color:#ffffff;
+}
+
+.navbar-default .navbar-toggle{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.navbar-default .navbar-brand{
+  padding-top:30px;
+  padding-bottom:30px;
+  font-weight:bold;
+  color:#2965A8;
+  font-size:24px;
+}
+
+.navbar-default .navbar-nav>li>a{
+  color:#1F4E81;
+  padding-top:30px;
+  padding-bottom: 30px;
+  padding-right: 25px;
+}
+
+.navbar-default .navbar-nav>li>a:hover{
+  background-color:#F6661B;
+  color:#ffffff;
+}
+
+.navbar-default .navbar-nav>.active>a{
+  font-weight:bold;
+  background-color:#ffffff;
+  color:#F6661B;
+}
+
+.navbar-default .navbar-nav>.active>a:hover{
+  background-color:#ffffff;
+  color:#F6661B;
+}
+
+.navbar-default li{
+  font-size:14px;
+}
+
+a#user{
+  border-left:2px solid #e8e8e8;
+  padding-left:50px;
+  padding-right:15px;
+}
+
+a#properties{
+  padding-right:30px;
+}
+
 [class*="layout-minor"] {
     width: 26%;
     float: left;
@@ -11,7 +71,7 @@ body {
 [class*="block-"][class*="layout-minor"] {
     width: calc(26% - 36px);
     }
-    
+
 .layout-minor-invert {
     float: right;
     clear: none;
@@ -99,7 +159,7 @@ body {
 
 .error {
     color: #8A1F11;
-    border-color: #FBC2C4; 
+    border-color: #FBC2C4;
     background-color: #FBE3E4;
     text-align: center;
 }

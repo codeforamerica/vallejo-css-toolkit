@@ -30,7 +30,7 @@
         <div class="col-md-8">
             {% if form.address.value %}
                 <h1>{{ form.address.value }}</h1>
-            {% endif %}    
+            {% endif %}
     </div>
 
         <div class="col-md-4">
@@ -50,7 +50,7 @@
     </div>
 
     <div class="row">
-        <div class="col-md-3 pane-selectors">
+        <div class="col-md-4 pane-selectors">
             <div class="list-group">
                 <h5 class="list-group-item">All reports for this address</h5>
                 {% for css_call in css_calls %}
@@ -62,6 +62,7 @@
                 {% endfor %}
             </div>
         </div>
+
 
 <!--         TODO: reimplement modal -->
         <!-- Modal -->
@@ -85,7 +86,7 @@
           </div>
         </div>
  -->
-        <div class="col-md-8 col-md-offset-1 report">
+        <div class="col-md-7 col-md-offset-1 report">
             {% if form.reported_datetime.value and form.name.value %}
                 <h4> Reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h4>
             {% endif %}
@@ -134,11 +135,18 @@
                     {{ form.phone|add_class:"form-control" }}
                 </div>
 
-                <div class="fieldWrapper form-group owner-phone">
-                    <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
-                    {{ form.reporter_address_number|add_class:"form-control" }}
-                    {{ form.reporter_address_number.errors }}
-                </div>
+                <div class="row">
+                  <div class="fieldWrapper form-group owner-phone col-md-6">
+                      <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
+                      {{ form.reporter_address_number|add_class:"form-control" }}
+                      {{ form.reporter_address_number.errors }}
+                  </div>
+
+                  <div class="fieldWrapper form-group owner-email col-md-6" id="reporter-street-name-selector">
+                      <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
+                      <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="form-control typeahead" type="text" value="{{ form.reporter_street_name.value }}">
+                  </div>
+                <div>
 
 <!--                 <div class="fieldWrapper form-group owner-email">
                     <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
@@ -146,10 +154,6 @@
                     {{ form.reporter_street_name.errors }}
                 </div>
  -->
-                <div class="fieldWrapper form-group owner-email" id="reporter-street-name-selector">
-                    <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
-                    <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="form-control typeahead" type="text" value="{{ form.reporter_street_name.value }}">
-                </div>
 
                 <div class="fieldWrapper form-group" id="problem-address-formfield">
                     {{ form.address.errors }}
@@ -235,6 +239,7 @@
 
             </form>
         </div>
+      </div>
 
     </div>
 </div>

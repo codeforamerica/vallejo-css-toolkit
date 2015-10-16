@@ -1,3 +1,7 @@
+.container{
+  width:1000px;
+}
+
 .nav-pills{
   margin-top: 30px;
 }
@@ -27,8 +31,7 @@ th, td { text-align: center; }
 #problem-address-formfield{
   width: 100%;
   margin-top: 10px;
-    display: inline-block;
-
+  display: inline-block;
 }
 
 .owner-phone {
