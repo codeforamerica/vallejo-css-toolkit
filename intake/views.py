@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django_twilio.decorators import twilio_view
 
-from intake.models import Call, TypeformSubmission
+from intake.models import Call, TypeformSubmission, TypeformAsset
 from workflow.models import CSSCall
 # from intake.utils import create_call, update_call
 
@@ -216,9 +216,11 @@ def handle_typeform(request):
         safety_concerns = request.POST.get("Are there safety concerns at the location you are reporting?")
 
         utc = pytz.utc
-        reported_datetime = utc.localize(datetime.datetime.utcnow())
+        reported_datetime = utc.localize(datetime.utcnow())
 
-        CSSCall.objects.create(
+        asset_url = request.POST.get("Do you have photos of the problem?")
+
+        c = CSSCall.objects.create(
             address=address,
             phone=phone,
             name=name,
@@ -232,6 +234,12 @@ def handle_typeform(request):
             safety_concerns=safety_concerns,
             reported_datetime=reported_datetime
         )
+
+        if asset_url:
+            TypeformAsset.objects.create(
+                css_report=c,
+                asset_url=asset_url
+            )
 
     except Exception:
         log.error(traceback.format_exc())

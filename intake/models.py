@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
+from workflow.models import CSSCall
 
 UNREVIEWED_STATUS = 1
 ACTIVE_STATUS = 2
@@ -53,6 +54,11 @@ class Call(models.Model):
         if not self.call_time:
             self.call_time = datetime.datetime.utcnow()
         super(Call, self).save(*args, **kwargs)
+
+
+class TypeformAsset(models.Model):
+    css_report = models.ForeignKey(CSSCall)
+    asset_url = models.CharField(max_length=256, null=True, blank=True)
 
 
 class CallAuditItem(models.Model):
