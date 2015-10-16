@@ -7,13 +7,13 @@ function removeAssignee (e, tableCell, assignee) {
     }).done( function() {
         tableCell.remove();
     });
-};
+}
 
 $(document).ready(function(){
 
     function getCookie(name) {
         var cookieValue = null;
-        if (document.cookie && document.cookie != '') {
+        if (document.cookie && document.cookie !== '') {
             var cookies = document.cookie.split(';');
             for (var i = 0; i < cookies.length; i++) {
                 var cookie = jQuery.trim(cookies[i]);
@@ -44,13 +44,13 @@ $(document).ready(function(){
         $(this).addClass("active");
         var paneId =  $(this).attr('href');
         $(".tab-pane").hide();
-        $(paneId).show();     
+        $(paneId).show();
     });
 
     $("#add-assignee-submit").click(function (e) {
         e.preventDefault();
         var assignee = $("#case-details-form")[0][7].value;
-        if (assignee != "") {
+        if (assignee !== "") {
             $.ajax({
                 "url": "/workflow/add_case_assignee/",
                 "type": "POST",

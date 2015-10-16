@@ -26,30 +26,32 @@
 {% load widget_tweaks %}
 
 <div class="container">
+
+    <!-- Address, reporter and reported datetime and nav tabs -->
     <div class="row subnav">
         <div class="col-md-8">
             {% if form.address.value %}
                 <h1>{{ form.address.value }}</h1>
-            {% endif %}    
-    </div>
+            {% endif %}
+            {% if form.reported_datetime.value and form.name.value %}
+                <h5 class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h5>
+            {% endif %}
+        </div>
 
         <div class="col-md-4">
             <ul class="nav nav-pills pull-right">
                 <li role="presentation" class="active"><a href="#">Reports</a></li>
-
                 {% if css_cases %}
                     <li role="presentation"><a href="/workflow/case/{{css_cases.0.0}}">Investigation</a></li>
                 {% else %}
                     <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
                 {% endif %}
-
                 <li role="presentation" class="disabled"><a href="#">Case</a></li>
             </ul>
         </div>
-
     </div>
 
-    <div class="row">
+<!--     <div class="row">
         <div class="col-md-3 pane-selectors">
             <div class="list-group">
                 <h5 class="list-group-item">All reports for this address</h5>
@@ -62,127 +64,148 @@
                 {% endfor %}
             </div>
         </div>
+ -->
 
-        <div class="col-md-8 col-md-offset-1 report">
-            {% if form.reported_datetime.value and form.name.value %}
-                <h4> Reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h4>
-            {% endif %}
+        <!-- Tab pane selectors -->
+        <div class="col-md-3 pane-selectors">
+            <div class="list-group">
+                <h5 class="list-group-item list-group-item-title">Report</h5>
+                <a href="#report-details" class="list-group-item active">Report Details<span class="fa fa-list-item fa-angle-right"></span></a>
+                <a href="#report-attachments" class="list-group-item">Attachments<span class="fa fa-list-item fa-angle-right"></span></a>
+                <a href="#report-history" class="list-group-item">History<span class="fa fa-list-item fa-angle-right"></span></a>
 
-            <form class="form-contact" id="css-call-form" method="POST">
-                {% csrf_token %}
+            </div>
+        </div>
 
-                {{ form.non_field_errors }}
+        <!-- Report Details pane -->
+        <div class="tab-pane" id="report-details">
+            <div class="col-md-8 col-md-offset-1 report">
+                <h3>Report Details</h3>
 
-                <div class="fieldWrapper form-group">
-                    <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
-                    <div class='input-group date' id='datetimepicker'>
-                        <input type='text' class="form-control" id="{{ form.reported_datetime.id_for_label }}" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'m/d/Y'}} {{form.reported_datetime.value|time:'H:i'}}"/>
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
+                <form class="form-contact" id="css-call-form" method="POST">
+                    {% csrf_token %}
+
+                    {{ form.non_field_errors }}
+
+                    <div class="fieldWrapper form-group">
+                        <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
+                        <div class='input-group date' id='datetimepicker'>
+                            <input type='text' class="form-control" id="{{ form.reported_datetime.id_for_label }}" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'m/d/Y'}} {{form.reported_datetime.value|time:'H:i'}}"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                        {{ form.reported_datetime.errors }}
                     </div>
-                    {{ form.reported_datetime.errors }}
-                </div>
-                <script type="text/javascript">
-                    $(function () {
-                        $('#datetimepicker').datetimepicker({
-                            'collapse': true,
-                            'format': 'MM/DD/YYYY HH:mm',
-                            'useCurrent': false
+                    <script type="text/javascript">
+                        $(function () {
+                            $('#datetimepicker').datetimepicker({
+                                'collapse': true,
+                                'format': 'MM/DD/YYYY HH:mm',
+                                'useCurrent': false
+                            });
                         });
-                    });
-                </script>
+                    </script>
 
-                <div class="fieldWrapper form-group">
-                    {{ form.name.errors }}
-                    <label for="{{ form.name.id_for_label }}">Reporter name:</label>
-                    {{ form.name|add_class:"form-control" }}
-                </div>
+                    <div class="fieldWrapper form-group">
+                        {{ form.name.errors }}
+                        <label for="{{ form.name.id_for_label }}">Reporter name:</label>
+                        {{ form.name|add_class:"form-control" }}
+                    </div>
 
-                <div class="fieldWrapper form-group">
-                    {{ form.phone.errors }}
-                    <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
-                    {{ form.phone|add_class:"form-control" }}
-                </div>
+                    <div class="fieldWrapper form-group">
+                        {{ form.phone.errors }}
+                        <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
+                        {{ form.phone|add_class:"form-control" }}
+                    </div>
 
-                <div class="fieldWrapper form-group owner-phone">
-                    <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
-                    {{ form.reporter_address_number|add_class:"form-control" }}
-                    {{ form.reporter_address_number.errors }}
-                </div>
+                    <div class="fieldWrapper form-group owner-phone">
+                        <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
+                        {{ form.reporter_address_number|add_class:"form-control" }}
+                        {{ form.reporter_address_number.errors }}
+                    </div>
 
-                <div class="fieldWrapper form-group owner-email" id="reporter-street-name-selector">
-                    <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
-                    <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="form-control typeahead" type="text" value="{{ form.reporter_street_name.value }}">
-                </div>
+                    <div class="fieldWrapper form-group owner-email" id="reporter-street-name-selector">
+                        <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
+                        <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="form-control typeahead" type="text" value="{{ form.reporter_street_name.value }}">
+                    </div>
 
-                <div class="fieldWrapper form-group" id="problem-address-formfield">
-                    {{ form.address.errors }}
-                    <label for="{{ form.address.id_for_label }}">Address of problem:</label>
-                    {{ form.address|add_class:"form-control" }}
-                </div>
+                    <div class="fieldWrapper form-group" id="problem-address-formfield">
+                        {{ form.address.errors }}
+                        <label for="{{ form.address.id_for_label }}">Address of problem:</label>
+                        {{ form.address|add_class:"form-control" }}
+                    </div>
 
-                <div class="fieldWrapper form-group">
-                    {{ form.problem.errors }}
-                    <label for="{{ form.problem.id_for_label }}">Description:</label>
-                    <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
-                </div>
+                    <div class="fieldWrapper form-group">
+                        {{ form.problem.errors }}
+                        <label for="{{ form.problem.id_for_label }}">Description:</label>
+                        <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                    </div>
 
-                <div class="fieldWrapper form-group">
-                    {{ form.resolution.errors }}
-                    <label for="{{ form.resolution.id_for_label }}">Resolution:</label>
-                    {{ form.resolution|add_class:"form-control" }}
-                </div>
+                    <div class="fieldWrapper form-group">
+                        {{ form.resolution.errors }}
+                        <label for="{{ form.resolution.id_for_label }}">Resolution:</label>
+                        {{ form.resolution|add_class:"form-control" }}
+                    </div>
 
-                <div hidden="true" class="fieldWrapper form-group">
-                    {{ form.date|add_class:"form-control" }}
-                </div>
+                    <div hidden="true" class="fieldWrapper form-group">
+                        {{ form.date|add_class:"form-control" }}
+                    </div>
 
-                {% if external_cases %}
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">History lookup:</label>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table class="table table-hover table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Source</th>
-                                        </tr>
-                                    </thead>
-                                    {% for external_case in external_cases %}
-                                        <tr>
-                                            <td>{{ external_case.0 }}</td>
-                                            <td>{{ external_case.3 }}</td>
-                                        </tr>
-                                    {% endfor %}
-                                </table>
+                    {% if external_cases %}
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">History lookup:</label>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <table class="table table-hover table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Source</th>
+                                            </tr>
+                                        </thead>
+                                        {% for external_case in external_cases %}
+                                            <tr>
+                                                <td>{{ external_case.0 }}</td>
+                                                <td>{{ external_case.3 }}</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </table>
+                                </div>
                             </div>
                         </div>
+                    {% endif %}
+
+    <!--            TODO: need to implement this at view and db level -->
+                    <div class="form-group">
+                        <label for="type">Type:</label>
+                        <select class="form-control">
+                            <option>Location</option>
+                            <option>Information</option>
+                        </select>
                     </div>
-                {% endif %}
 
-<!--            TODO: need to implement this at view and db level -->
-                <div class="form-group">
-                    <label for="type">Type:</label>
-                    <select class="form-control">
-                        <option>Location</option>
-                        <option>Information</option>
-                    </select>
-                </div>
+                    <div class="fieldWrapper form-group">
+                        <label for="{{ form.resolution.id_for_label }}">Tags:</label>
+                        {{ form.tags|add_class:"form-control" }}
+                        {{ form.tags.errors }}
+                    </div>
 
-                <div class="fieldWrapper form-group">
-                    <label for="{{ form.resolution.id_for_label }}">Tags:</label>
-                    {{ form.tags|add_class:"form-control" }}
-                    {{ form.tags.errors }}
-                </div>
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
+                    </div>
 
-                <div class="pull-right">
-                    <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
-                </div>
+                </form>
+            </div>
 
-            </form>
-        </div>
+
+
+
+
+        </div>  <!-- end Report Details pane -->
+
+
+
 
     </div>
 </div>

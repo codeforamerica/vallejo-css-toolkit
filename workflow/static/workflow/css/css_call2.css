@@ -24,11 +24,29 @@ th, td { text-align: center; }
     float: right;
 }
 
+.list-group-item-title {
+  color: #fff;
+  background-color: #428bca;
+}
+
+.list-group-item {
+  border: none;
+}
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover  {
+  color: orange;
+  background-color: #fff;
+}
+
 #problem-address-formfield{
   width: 100%;
   margin-top: 10px;
     display: inline-block;
 
+}
+
+.reporter-subheader {
+  color: #777;
 }
 
 .owner-phone {
