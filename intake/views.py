@@ -224,7 +224,6 @@ def handle_typeform(request):
             reporter_street_name=reporter_street_name,
             problem_duration=problem_duration,
             reporter_alternate_contact=reporter_alternate_contact,
-            reported_before=reported_before,
             when_last_reported=when_last_reported,
             time_of_day_occurs=time_of_day_occurs,
             num_people_involved=num_people_involved,
