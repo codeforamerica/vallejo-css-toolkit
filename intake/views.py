@@ -3,6 +3,7 @@ import logging
 import traceback
 from datetime import datetime
 
+import pytz
 import twilio.twiml
 
 from django.http import JsonResponse
@@ -197,24 +198,25 @@ def handle_typeform(request):
 
         TypeformSubmission.objects.create(typeform_json=json.dumps(request.POST))
 
-        address = request.POST.get("Where is the problem occurring?")[0]
-        phone = request.POST.get("What is your phone number?")[0]
-        name = request.POST.get("What is your name?")[0]
-        problem = request.POST.get("Please describe what is happening.")[0]
-        reporter_street_name = request.POST.get("What is your home address?")[0]
-        problem_duration = request.POST.get("How long has the problem been occurring?")[0]
-        reporter_alternate_contact = request.POST.get("What is your email address?")[0]
-        reported_before = request.POST.get("Have you ever reported this problem before?")[0]
+        address = request.POST.get("Where is the problem occurring?")
+        phone = request.POST.get("What is your phone number?")
+        name = request.POST.get("What is your name?")
+        problem = request.POST.get("Please describe what is happening.")
+        reporter_street_name = request.POST.get("What is your home address?")
+        problem_duration = request.POST.get("How long has the problem been occurring?")
+        reporter_alternate_contact = request.POST.get("What is your email address?")
+        reported_before = request.POST.get("Have you ever reported this problem before?")
         if reported_before != "0":
-            when_last_reported = request.POST.get("When did you last report this problem?")[0]
+            when_last_reported = request.POST.get("When did you last report this problem?")
         else:
             when_last_reported = None
-        time_of_day_occurs = request.POST.get("What time of day does the problem occur?")[0]
+        time_of_day_occurs = request.POST.get("What time of day does the problem occur?")
 
-        num_people_involved = request.POST.get("How many people are involved?")[0]
-        safety_concerns = request.POST.get("Are there safety concerns at the location you are reporting?")[0]
+        num_people_involved = request.POST.get("How many people are involved?")
+        safety_concerns = request.POST.get("Are there safety concerns at the location you are reporting?")
 
-        reported_datetime = datetime.utcnow()
+        utc = pytz.utc
+        reported_datetime = utc.localize(datetime.datetime.utcnow())
 
         CSSCall.objects.create(
             address=address,
