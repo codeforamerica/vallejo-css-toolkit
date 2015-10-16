@@ -6,7 +6,7 @@ from datetime import datetime
 import usaddress
 
 from django.contrib import messages
-# from django.contrib.auth.models import User
+from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, JsonResponse
@@ -15,13 +15,15 @@ from common.datatables import get_datatables_data
 
 # from intake.models import Call
 # from intake.forms import CallForm
-# from intake.models import CallAuditItem, STATUS_CHOICES
+from intake.models import CallAuditItem
 
 from workflow.forms import CSSCallForm
 from workflow.models import CSSCall, PDCase, CRWCase, CSSCase
 from workflow.sql import CALLS_DATA_SQL, AUDIT_LOG_DATA_SQL, CALLS_IDX_COLUMN_MAP, AUDIT_LOG_IDX_COLUMN_MAP
 
 log = logging.getLogger('consolelogger')
+
+LOG_AUDIT_HISTORY = False
 
 
 @login_required(login_url='/admin/login/')
@@ -41,6 +43,26 @@ def call(request, call_id):
     instance = get_object_or_404(CSSCall, id=call_id)
     form = CSSCallForm(request.POST or None, instance=instance)
 
+    if form.errors:
+        messages.add_message(request, messages.ERROR, form.errors)
+
+    if form.is_valid():
+        call = form.save()
+
+        if LOG_AUDIT_HISTORY:
+
+            user = get_object_or_404(User, id=request.user.id)
+            for field, new_value in form.cleaned_data.iteritems():
+                old_value = form.initial.get(field)
+
+                if (old_value or new_value) and old_value != new_value:
+                    CallAuditItem.objects.create(user=user, call=call, changed_field=field, old_value=old_value, new_value=new_value)
+
+        messages.add_message(request, messages.SUCCESS, 'Report successfully updated.')
+
+        return HttpResponseRedirect('/workflow/calls')
+
+    # either the form was not valid, or we're just loading the page
     pd_cases = []
     crw_cases = []
     css_cases = []
@@ -64,14 +86,12 @@ def call(request, call_id):
     else:
         css_calls = [(instance.id, instance.reported_datetime)]
 
-    if form.errors:
-        messages.add_message(request, messages.ERROR, form.errors)
-
-    if form.is_valid():
-        call = form.save()
-        messages.add_message(request, messages.SUCCESS, 'Report successfully updated.')
-
-        return HttpResponseRedirect('/workflow/call/%d' % call.id)
+    # TODO: write the middleware to handle doc uploads
+    uploaded_docs = [
+        {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
+        {"name": 'Deed with signature', "filename": 'deed_updated.pdf', "added": "Sep, 16, 2015", "thumbnail_url": "http://placehold.it/120x120"},
+        {"name": 'Notice to evict - copy', "filename": 'eviction_notice_9_1_15.pdf', "added": "Sep. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"}
+    ]
 
     # TODO: fix the history section at db and view level
     return render(
@@ -82,45 +102,10 @@ def call(request, call_id):
             'form': form,
             'css_cases': css_cases,
             'external_cases': list(chain(pd_cases, crw_cases)),
-            'css_calls': css_calls
+            'css_calls': css_calls,
+            'uploaded_docs': uploaded_docs
         }
     )
-
-# @login_required(login_url='/admin/login/')
-# def call(request, call_id):
-#     instance = get_object_or_404(Call, id=call_id)
-#     form = CallForm(request.POST or None, instance=instance)
-
-#     if form.is_valid():
-#         call = form.save()
-#         user = get_object_or_404(User, id=request.user.id)
-#         for field, new_value in form.cleaned_data.iteritems():
-#             old_value = form.initial.get(field)
-
-#             if field == 'assignee':
-#                 if old_value:
-#                     old_assignee = get_object_or_404(User, id=old_value)
-#                     old_value = old_assignee.get_full_name()
-
-#                 if new_value:
-#                     new_assignee = get_object_or_404(User, username=new_value)
-#                     new_value = new_assignee.get_full_name()
-
-#             if field == 'status':
-#                 for status_choice in STATUS_CHOICES:
-#                     if old_value == status_choice[0]:
-#                         old_value = status_choice[1]
-#                     if new_value == status_choice[0]:
-#                         new_value = status_choice[1]
-
-#             if (old_value or new_value) and old_value != new_value:
-#                 CallAuditItem.objects.create(user=user, call=call, changed_field=field, old_value=old_value, new_value=new_value)
-
-#         messages.add_message(request, messages.SUCCESS, 'Call successfully updated.')
-
-#         return HttpResponseRedirect('/workflow/call/%d' % call.id)
-
-#     return render(request, 'workflow/call.html', {'form': form})
 
 
 @login_required(login_url='/admin/login/')

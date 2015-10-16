@@ -80,7 +80,7 @@
         <!-- Report Details pane -->
         <div class="tab-pane" id="report-details">
             <div class="col-md-8 col-md-offset-1 report">
-                <h3>Report Details</h3>
+                <h4>Report Details</h4>
 
                 <form class="form-contact" id="css-call-form" method="POST">
                     {% csrf_token %}
@@ -107,51 +107,112 @@
                         });
                     </script>
 
-                    <div class="fieldWrapper form-group">
-                        {{ form.name.errors }}
+                    <div class="form-group">
                         <label for="{{ form.name.id_for_label }}">Reporter name:</label>
                         {{ form.name|add_class:"form-control" }}
+                        {{ form.name.errors }}
                     </div>
 
-                    <div class="fieldWrapper form-group">
-                        {{ form.phone.errors }}
+                    <div class="form-group">
                         <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
                         {{ form.phone|add_class:"form-control" }}
+                        {{ form.phone.errors }}
                     </div>
 
-                    <div class="fieldWrapper form-group owner-phone">
+                    <div class="form-group address-number-field">
                         <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
                         {{ form.reporter_address_number|add_class:"form-control" }}
                         {{ form.reporter_address_number.errors }}
                     </div>
 
-                    <div class="fieldWrapper form-group owner-email" id="reporter-street-name-selector">
+                    <div class="form-group street-name-field">
                         <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
-                        <input id="{{ form.reporter_street_name.id_for_label }}" name="{{ form.reporter_street_name.html_name }}" class="form-control typeahead" type="text" value="{{ form.reporter_street_name.value }}">
+                        {{ form.reporter_street_name|add_class:"form-control typeahead" }}
+                        {{ form.reporter_street_name.errors }}
                     </div>
 
-                    <div class="fieldWrapper form-group" id="problem-address-formfield">
-                        {{ form.address.errors }}
+                    <div class="form-group">
                         <label for="{{ form.address.id_for_label }}">Address of problem:</label>
                         {{ form.address|add_class:"form-control" }}
+                        {{ form.address.errors }}
                     </div>
 
-                    <div class="fieldWrapper form-group">
-                        {{ form.problem.errors }}
+                    <div class="form-group">
                         <label for="{{ form.problem.id_for_label }}">Description:</label>
                         <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                        {{ form.problem.errors }}
                     </div>
 
-                    <div class="fieldWrapper form-group">
-                        {{ form.resolution.errors }}
-                        <label for="{{ form.resolution.id_for_label }}">Resolution:</label>
+                    <div class="form-group">
+                        <label for="{{ form.resolution.id_for_label }}">Notes:</label>
                         {{ form.resolution|add_class:"form-control" }}
+                        {{ form.resolution.errors }}
                     </div>
 
-                    <div hidden="true" class="fieldWrapper form-group">
+                    <!-- TODO: remove this -->
+                    <div hidden="true" class="form-group">
                         {{ form.date|add_class:"form-control" }}
                     </div>
 
+    <!--            TODO: need to implement this at view and db level -->
+                    <div class="form-group">
+                        <label for="type">Type:</label>
+                        <select class="form-control">
+                            <option>Location</option>
+                            <option>Information</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="{{ form.resolution.id_for_label }}">Tags:</label>
+                        {{ form.tags|add_class:"form-control" }}
+                        {{ form.tags.errors }}
+                    </div>
+
+                    <div class="pull-right">
+                        <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>  <!-- end Report Details pane -->
+
+        <!-- Report Attachments pane -->
+        <div class="tab-pane" id="report-attachments">
+            <div class="col-md-8 col-md-offset-1 report">
+                <h4>Report Attachments</h4>
+
+                {% for uploaded_doc in uploaded_docs %}
+                    <hr>
+                    <div class="row uploaded-doc">
+                        <img class="inline" src="{{ uploaded_doc.thumbnail_url }}">
+                        <ul class="inline doc-attrs">
+                            <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.name }}</h5></li>
+                            <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
+                            <li></li>
+                            <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.added }}</p></li>
+                        </ul>
+                    </div>
+
+                {% endfor %}
+
+                <hr>
+
+                <!-- TODO: write the middleware to handle file upload -->
+
+<!--                 <form id="file-upload-form">
+                    <h5>Upload a new file</h5>
+                    <input type="file" name="uploadDoc">
+                    <button class="btn btn-primary upload-submit-button" type="submit" form="file-upload-form" value="Submit">Submit</button>
+                </form>
+ -->
+            </div>
+        </div>  <!-- end Report Attachments pane -->
+
+        <!-- Report History pane -->
+        <div class="tab-pane" id="report-details">
+            <div class="col-md-8 col-md-offset-1 report">
+                <h4>Report History</h4>
                     {% if external_cases %}
                         <div class="form-group">
                             <label for="exampleInputEmail1">History lookup:</label>
@@ -175,37 +236,8 @@
                             </div>
                         </div>
                     {% endif %}
-
-    <!--            TODO: need to implement this at view and db level -->
-                    <div class="form-group">
-                        <label for="type">Type:</label>
-                        <select class="form-control">
-                            <option>Location</option>
-                            <option>Information</option>
-                        </select>
-                    </div>
-
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.resolution.id_for_label }}">Tags:</label>
-                        {{ form.tags|add_class:"form-control" }}
-                        {{ form.tags.errors }}
-                    </div>
-
-                    <div class="pull-right">
-                        <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
-                    </div>
-
-                </form>
             </div>
-
-
-
-
-
-        </div>  <!-- end Report Details pane -->
-
-
-
+        </div>  <!-- end Report Attachments pane -->
 
     </div>
 </div>

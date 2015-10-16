@@ -1,5 +1,6 @@
 import json
 import logging
+from datetime import datetime
 
 import twilio.twiml
 
@@ -9,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission
+from workflow.models import CSSCall
 # from intake.utils import create_call, update_call
 
 log = logging.getLogger('consolelogger')
@@ -191,5 +193,40 @@ def handle_typeform(request):
     log.info(request.POST)
 
     TypeformSubmission.objects.create(typeform_json=json.dumps(request.POST))
+
+    address = request.POST.get("Where is the problem occurring?", '')
+    phone = request.POST.get("What is your phone number?", '')
+    name = request.POST.get("What is your name?", '')
+    problem = request.POST.get("Please describe what is happening.", '')
+    reporter_street_name = request.POST.get("What is your home address?", '')
+    problem_duration = request.POST.get("How long has the problem been occurring?", '')
+    reporter_alternate_contact = request.POST.get("What is your email address?", '')
+    reported_before = request.POST.get("Have you ever reported this problem before?", '')
+    if reported_before != "0":
+        when_last_reported = request.POST.get("When did you last report this problem?")
+    else:
+        when_last_reported = None
+    time_of_day_occurs = request.POST.get("What time of day does the problem occur?", '')
+
+    num_people_involved = request.POST.get("How many people are involved?", '')
+    safety_concerns = request.POST.get("Are there any safety concerns at the property that we should know about?", '')
+
+    reported_datetime = datetime.utcnow()
+
+    CSSCall.objects.create(
+        address=address,
+        phone=phone,
+        name=name,
+        problem=problem,
+        reporter_street_name=reporter_street_name,
+        problem_duration=problem_duration,
+        reporter_alternate_contact=reporter_alternate_contact,
+        reported_before=reported_before,
+        when_last_reported=when_last_reported,
+        time_of_day_occurs=time_of_day_occurs,
+        num_people_involved=num_people_involved,
+        safety_concerns=safety_concerns,
+        reported_datetime=reported_datetime
+    )
 
     return JsonResponse({'status': 'OK'})

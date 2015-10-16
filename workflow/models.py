@@ -38,6 +38,11 @@ class CSSCall(models.Model):
 
     reporter_address_number = models.IntegerField(null=True, blank=True)
     reporter_street_name = models.CharField(max_length=256, null=True, blank=True)
+    reporter_alternate_contact = models.CharField(max_length=256, null=True, blank=True)
+    when_last_reported = models.CharField(max_length=256, null=True, blank=True)
+    time_of_day_occurs = models.CharField(max_length=256, null=True, blank=True)
+    num_people_involved = models.CharField(max_length=256, null=True, blank=True)
+    safety_concerns = models.CharField(max_length=256, null=True, blank=True)
 
     problem = models.CharField(max_length=256, null=True, blank=True)
     resolution = models.CharField(max_length=256, null=True, blank=True)
@@ -47,6 +52,8 @@ class CSSCall(models.Model):
     reported_datetime = models.DateTimeField(null=True, blank=True)
 
     tags = models.CharField(max_length=256, null=True, blank=True)
+
+    problem_duration = models.CharField(max_length=256, null=True, blank=True)
 
     # TODO: we'll eventually need to store geometry objects somewhere
 

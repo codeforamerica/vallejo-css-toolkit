@@ -139,7 +139,8 @@ thead {
 .typeahead,
 .tt-query,
 .tt-hint {
-  width: 396px;
+  width: 100%;
+/*  width: 396px;*/
   height: 30px;
   padding: 8px 12px;
   line-height: 30px;
