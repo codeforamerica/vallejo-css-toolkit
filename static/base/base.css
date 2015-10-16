@@ -33,9 +33,15 @@ body {
   padding-right: 25px;
 }
 
-.navbar-default .navbar-nav>li>a:hover{
-  background-color:#F6661B;
-  color:#ffffff;
+.dropdown-menu>li>a{
+  color:#1F4E81;
+  padding-top:5px;
+  padding-bottom:5px;
+}
+
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-brand:hover, .dropdown-menu>li>a:hover{
+  color:#F6661B;
+  background:#ffffff;
 }
 
 .navbar-default .navbar-nav>.active>a{
