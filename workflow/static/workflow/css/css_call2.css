@@ -66,6 +66,11 @@ th, td { text-align: center; }
     display: inline-block;
 }
 
+.external-asset {
+  max-width: 25%;
+  height: auto;
+}
+
 .doc-name-text {
     font-size: 1.9rem;
 }

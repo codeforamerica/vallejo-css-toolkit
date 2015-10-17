@@ -15,7 +15,7 @@ from common.datatables import get_datatables_data
 
 # from intake.models import Call
 # from intake.forms import CallForm
-from intake.models import CallAuditItem
+from intake.models import CallAuditItem, TypeformAsset
 
 from workflow.forms import CSSCallForm
 from workflow.models import CSSCall, PDCase, CRWCase, CSSCase
@@ -86,12 +86,8 @@ def call(request, call_id):
     else:
         css_calls = [(instance.id, instance.reported_datetime)]
 
-    # TODO: write the middleware to handle doc uploads
-    uploaded_docs = [
-        {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
-        {"name": 'Deed with signature', "filename": 'deed_updated.pdf', "added": "Sep, 16, 2015", "thumbnail_url": "http://placehold.it/120x120"},
-        {"name": 'Notice to evict - copy', "filename": 'eviction_notice_9_1_15.pdf', "added": "Sep. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"}
-    ]
+    external_assets = TypeformAsset.objects.filter(css_report=instance.id).order_by('-id')
+    external_assets_count = len(external_assets)
 
     # TODO: fix the history section at db and view level
     return render(
@@ -103,7 +99,8 @@ def call(request, call_id):
             'css_cases': css_cases,
             'external_cases': list(chain(pd_cases, crw_cases)),
             'css_calls': css_calls,
-            'uploaded_docs': uploaded_docs
+            'external_assets': external_assets,
+            'external_assets_count': external_assets_count
         }
     )
 
