@@ -35,7 +35,7 @@ def add_call(request):
 
         return HttpResponseRedirect('/workflow/call/%d' % call.id)
 
-    return render(request, 'workflow/css_call.html', {'form': form})
+    return render(request, 'workflow/css_call.html', {'form': form, 'is_new_report': True})
 
 
 @login_required(login_url='/admin/login/')

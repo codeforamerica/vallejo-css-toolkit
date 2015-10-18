@@ -27,29 +27,39 @@
 
 <div class="container">
 
-    <!-- Address, reporter and reported datetime and nav tabs -->
-    <div class="row subnav">
-        <div class="col-md-8">
-            {% if form.address.value %}
-                <h1>{{ form.address.value }}</h1>
-            {% endif %}
-            {% if form.reported_datetime.value and form.name.value %}
-                <h5 class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h5>
-            {% endif %}
+    {% if is_new_report %}
+
+        <div class="row subnav">
+            <div class="col-md-8 col-md-offset-1">
+                <h1>New Report</h1>
+            </div>
         </div>
 
-        <div class="col-md-4">
-            <ul class="nav nav-pills pull-right">
-                <li role="presentation" class="active"><a href="#">Reports</a></li>
-                {% if css_cases %}
-                    <li role="presentation"><a href="/workflow/case/{{css_cases.0.0}}">Investigation</a></li>
-                {% else %}
-                    <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
+    {% else %}
+
+        <!-- Address, reporter and reported datetime and nav tabs -->
+        <div class="row subnav">
+            <div class="col-md-8">
+                {% if form.address.value %}
+                    <h1>{{ form.address.value }}</h1>
                 {% endif %}
-                <li role="presentation" class="disabled"><a href="#">Case</a></li>
-            </ul>
+                {% if form.reported_datetime.value and form.name.value %}
+                    <h5 class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h5>
+                {% endif %}
+            </div>
+
+            <div class="col-md-4">
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class="active"><a href="#">Reports</a></li>
+                    {% if css_cases %}
+                        <li role="presentation"><a href="/workflow/case/{{css_cases.0.0}}">Investigation</a></li>
+                    {% else %}
+                        <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
+                    {% endif %}
+                    <li role="presentation" class="disabled"><a href="#">Case</a></li>
+                </ul>
+            </div>
         </div>
-    </div>
 
 <!--     <div class="row">
         <div class="col-md-3 pane-selectors">
@@ -77,175 +87,176 @@
             </div>
         </div>
 
-        <!-- Report Details pane -->
-        <div class="tab-pane" id="report-details">
-            <div class="col-md-8 col-md-offset-1 report">
-                <h4>Report Details</h4>
+    {% endif %}
 
-                <form class="form-contact" id="css-call-form" method="POST">
-                    {% csrf_token %}
+    <!-- Report Details pane -->
+    <div class="tab-pane" id="report-details">
+        <div class="col-md-8 col-md-offset-1 report">
+            <h4>Report Details</h4>
 
-                    {{ form.non_field_errors }}
+            <form class="form-contact" id="css-call-form" method="POST">
+                {% csrf_token %}
 
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
-                        <div class='input-group date' id='datetimepicker'>
-                            <input type='text' class="form-control" id="{{ form.reported_datetime.id_for_label }}" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'m/d/Y'}} {{form.reported_datetime.value|time:'H:i'}}"/>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                        {{ form.reported_datetime.errors }}
+                {{ form.non_field_errors }}
+
+                <div class="fieldWrapper form-group">
+                    <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
+                    <div class='input-group date' id='datetimepicker'>
+                        <input type='text' class="form-control" id="{{ form.reported_datetime.id_for_label }}" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'m/d/Y'}} {{form.reported_datetime.value|time:'H:i'}}"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
                     </div>
-                    <script type="text/javascript">
-                        $(function () {
-                            $('#datetimepicker').datetimepicker({
-                                'collapse': true,
-                                'format': 'MM/DD/YYYY HH:mm',
-                                'useCurrent': false
-                            });
+                    {{ form.reported_datetime.errors }}
+                </div>
+                <script type="text/javascript">
+                    $(function () {
+                        $('#datetimepicker').datetimepicker({
+                            'collapse': true,
+                            'format': 'MM/DD/YYYY HH:mm',
+                            'useCurrent': false
                         });
-                    </script>
+                    });
+                </script>
 
-                    <div class="form-group">
-                        <label for="{{ form.name.id_for_label }}">Reporter name:</label>
-                        {{ form.name|add_class:"form-control" }}
-                        {{ form.name.errors }}
-                    </div>
+                <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Reporter name:</label>
+                    {{ form.name|add_class:"form-control" }}
+                    {{ form.name.errors }}
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
-                        {{ form.phone|add_class:"form-control" }}
-                        {{ form.phone.errors }}
-                    </div>
+                <div class="form-group">
+                    <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
+                    {{ form.phone|add_class:"form-control" }}
+                    {{ form.phone.errors }}
+                </div>
 
-                    <div class="form-group address-number-field">
-                        <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
-                        {{ form.reporter_address_number|add_class:"form-control" }}
-                        {{ form.reporter_address_number.errors }}
-                    </div>
+                <div class="form-group address-number-field">
+                    <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
+                    {{ form.reporter_address_number|add_class:"form-control" }}
+                    {{ form.reporter_address_number.errors }}
+                </div>
 
-                    <div class="form-group street-name-field">
-                        <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
-                        {{ form.reporter_street_name|add_class:"form-control typeahead" }}
-                        {{ form.reporter_street_name.errors }}
-                    </div>
+                <div class="form-group street-name-field">
+                    <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
+                    {{ form.reporter_street_name|add_class:"form-control typeahead" }}
+                    {{ form.reporter_street_name.errors }}
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.when_last_reported.id_for_label }}">When last reported:</label>
-                        {{ form.when_last_reported|add_class:"form-control" }}
-                        {{ form.when_last_reported.errors }}
-                    </div>
+                <div class="form-group">
+                    <label for="{{ form.when_last_reported.id_for_label }}">When last reported:</label>
+                    {{ form.when_last_reported|add_class:"form-control" }}
+                    {{ form.when_last_reported.errors }}
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.address.id_for_label }}">Address of problem:</label>
-                        {{ form.address|add_class:"form-control" }}
-                        {{ form.address.errors }}
-                    </div>
+                <div class="form-group">
+                    <label for="{{ form.address.id_for_label }}">Address of problem:</label>
+                    {{ form.address|add_class:"form-control" }}
+                    {{ form.address.errors }}
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.problem.id_for_label }}">Description:</label>
-                        <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
-                        {{ form.problem.errors }}
-                    </div>
+                <div class="form-group">
+                    <label for="{{ form.problem.id_for_label }}">Description:</label>
+                    <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                    {{ form.problem.errors }}
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.resolution.id_for_label }}">Notes:</label>
-                        {{ form.resolution|add_class:"form-control" }}
-                        {{ form.resolution.errors }}
-                    </div>
+                <div class="form-group">
+                    <label for="{{ form.resolution.id_for_label }}">Notes:</label>
+                    {{ form.resolution|add_class:"form-control" }}
+                    {{ form.resolution.errors }}
+                </div>
 
-                    <!-- TODO: remove this -->
-                    <div hidden="true" class="form-group">
-                        {{ form.date|add_class:"form-control" }}
-                    </div>
+                <!-- TODO: remove this -->
+                <div hidden="true" class="form-group">
+                    {{ form.date|add_class:"form-control" }}
+                </div>
 
-    <!--            TODO: need to implement this at view and db level -->
-                    <div class="form-group">
-                        <label for="type">Type:</label>
-                        <select class="form-control">
-                            <option>Location</option>
-                            <option>Information</option>
-                        </select>
-                    </div>
+<!--            TODO: need to implement this at view and db level -->
+                <div class="form-group">
+                    <label for="type">Type:</label>
+                    <select class="form-control">
+                        <option>Location</option>
+                        <option>Information</option>
+                    </select>
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.resolution.id_for_label }}">Tags:</label>
-                        {{ form.tags|add_class:"form-control" }}
-                        {{ form.tags.errors }}
-                    </div>
+                <div class="form-group">
+                    <label for="{{ form.resolution.id_for_label }}">Tags:</label>
+                    {{ form.tags|add_class:"form-control" }}
+                    {{ form.tags.errors }}
+                </div>
 
-                    <div class="pull-right">
-                        <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
-                    </div>
+                <div class="pull-right">
+                    <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
+                </div>
 
-                </form>
-            </div>
-        </div>  <!-- end Report Details pane -->
+            </form>
+        </div>
+    </div>  <!-- end Report Details pane -->
 
-        <!-- Report Attachments pane -->
-        <div class="tab-pane" id="report-attachments">
-            <div class="col-md-8 col-md-offset-1 report">
-                <h4>Report Attachments</h4>
+    <!-- Report Attachments pane -->
+    <div class="tab-pane" id="report-attachments">
+        <div class="col-md-8 col-md-offset-1 report">
+            <h4>Report Attachments</h4>
 
-                {% for external_asset in external_assets %}
-                    <hr>
-                    <div class="row uploaded-doc">
-                        <a href="{{ external_asset.asset_url }}" target="_blank"><img class="inline external-asset" src="{{ external_asset.asset_url }}"></a>
-                        <ul class="inline doc-attrs">
-                            <li class="doc-name"><h5 class="doc-name-text">Submitted via web form</h5></li>
-<!--                             <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
-                            <li></li> -->
-                            <li class="doc-date"><p class="doc-date-text">Added: {{ external_asset.css_report.reported_datetime|date }}</p></li>
-                        </ul>
-                    </div>
-
-                {% endfor %}
-
+            {% for external_asset in external_assets %}
                 <hr>
+                <div class="row uploaded-doc">
+                    <a href="{{ external_asset.asset_url }}" target="_blank"><img class="inline external-asset" src="{{ external_asset.asset_url }}"></a>
+                    <ul class="inline doc-attrs">
+                        <li class="doc-name"><h5 class="doc-name-text">Submitted via web form</h5></li>
+<!--                             <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
+                        <li></li> -->
+                        <li class="doc-date"><p class="doc-date-text">Added: {{ external_asset.css_report.reported_datetime|date }}</p></li>
+                    </ul>
+                </div>
 
-                <!-- TODO: write the middleware to handle file upload -->
+            {% endfor %}
+
+            <hr>
+
+            <!-- TODO: write the middleware to handle file upload -->
 
 <!--                 <form id="file-upload-form">
-                    <h5>Upload a new file</h5>
-                    <input type="file" name="uploadDoc">
-                    <button class="btn btn-primary upload-submit-button" type="submit" form="file-upload-form" value="Submit">Submit</button>
-                </form>
- -->
-            </div>
-        </div>  <!-- end Report Attachments pane -->
+                <h5>Upload a new file</h5>
+                <input type="file" name="uploadDoc">
+                <button class="btn btn-primary upload-submit-button" type="submit" form="file-upload-form" value="Submit">Submit</button>
+            </form>
+-->
+        </div>
+    </div>  <!-- end Report Attachments pane -->
 
-        <!-- Report History pane -->
-        <div class="tab-pane" id="report-details">
-            <div class="col-md-8 col-md-offset-1 report">
-                <h4>Report History</h4>
-                    {% if external_cases %}
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">History lookup:</label>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Source</th>
-                                            </tr>
-                                        </thead>
-                                        {% for external_case in external_cases %}
-                                            <tr>
-                                                <td>{{ external_case.0 }}</td>
-                                                <td>{{ external_case.3 }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-                                </div>
+    <!-- Report History pane -->
+    <div class="tab-pane" id="report-details">
+        <div class="col-md-8 col-md-offset-1 report">
+            <h4>Report History</h4>
+                {% if external_cases %}
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">History lookup:</label>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table class="table table-hover table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Source</th>
+                                        </tr>
+                                    </thead>
+                                    {% for external_case in external_cases %}
+                                        <tr>
+                                            <td>{{ external_case.0 }}</td>
+                                            <td>{{ external_case.3 }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
                             </div>
                         </div>
-                    {% endif %}
-            </div>
-        </div>  <!-- end Report Attachments pane -->
+                    </div>
+                {% endif %}
+        </div>
+    </div>  <!-- end Report Attachments pane -->
 
-    </div>
 </div>
 
 {% endblock %}
