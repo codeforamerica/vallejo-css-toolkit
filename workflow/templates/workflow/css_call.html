@@ -132,6 +132,12 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="{{ form.when_last_reported.id_for_label }}">When last reported:</label>
+                        {{ form.when_last_reported|add_class:"form-control" }}
+                        {{ form.when_last_reported.errors }}
+                    </div>
+
+                    <div class="form-group">
                         <label for="{{ form.address.id_for_label }}">Address of problem:</label>
                         {{ form.address|add_class:"form-control" }}
                         {{ form.address.errors }}

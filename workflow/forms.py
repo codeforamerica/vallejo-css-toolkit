@@ -30,7 +30,8 @@ class CSSCallForm(forms.ModelForm):
             'reported_datetime',
             'tags',
             'reporter_address_number',
-            'reporter_street_name'
+            'reporter_street_name',
+            'when_last_reported'
         )
 
 
