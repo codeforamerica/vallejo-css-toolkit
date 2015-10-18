@@ -125,10 +125,16 @@
                     {{ form.name.errors }}
                 </div>
 
-                <div class="form-group">
+                <div class="form-group reporter_primary_contact">
                     <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
                     {{ form.phone|add_class:"form-control" }}
                     {{ form.phone.errors }}
+                </div>
+
+                <div class="form-group reporter_additional_contact">
+                    <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
+                    {{ form.reporter_alternate_contact|add_class:"form-control" }}
+                    {{ form.reporter_alternate_contact.errors }}
                 </div>
 
                 <div class="form-group address-number-field">
@@ -137,7 +143,7 @@
                     {{ form.reporter_address_number.errors }}
                 </div>
 
-                <div class="form-group street-name-field">
+                <div class="form-group street-name-field" id="reporter-street-name-selector">
                     <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
                     {{ form.reporter_street_name|add_class:"form-control typeahead" }}
                     {{ form.reporter_street_name.errors }}
@@ -153,6 +159,25 @@
                     <label for="{{ form.address.id_for_label }}">Address of problem:</label>
                     {{ form.address|add_class:"form-control" }}
                     {{ form.address.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.time_of_day_occurs.id_for_label }}">Time of day issues occurs:</label>
+                    {{ form.time_of_day_occurs|add_class:"form-control" }}
+                    {{ form.time_of_day_occurs.errors }}
+                </div>
+                
+
+                <div class="form-group">
+                    <label for="{{ form.num_people_involved.id_for_label }}">Number of individuals involved:</label>
+                    {{ form.num_people_involved|add_class:"form-control" }}
+                    {{ form.num_people_involved.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.safety_concerns.id_for_label }}">Safety concerns?:</label>
+                    {{ form.safety_concerns|add_class:"form-control" }}
+                    {{ form.safety_concerns.errors }}
                 </div>
 
                 <div class="form-group">

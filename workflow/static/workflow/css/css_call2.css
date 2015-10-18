@@ -79,17 +79,17 @@ th, td { text-align: center; }
   color: #777;
 }
 
-.address-number-field {
-    width: 46%;
+.address-number-field, .reporter_primary_contact {
+    width: 45%;
     float: left;
     margin-bottom: 10px;
 }
 
-.street-name-field {
-    width: 46%;
+.street-name-field, .reporter_additional_contact {
+    width: 45%;
     float: right;
     margin-bottom: 10px;
-    margin-left: 6%;
+    margin-left: 10%;
 }
 
 .tt-menu {

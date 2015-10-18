@@ -30,10 +30,10 @@ LOG_AUDIT_HISTORY = False
 def add_call(request):
     form = CSSCallForm(request.POST or None, initial={'reported_datetime': datetime.now()})
     if form.is_valid():
-        call = form.save()
+        form.save()
         messages.add_message(request, messages.SUCCESS, 'Report successfully added.')
 
-        return HttpResponseRedirect('/workflow/call/%d' % call.id)
+        return HttpResponseRedirect('/workflow/calls')
 
     return render(request, 'workflow/css_call.html', {'form': form, 'is_new_report': True})
 
