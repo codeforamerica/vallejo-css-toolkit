@@ -8,7 +8,7 @@ $(document).ready(function(){
         "bLengthChange": false,
         "serverSide": true,
         "ajax": "/workflow/calls_data",
-        "order": [[ 1, "desc" ]],
+        "order": [[ 2, "desc" ]],
         "columnDefs": [
             {
                 "targets": [ 0 ],  // id
