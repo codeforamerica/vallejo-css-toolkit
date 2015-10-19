@@ -135,3 +135,9 @@ LOGGING = {
         }
     }
 }
+
+STATIC_LIB_BASE = "https://s3.amazonaws.com/vallejo-css-toolkit/static/libs/"
+
+SETTINGS_EXPORT = [
+    'STATIC_LIB_BASE',
+]

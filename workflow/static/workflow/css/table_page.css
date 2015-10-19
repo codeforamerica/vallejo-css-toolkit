@@ -3,7 +3,7 @@ table.dataTable tr.even { background-color: #FFF; }*/
 
 
 table {
-  border-radius:4px;
+  border-radius:8px;
   border:1px solid #ddd;
 }
 
@@ -20,15 +20,21 @@ table.dataTable thead th, table.dataTable tfoot th{
 }
 
 thead{
-  background-color:#ddd;
+  background-color:#1F4E81;
+  color:#ffffff;
+  border-radius: 8px;
 }
 
 table.dataTable thead th{
   padding:20px 15px 10px;
 }
 
-th:hover, th:active{
-  background:#696969;
+th{
+  width:200px;
+}
+
+th:hover{
+  background:#2B6CB3;
   color:#ffffff;
 }
 
@@ -60,6 +66,6 @@ table.dataTable.row-border tbody td {
 }
 
 th.sorting_asc, th.sorting_desc {
-  background-color: #696969;
+  background-color: #2B6CB3;
   color: #ffffff;
 }
