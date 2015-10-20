@@ -24,22 +24,11 @@ p.reporter-subheader{
   margin-top:30px;
 }
 
-
-/**Sidebar**/
-
-
-/**Body**/
 .subnav h1{
   margin-bottom:5px;
 }
 
-.report h4{
-  font-size:22px;
-  font-weight: bold;
-  color:#337ab7;
-  margin-bottom: 30px;
-}
-
+/**Sidebar**/
 th, td { padding: 10px 15px; }
 
 th, td { text-align: center; }
@@ -103,7 +92,17 @@ th, td { text-align: center; }
   color: #777;
 }
 
-.address-number-field, .reporter_primary_contact {
+
+
+/**Body**/
+.report h4{
+  font-size:22px;
+  font-weight: bold;
+  color:#337ab7;
+  margin-bottom: 30px;
+}
+
+/*.address-number-field, .reporter_primary_contact {
     width: 45%;
     float: left;
     margin-bottom: 10px;
@@ -114,7 +113,7 @@ th, td { text-align: center; }
     float: right;
     margin-bottom: 10px;
     margin-left: 10%;
-}
+}*/
 
 .tt-menu {
   text-align: left;
