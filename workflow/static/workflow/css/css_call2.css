@@ -37,20 +37,29 @@ th, td { text-align: center; }
     float: right;
 }
 
-.list-group-item-title {
-  color: #fff;
-  background-color: #428bca;
+.list-group-item{
+  border-color:#ddd;
+  padding:15px 15px 10px;
 }
 
-.list-group-item {
-  border: none;
+.list-group-item-title {
+  color: #fff;
+  background-color: #1F4E81;
+  padding-top:20px;
+  border-color:#1F4E81;
+}
+
+.list-group-item.active{
+  border-color:#ddd;
 }
 
 .list-group-item.active,
 .list-group-item.active:focus,
 .list-group-item.active:hover  {
-  color: orange;
+  color: #F6661B;
   background-color: #fff;
+  font-weight:500;
+  border-color:#ddd;
 }
 
 .uploaded-doc, #file-upload-form {
