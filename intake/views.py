@@ -250,5 +250,6 @@ def handle_typeform(request):
 @csrf_exempt
 def handle_crw_post(request):
     log.info(request.POST)
+    log.info(request.body)
 
     return JsonResponse({'status': 'OK'})

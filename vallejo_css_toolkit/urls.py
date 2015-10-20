@@ -5,7 +5,7 @@ urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
 
     # all call-in related urls
-    url(r'^intake/welcome/$','intake.views.welcome',name='welcome'),
+    url(r'^intake/welcome/$', 'intake.views.welcome', name='welcome'),
     url(r'^intake/handle-name/$', 'intake.views.handle_name', name='handle_name'),
     url(r'^intake/handle-name-transcription/$', 'intake.views.handle_name_transcription', name='handle_name_transcription'),
     url(r'^intake/handle-feedback-pref/$', 'intake.views.handle_feedback_pref', name='handle_feedback_pref'),
