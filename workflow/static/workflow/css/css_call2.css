@@ -1,3 +1,7 @@
+body{
+  padding-bottom:0;
+}
+
 
 /**Header**/
 p.reporter-subheader{
@@ -21,7 +25,7 @@ p.reporter-subheader{
   border-bottom:2px solid #eee;
   padding-bottom:10px;
   margin-bottom:50px;
-  margin-top:30px;
+  margin-top:50px;
 }
 
 .subnav h1{
@@ -205,6 +209,18 @@ label{
 .tt-suggestion p {
   margin: 0;
 }
+
+/**Footer**/
+.footer{
+  background-color:#1F4E81;
+  height:120px;
+  margin-top:100px;
+}
+
+.footer button.btn.btn-success.btn-lg.pull-right{
+  margin-top:35px;
+}
+
 
 /**Media Queries**/
 
