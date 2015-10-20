@@ -98,22 +98,26 @@ th, td { text-align: center; }
 .report h4{
   font-size:22px;
   font-weight: bold;
-  color:#337ab7;
+  color:#1F4E81;
   margin-bottom: 30px;
 }
 
-/*.address-number-field, .reporter_primary_contact {
-    width: 45%;
-    float: left;
-    margin-bottom: 10px;
+.form-group{
+  margin-bottom:35px;
+
 }
 
-.street-name-field, .reporter_additional_contact {
-    width: 45%;
-    float: right;
-    margin-bottom: 10px;
-    margin-left: 10%;
-}*/
+.form-control{
+  border-color: #ddd;
+  box-shadow:none;
+  height:40px;
+  color:#696969;
+}
+
+label{
+  font-weight:500;
+  color:#3e3e3e;
+}
 
 .tt-menu {
   text-align: left;
@@ -124,10 +128,10 @@ th, td { text-align: center; }
 .tt-hint {
 /*  width: 396px;*/
   width: 100%;
-  height: 34px;
+  height: 40px;
   padding: 8px 12px;
   line-height: 30px;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   -webkit-border-radius: 4px;
      -moz-border-radius: 4px;
           border-radius: 4px;
