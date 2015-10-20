@@ -245,3 +245,10 @@ def handle_typeform(request):
         log.error(traceback.format_exc())
 
     return JsonResponse({'status': 'OK'})
+
+
+@csrf_exempt
+def handle_crw_post(request):
+    log.info(request.POST)
+
+    return JsonResponse({'status': 'OK'})
