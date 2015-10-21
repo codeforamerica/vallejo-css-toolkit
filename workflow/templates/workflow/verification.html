@@ -57,9 +57,79 @@
             <div class="row">
               <div class="col-sm-12">
                 <h4>Property Details</h4>
-                <p>(coming soon)</p>
               </div>
             </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="map-placeholder"><p>Google map</p></div>
+              </div>
+            </div>
+
+            <div class="row property-photos">
+              <div class="col-xs-12 col-sm-3">
+                <a href="#" class="thumbnail active">
+                </a>
+              </div>
+              <div class="col-xs-12 col-sm-3">
+                <a href="#" class="thumbnail">
+                </a>
+              </div>
+              <div class="col-xs-12 col-sm-3">
+                <a href="#" class="thumbnail">
+                </a>
+              </div>
+            </div>
+
+            <div class="row new-upload">
+              <div class="col-sm-12">
+                <form id="file-upload-form">
+                  <div class="form-group">
+                    <label for="{{ form.name.id_for_label }}">Upload a photo:</label>
+                    <input type="file" name="uploadDoc">
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="">Property Description:</label>
+                    <textarea id="" maxlength="256" name="" class="form-control" rows="5"></textarea>
+                    {{ form.problem.errors }}
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">Water Services:</label>
+                    <input type="checkbox">
+                    {{ form.problem.errors }}
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">PGE Services:</label>
+                    <input type="checkbox">
+                    {{ form.problem.errors }}
+                </div>
+              </div>
+
+              <div class="col-sm-4">
+                <div class="form-group">
+                    <label for="">Occupied/Boarded:</label>
+                    <input type="checkbox">
+                    {{ form.problem.errors }}
+                </div>
+              </div>
+            </div>
+
+
+
         </div>  <!-- end Report Details pane -->
 
 
