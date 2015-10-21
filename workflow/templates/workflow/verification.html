@@ -13,6 +13,7 @@
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/css_case.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/verification.css" %}"/>
 
 <script type='text/javascript' src="{% static "workflow/js/css_case.js" %}"></script>
 
@@ -71,83 +72,88 @@
                   {% csrf_token %}
 
                   {{ contact_owner_form.non_field_errors }}
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="fieldWrapper form-group">
+                          <label for="{{ form.owner_name.id_for_label }}">Property Owner:</label>
+                          {{ contact_owner_form.owner_name|add_class:"form-control" }}
+                          {{ contact_owner_form.owner_name.errors }}
+                      </div>
+                    </div>
 
-                  <div class="fieldWrapper form-group">
-                      <label for="{{ form.owner_name.id_for_label }}">Property Owner:</label>
-                      {{ contact_owner_form.owner_name|add_class:"form-control" }}
-                      {{ contact_owner_form.owner_name.errors }}
+                    <div class="col-sm-12">
+                      <div class="fieldWrapper form-group">
+                          <label for="{{ form.owner_address.id_for_label }}">Owner Address:</label>
+                          {{ contact_owner_form.owner_address|add_class:"form-control" }}
+                          {{ contact_owner_form.owner_address.errors }}
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="fieldWrapper form-group owner-phone">
+                          <label for="{{ form.owner_phone.id_for_label }}">Phone:</label>
+                          {{ contact_owner_form.owner_phone|add_class:"form-control" }}
+                          {{ contact_owner_form.owner_phone.errors }}
+                      </div>
+                    </div>
+
+                    <div class="col-sm-6">
+                      <div class="fieldWrapper form-group owner-email">
+                          <label for="{{ form.owner_email.id_for_label }}">Email:</label>
+                          {{ contact_owner_form.owner_email|add_class:"form-control" }}
+                          {{ contact_owner_form.owner_email.errors }}
+                      </div>
+                    </div>
+
                   </div>
-
-                  <div class="fieldWrapper form-group">
-                      <label for="{{ form.owner_address.id_for_label }}">Owner Address:</label>
-                      {{ contact_owner_form.owner_address|add_class:"form-control" }}
-                      {{ contact_owner_form.owner_address.errors }}
-                  </div>
-
-                  <div class="fieldWrapper form-group owner-phone">
-                      <label for="{{ form.owner_phone.id_for_label }}">Phone:</label>
-                      {{ contact_owner_form.owner_phone|add_class:"form-control" }}
-                      {{ contact_owner_form.owner_phone.errors }}
-                  </div>
-
-                  <div class="fieldWrapper form-group owner-email">
-                      <label for="{{ form.owner_email.id_for_label }}">Email:</label>
-                      {{ contact_owner_form.owner_email|add_class:"form-control" }}
-                      {{ contact_owner_form.owner_email.errors }}
-                  </div>
-
-                  <button class="btn btn-primary owner-info-submit-button" type="submit" form="owner-contact-form" value="Submit">Save</button>
               </form>
 
               <div class="contact-log-section">
                   <label>Contact Log</label>
-                      <div class="container">
-                          <div class="col-md-7 col-md-offset-1" id="call-log">
-                            <div class="row">
-                              <div class="col-sm-12">
-                                <div class="table-wrapper">
-                                  <table class="table table-hover">
-                                    <thead>
-                                      <tr>
-                                        <th>Date</th>
-                                        <th>Caller</th>
-                                        <th>Type</th>
-                                        <th>Description</th>
-                                      </tr>
-                                    </thead>
+                      <div class="row">
+                        <div class="col-sm-12">
+                          <div class="table-wrapper">
+                            <table class="table table-hover" id="call-log">
+                              <thead>
+                                <tr>
+                                  <th>Date</th>
+                                  <th>Caller</th>
+                                  <th>Type</th>
+                                  <th>Description</th>
+                                </tr>
+                              </thead>
 
-                                    <tbody>
-                                      <tr>
-                                        <td>Today</td>
-                                        <td>TinaE</td>
-                                        <td>Phone</td>
-                                        <td>Left message with assistant to call back</td>
-                                      </tr>
+                              <tbody>
+                                <tr>
+                                  <td>Today</td>
+                                  <td>TinaE</td>
+                                  <td>Phone</td>
+                                  <td>Left message with assistant to call back</td>
+                                </tr>
 
-                                      <tr>
-                                        <td>10/15/15</td>
-                                        <td>TinaE</td>
-                                        <td>Phone</td>
-                                        <td>Left message asking if she received email</td>
-                                      </tr>
+                                <tr>
+                                  <td>10/15/15</td>
+                                  <td>TinaE</td>
+                                  <td>Phone</td>
+                                  <td>Left message asking if she received email</td>
+                                </tr>
 
-                                      <tr>
-                                        <td>10/10/15</td>
-                                        <td>Karen</td>
-                                        <td>Email</td>
-                                        <td>First contact; informed her of squatters</td>
-                                      </tr>
-                                  </table>
-                                </div> <!--table wrapper-->
+                                <tr>
+                                  <td>10/10/15</td>
+                                  <td>Karen</td>
+                                  <td>Email</td>
+                                  <td>First contact; informed her of squatters</td>
+                                </tr>
+                            </table>
+                          </div> <!--table wrapper-->
 
-                                <a class="pull-right" href="#">Add Contact</a>
-                              </div><!--cols-->
-                            </div> <!--row-->
-                          </div><!--cols-->
-                        </div><!--container-->
+                          <a class="pull-right" href="#">Add Contact</a>
+                        </div>
+                      </div>
+
                     </div><!--contact log table-->
 
-            </div><!--cols-->
+            </div>
         </div> <!-- end Contact Sheet pane -->
 
 

@@ -1,5 +1,8 @@
+*{
+  font-family: 'PT Sans', sans-serif;
+}
+
 body {
-    font-family: "Roboto", sans-serif;
     padding-bottom: 100px;
 }
 

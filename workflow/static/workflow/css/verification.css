@@ -1,0 +1,12 @@
+.contact-log-section {
+  margin-top:5px;
+}
+
+.contact-log-section .table-wrapper{
+  margin-top:5px;
+}
+
+.contact-log-section th, .contact-log-section td{
+  text-align:left;
+  font-size:12px;
+}
