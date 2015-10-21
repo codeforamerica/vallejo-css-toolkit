@@ -7,6 +7,10 @@ p.reporter-subheader{
   margin-left:5px;
 }
 
+.reporter-subheader {
+  color: #777;
+}
+
 .nav-pills{
   margin-top: 60px;
 }
@@ -32,10 +36,45 @@ p.reporter-subheader{
 }
 
 /**Sidebar**/
+th, td { padding: 10px 15px; }
 
+th, td { text-align: center; }
+
+.fa-list-item {
+    float: right;
+}
+
+.list-group-item{
+  border-color:#ddd;
+  padding:15px 15px 10px;
+}
+
+.list-group-item-title {
+  color: #fff;
+  background-color: #1F4E81;
+  padding-top:20px;
+  border-color:#1F4E81;
+}
+
+.list-group-item.active{
+  border-color:#ddd;
+}
+
+.list-group-item.active,
+.list-group-item.active:focus,
+.list-group-item.active:hover  {
+  color: #F6661B;
+  background-color: #fff;
+  font-weight:500;
+  border-color:#ddd;
+}
 
 
 /**Pane Body**/
+.tab-pane{
+  min-height:550px;
+}
+
 .report h4{
   font-size:22px;
   font-weight: bold;
@@ -137,6 +176,44 @@ label{
 .tt-suggestion p {
   margin: 0;
 }
+
+
+/**Documents Pane**/
+.uploaded-doc, #file-upload-form {
+    margin-left: 20px;
+}
+
+.upload-submit-button {
+    margin-top: 10px;
+}
+
+.doc-attrs {
+    list-style-type: none;
+}
+
+.doc-date {
+    position: relative;
+    top: 20px;
+}
+
+.doc-date-text {
+    font-size: 1.2rem;
+    color: grey;
+}
+
+.inline {
+    display: inline-block;
+}
+
+.external-asset {
+  max-width: 25%;
+  height: auto;
+}
+
+.doc-name-text {
+    font-size: 1.9rem;
+}
+
 
 /**Footer**/
 .footer{
