@@ -39,16 +39,16 @@
 
         <!-- Address, reporter and reported datetime and nav tabs -->
         <div class="row subnav">
-            <div class="col-md-8">
+            <div class="col-md-8 col-sm-7 col-xs-12">
                 {% if form.address.value %}
                     <h1>{{ form.address.value }}</h1>
                 {% endif %}
                 {% if form.reported_datetime.value and form.name.value %}
-                    <h5 class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h5>
+                    <p class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</p>
                 {% endif %}
             </div>
 
-            <div class="col-md-4">
+            <div class="col-md-4 col-sm-5 col-xs-12">
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation" class="active"><a href="#">Report</a></li>
                     {% if css_cases %}
@@ -64,7 +64,7 @@
     {% endif %}
 
     <div class="row">
-        <div class="col-md-4 pane-selectors">
+        <div class="col-sm-4 pane-selectors">
             <div class="list-group">
                 <h5 class="list-group-item list-group-item-title">Report</h5>
                 <a href="#report-details" class="list-group-item active">Report Details<span class="fa fa-list-item fa-angle-right"></span></a>
@@ -74,138 +74,172 @@
         </div>
 
         <!-- Report Details pane -->
-        <div class="tab-pane" id="report-details">
-            <div class="col-md-7 col-md-offset-1 report">
-                <h4>Report Details</h4>
+        <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="report-details">
+          <div class="row">
+            <div class="col-sm-12">
+              <h4>Report Details</h4>
+            </div>
+          </div>
 
 <!--                 {% if form.reported_datetime.value and form.name.value %}
-                    <h4> Reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h4>
-                {% endif %}
- -->
-                <form class="form-contact" id="css-call-form" method="POST">
-                    {% csrf_token %}
+              <h4> Reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h4>
+          {% endif %}
+-->
+          <form class="form-contact" id="css-call-form" method="POST">
+              {% csrf_token %}
 
-                    {{ form.non_field_errors }}
+              {{ form.non_field_errors }}
 
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
-                        <div class='input-group date' id='datetimepicker'>
-                            <input type='text' class="form-control" id="{{ form.reported_datetime.id_for_label }}" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'m/d/Y'}} {{form.reported_datetime.value|time:'H:i'}}"/>
-                            <span class="input-group-addon">
-                                <span class="glyphicon glyphicon-calendar"></span>
-                            </span>
-                        </div>
-                        {{ form.reported_datetime.errors }}
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="fieldWrapper form-group">
+                      <label for="{{ form.reported_datetime.id_for_label }}">Date and time reported:</label>
+                      <div class='input-group date' id='datetimepicker'>
+                          <input type='text' class="form-control" id="{{ form.reported_datetime.id_for_label }}" name="{{ form.reported_datetime.html_name }}" type="text" value="{{form.reported_datetime.value|date:'m/d/Y'}} {{form.reported_datetime.value|time:'H:i'}}"/>
+                          <span class="input-group-addon">
+                              <span class="glyphicon glyphicon-calendar"></span>
+                          </span>
+                      </div>
+                      {{ form.reported_datetime.errors }}
                     </div>
-                    <script type="text/javascript">
-                        $(function () {
-                            $('#datetimepicker').datetimepicker({
-                                'collapse': true,
-                                'format': 'MM/DD/YYYY HH:mm',
-                                'useCurrent': false
-                            });
-                        });
-                    </script>
+                  </div>
+                  <script type="text/javascript">
+                      $(function () {
+                          $('#datetimepicker').datetimepicker({
+                              'collapse': true,
+                              'format': 'MM/DD/YYYY HH:mm',
+                              'useCurrent': false
+                          });
+                      });
+                  </script>
 
-                    <div class="form-group">
-                        <label for="{{ form.name.id_for_label }}">Reporter name:</label>
-                        {{ form.name|add_class:"form-control" }}
-                        {{ form.name.errors }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.name.id_for_label }}">Reporter name:</label>
+                      {{ form.name|add_class:"form-control" }}
+                      {{ form.name.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group reporter_primary_contact">
-                        <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
-                        {{ form.phone|add_class:"form-control" }}
-                        {{ form.phone.errors }}
-                    </div>
+                <div class="col-sm-6">
+                  <div class="form-group reporter_primary_contact">
+                      <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
+                      {{ form.phone|add_class:"form-control" }}
+                      {{ form.phone.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group reporter_additional_contact">
-                        <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
-                        {{ form.reporter_alternate_contact|add_class:"form-control" }}
-                        {{ form.reporter_alternate_contact.errors }}
-                    </div>
+                <div class="col-sm-6">
+                  <div class="form-group reporter_additional_contact">
+                      <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
+                      {{ form.reporter_alternate_contact|add_class:"form-control" }}
+                      {{ form.reporter_alternate_contact.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group address-number-field">
-                        <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
-                        {{ form.reporter_address_number|add_class:"form-control" }}
-                        {{ form.reporter_address_number.errors }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group address-number-field">
+                      <label for="{{ form.reporter_address_number.id_for_label }}">Reporter address number:</label>
+                      {{ form.reporter_address_number|add_class:"form-control" }}
+                      {{ form.reporter_address_number.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group street-name-field" id="reporter-street-name-selector">
-                        <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
-                        {{ form.reporter_street_name|add_class:"form-control typeahead" }}
-                        {{ form.reporter_street_name.errors }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group street-name-field">
+                      <label for="{{ form.reporter_street_name.id_for_label }}">Reporter street name:</label>
+                      {{ form.reporter_street_name|add_class:"form-control typeahead" }}
+                      {{ form.reporter_street_name.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.when_last_reported.id_for_label }}">When last reported:</label>
-                        {{ form.when_last_reported|add_class:"form-control" }}
-                        {{ form.when_last_reported.errors }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.when_last_reported.id_for_label }}">When last reported:</label>
+                      {{ form.when_last_reported|add_class:"form-control" }}
+                      {{ form.when_last_reported.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.address.id_for_label }}">Address of problem:</label>
-                        {{ form.address|add_class:"form-control" }}
-                        {{ form.address.errors }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.address.id_for_label }}">Address of problem:</label>
+                      {{ form.address|add_class:"form-control" }}
+                      {{ form.address.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.time_of_day_occurs.id_for_label }}">Time of day issues occurs:</label>
-                        {{ form.time_of_day_occurs|add_class:"form-control" }}
-                        {{ form.time_of_day_occurs.errors }}
-                    </div>
-                    
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.time_of_day_occurs.id_for_label }}">Time of day issues occurs:</label>
+                      {{ form.time_of_day_occurs|add_class:"form-control" }}
+                      {{ form.time_of_day_occurs.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.num_people_involved.id_for_label }}">Number of individuals involved:</label>
-                        {{ form.num_people_involved|add_class:"form-control" }}
-                        {{ form.num_people_involved.errors }}
-                    </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.safety_concerns.id_for_label }}">Safety concerns:</label>
-                        {{ form.safety_concerns|add_class:"form-control" }}
-                        {{ form.safety_concerns.errors }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.num_people_involved.id_for_label }}">Number of individuals involved:</label>
+                      {{ form.num_people_involved|add_class:"form-control" }}
+                      {{ form.num_people_involved.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.problem.id_for_label }}">Description:</label>
-                        <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
-                        {{ form.problem.errors }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.safety_concerns.id_for_label }}">Safety concerns:</label>
+                      {{ form.safety_concerns|add_class:"form-control" }}
+                      {{ form.safety_concerns.errors }}
+                  </div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.resolution.id_for_label }}">Notes:</label>
-                        {{ form.resolution|add_class:"form-control" }}
-                        {{ form.resolution.errors }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.problem.id_for_label }}">Description:</label>
+                      <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                      {{ form.problem.errors }}
+                  </div>
+                </div>
 
-                    <!-- TODO: remove this -->
-                    <div hidden="true" class="form-group">
-                        {{ form.date|add_class:"form-control" }}
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.resolution.id_for_label }}">Notes:</label>
+                      {{ form.resolution|add_class:"form-control" }}
+                      {{ form.resolution.errors }}
+                  </div>
+                </div>
 
-                    <!-- TODO: need to implement this at view and db level -->
-                    <div class="form-group">
-                        <label for="type">Type:</label>
-                        <select class="form-control">
-                            <option>Location</option>
-                            <option>Information</option>
-                        </select>
-                    </div>
+                <!-- TODO: remove this -->
+                <div hidden="true" class="form-group">
+                    {{ form.date|add_class:"form-control" }}
+                </div>
 
-                    <div class="form-group">
-                        <label for="{{ form.resolution.id_for_label }}">Tags:</label>
-                        {{ form.tags|add_class:"form-control" }}
-                        {{ form.tags.errors }}
-                    </div>
+                <!-- TODO: need to implement this at view and db level -->
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="type">Type:</label>
+                      <select class="form-control">
+                          <option>Location</option>
+                          <option>Information</option>
+                      </select>
+                  </div>
+                </div>
 
-                    <div class="pull-right">
-                        <button type="submit" class="btn btn-primary btn-lg" aria-haspopup="true" aria-expanded="true">Save</button>
-                    </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                      <label for="{{ form.resolution.id_for_label }}">Tags:</label>
+                      {{ form.tags|add_class:"form-control" }}
+                      {{ form.tags.errors }}
+                  </div>
+                </div>
 
-                </form>
-            </div>
+                <!--<div class="col-sm-4 pull-right">
+                  <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Save</button>
+                </div>-->
+              </div>
+
+          </form>
         </div>  <!-- end Report Details pane -->
 
         <!-- Report Attachments pane -->
@@ -273,6 +307,16 @@
         </div>  <!-- end Report Attachments pane -->
     </div>
 
+</div>
+
+<div class="footer container-fluid">
+  <div class="container next-actions">
+    <div class="row">
+      <div class="col-sm-4 pull-right">
+        <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Save</button>
+      </div>
+    </div>
+  </footer>
 </div>
 
 {% endblock %}
