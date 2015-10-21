@@ -3,6 +3,11 @@ body{
 }
 
 /**Header**/
+.subnav h1{
+  margin-bottom:5px;
+  font-weight:bold;
+}
+
 p.reporter-subheader{
   margin-left:5px;
 }
@@ -31,9 +36,7 @@ p.reporter-subheader{
   margin-top:50px;
 }
 
-.subnav h1{
-  margin-bottom:5px;
-}
+
 
 /**Sidebar**/
 th, td { padding: 10px 15px; }
