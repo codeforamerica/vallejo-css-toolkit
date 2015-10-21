@@ -16,9 +16,7 @@
 }
 
 
-thead {
-    background-color: #e7e7e7;
-}
+
 
 .assignee-row-cell {
     background-color: #e7e7e7;
@@ -101,37 +99,4 @@ thead {
 
 .tt-suggestion p {
   margin: 0;
-}
-
-
-
-.table{
-  margin-bottom:0;
-  font-size:14px;
-  color:#3e3e3e;
-}
-
-.table-wrapper{
-  border:1px solid #eeeeee;
-  border-radius:4px;
-  overflow: hidden;
-  margin-bottom:20px;
-}
-
-thead{
-  background-color:#E8E8E8;
-  color:#3e3e3e;
-  border-bottom:none;
-}
-
-th{
-  font-weight: normal;
-
-}
-
-.table>thead>tr>th, .table>tbody>tr>td{
-  padding-top: 15px;
-  padding-bottom:8px;
-  padding-left: 25px;
-  border-color:#eeeeee;
 }

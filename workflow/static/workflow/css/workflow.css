@@ -218,6 +218,44 @@ ul.doc-attrs {
   margin-bottom:15px;
 }
 
+/**Small tables**/
+.small-table{
+  margin-bottom:0;
+  font-size:14px;
+  color:#3e3e3e;
+}
+
+.table-wrapper{
+  border:1px solid #eeeeee;
+  border-radius:4px;
+  overflow: hidden;
+  margin-bottom:20px;
+}
+
+.small-table thead{
+  background-color:#E8E8E8;
+  color:#3e3e3e;
+  border-bottom:none;
+}
+
+.small-table th{
+  font-weight: normal;
+
+}
+
+.small-table>thead>tr>th, .table>tbody>tr>td{
+  padding-top: 15px;
+  padding-bottom:8px;
+  padding-left: 25px;
+  border-color:#eeeeee;
+}
+
+.small-table th, .small-table td{
+  text-align:left;
+  font-size:12px;
+}
+
+
 /**Footer**/
 .footer{
   background-color:#1F4E81;

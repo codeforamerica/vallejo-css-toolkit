@@ -293,29 +293,70 @@
         <div class="tab-pane" id="report-history">
             <div class="col-md-7 col-md-offset-1 report">
                 <h4>Report History</h4>
-                    {% if external_cases %}
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">History lookup:</label>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Source</th>
-                                            </tr>
-                                        </thead>
-                                        {% for external_case in external_cases %}
-                                            <tr>
-                                                <td>{{ external_case.0 }}</td>
-                                                <td>{{ external_case.3 }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="table-wrapper">
+                          <table class="table table-hover small-table" id="call-log">
+                            <thead>
+                              <tr>
+                                <th>Date</th>
+                                <th>Source</th>
+                                <th>Code</th>
+                                <th>Description</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              <tr>
+                                <td>Today</td>
+                                <td><b>RMS</b></td>
+                                <td>459</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/15/15</td>
+                                <td><b>RMS</b></td>
+                                <td>670</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/10/15</td>
+                                <td><b>CRW</b></td>
+                                <td>E12</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/1/15</td>
+                                <td><b>RMS</b></td>
+                                <td>459</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>8/8/15</td>
+                                <td><b>RMS</b></td>
+                                <td>670</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>1/23/15</td>
+                                <td><b>CRW</b></td>
+                                <td>E12</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+                          </table>
+                        </div> <!--table wrapper-->
+
+                      </div>
+                    </div>
+
+                  </div><!--contact log table-->
+
             </div>
         </div>  <!-- end Report Attachments pane -->
     </div>
