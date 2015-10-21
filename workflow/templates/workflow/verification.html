@@ -163,26 +163,32 @@
               <h4>Verification Documents</h4>
 
               {% for uploaded_doc in uploaded_docs %}
-                  <hr>
                   <div class="row uploaded-doc">
-                      <img class="inline" src="{{ uploaded_doc.thumbnail_url }}">
-                      <ul class="inline doc-attrs">
+                    <div class="col-sm-4">
+                      <img src="{{ uploaded_doc.thumbnail_url }}">
+                    </div>
+
+                    <div class="col-sm-8">
+                      <ul class="doc-attrs">
                           <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.name }}</h5></li>
                           <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
-                          <li></li>
                           <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.added }}</p></li>
                       </ul>
+                    </div>
                   </div>
 
               {% endfor %}
 
-              <hr>
 
-              <form id="file-upload-form">
-                  <h5>Upload a new file</h5>
-                  <input type="file" name="uploadDoc">
-                  <button class="btn btn-primary upload-submit-button" type="submit" form="file-upload-form" value="Submit">Submit</button>
-              </form>
+                  <div class="row new-upload">
+                    <div class="col-sm-12">
+                      <form id="file-upload-form">
+                          <h4>Upload a new file</h4>
+                          <input type="file" name="uploadDoc">
+                      </form>
+                    </div>
+                  </div>
+
             </div>
         </div> <!-- end Documents pane -->
 

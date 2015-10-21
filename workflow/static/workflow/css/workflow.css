@@ -182,21 +182,19 @@ label{
 
 
 /**Documents Pane**/
-.uploaded-doc, #file-upload-form {
-    margin-left: 20px;
+.uploaded-doc{
+  border-bottom: 1px solid #eee;
+  padding-top:30px;
+  padding-bottom:30px;
 }
 
 .upload-submit-button {
     margin-top: 10px;
 }
 
-.doc-attrs {
+ul.doc-attrs {
     list-style-type: none;
-}
-
-.doc-date {
-    position: relative;
-    top: 20px;
+    padding-left:0
 }
 
 .doc-date-text {
@@ -204,12 +202,8 @@ label{
     color: grey;
 }
 
-.inline {
-    display: inline-block;
-}
-
 .external-asset {
-  max-width: 25%;
+  max-width: 100%;
   height: auto;
 }
 
@@ -217,6 +211,12 @@ label{
     font-size: 1.9rem;
 }
 
+.new-upload h4{
+  font-size:16px;
+  font-weight:bold;
+  margin-top:30px;
+  margin-bottom:15px;
+}
 
 /**Footer**/
 .footer{

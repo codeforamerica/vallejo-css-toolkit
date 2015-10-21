@@ -1,14 +1,6 @@
 
-.uploaded-doc, #file-upload-form {
-    margin-left: 20px;
-}
 
 
-
-
-.doc-attrs {
-    list-style-type: none;
-}
 
 .unassign {
   background-color: #e7e7e7;
@@ -23,32 +15,6 @@
   color: white;
 }
 
-.doc-date {
-    position: relative;
-    top: 20px;
-}
-
-#assignee-table {
-    border-spacing: 10px;
-    border-collapse: separate;
-}
-
-.doc-date-text {
-    font-size: 1.2rem;
-    color: grey;
-}
-
-.doc-name-text {
-    font-size: 1.9rem;
-}
-
-.upload-submit-button {
-    margin-top: 10px;
-}
-
-.owner-info-submit-button {
-    margin-top: 10px;
-}
 
 thead {
     background-color: #e7e7e7;

@@ -249,21 +249,33 @@
                 <h4>Report Attachments</h4>
 
                 {% for external_asset in external_assets %}
-                    <hr>
                     <div class="row uploaded-doc">
-                        <a href="{{ external_asset.asset_url }}" target="_blank"><img class="inline external-asset" src="{{ external_asset.asset_url }}"></a>
-                        <ul class="inline doc-attrs">
-                            <li class="doc-name"><h5 class="doc-name-text">Submitted via web form</h5></li>
-    <!--                             <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
-                            <li></li> -->
-                            <li class="doc-date"><p class="doc-date-text">Added: {{ external_asset.css_report.reported_datetime|date }}</p></li>
-                        </ul>
+                        <div class="col-sm-4">
+                          <a href="{{ external_asset.asset_url }}" target="_blank"><img class="external-asset" src="{{ external_asset.asset_url }}"></a>
+                        </div>
+
+                        <div class="col-sm-8">
+                          <ul class="doc-attrs">
+                              <li class="doc-name"><h5 class="doc-name-text">Submitted via web form</h5></li>
+                              <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
+                              <li class="doc-date"><p class="doc-date-text">Added: {{ external_asset.css_report.reported_datetime|date }}</p></li>
+                          </ul>
+                        </div>
                     </div>
 
                 {% endfor %}
 
+                    <div class="row new-upload">
+                      <div class="col-sm-12">
+                        <form id="file-upload-form">
+                            <h4>Upload a new file</h4>
+                            <input type="file" name="uploadDoc">
+                        </form>
+                      </div>
+                    </div>
+
                 {% if external_assets %}
-                    <hr>
+
                 {% endif %}
 
                 <!-- TODO: write the middleware to handle file upload -->
