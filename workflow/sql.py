@@ -68,7 +68,7 @@ CALLS_DATA_SQL = """
         SELECT
             c.id AS id,
 
-            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.reported_datetime AT TIME ZONE 'America/Los_Angeles'  || '</a>', '') AS reported_datetime_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || TO_CHAR(c.reported_datetime AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI')  || '</a>', '') AS reported_datetime_link,
             c.reported_datetime AT TIME ZONE 'America/Los_Angeles' AS reported_datetime,
 
             COALESCE('<a href="/workflow/report/' || c.id || '">' || c.name  || '</a>', '') AS caller_name_link,
