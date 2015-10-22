@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.conf.urls import patterns, include, url
 
-urlpatterns = patterns('',
+urlpatterns = patterns(
+    '',
     url(r'^admin/', include(admin.site.urls)),
 
     # all call-in related urls
@@ -40,6 +41,8 @@ urlpatterns = patterns('',
     url(r'^workflow/add_case_assignee/$', 'workflow.views.case_views.add_case_assignee', name='add_case_assignee'),
     url(r'^workflow/remove_case_assignee/$', 'workflow.views.case_views.remove_case_assignee', name='remove_case_assignee'),
 
+    # verification related views
+    url(r'^workflow/verification/(?P<verification_id>\d*)/$', 'workflow.views.verification_views.verification', name='verfication'),
 
     # visit-queue related views
     url(r'^workflow/visit_queue/$', 'workflow.views.case_views.visit_queue', name='visit_queue'),
@@ -54,11 +57,11 @@ urlpatterns = patterns('',
     url(r'^workflow/location_data/$', 'workflow.views.location_views.location_data', name='lcoation_data'),
     url(r'^workflow/locations_data/$', 'workflow.views.location_views.locations_data', name='lcoations_data'),
 
-    # call admin-related views
-    url(r'^workflow/call/(?P<call_id>\d*)/$', 'workflow.views.call_views.call', name='call'),
-    url(r'^workflow/calls/$', 'workflow.views.call_views.calls', name='calls'),
-    url(r'^workflow/calls_data/$', 'workflow.views.call_views.calls_data', name='calls_data'),
-    url(r'^workflow/add_call/$', 'workflow.views.call_views.add_call', name='add_call'),
+    # report related views
+    url(r'^workflow/report/(?P<report_id>\d*)/$', 'workflow.views.report_views.report', name='report'),
+    url(r'^workflow/reports/$', 'workflow.views.report_views.reports', name='reports'),
+    url(r'^workflow/reports_data/$', 'workflow.views.report_views.reports_data', name='reports_data'),
+    url(r'^workflow/add_report/$', 'workflow.views.report_views.add_report', name='add_report'),
 
     # dataload-related views
     url(r'^data_load/import_csv/$', 'data_load.views.import_csv', name='import_csv'),

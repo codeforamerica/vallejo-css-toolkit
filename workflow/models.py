@@ -58,6 +58,15 @@ class CSSCall(models.Model):
     # TODO: we'll eventually need to store geometry objects somewhere
 
 
+class Verification(models.Model):
+    report = models.ForeignKey(CSSCall)
+    property_desciption = models.CharField(max_length=256, null=True, blank=True)
+    owner_name = models.CharField(max_length=256, null=True, blank=True)
+    owner_address = models.CharField(max_length=256, null=True, blank=True)
+    owner_primary_contact = models.CharField(max_length=256, null=True, blank=True)
+    owner_secondary_contact = models.CharField(max_length=256, null=True, blank=True)
+
+
 class RecordingType(models.Model):
     name = models.CharField(max_length=256, null=True, blank=True)
 

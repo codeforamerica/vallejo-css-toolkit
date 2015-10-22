@@ -17,8 +17,8 @@ from common.datatables import get_datatables_data
 # from intake.forms import CallForm
 from intake.models import CallAuditItem, TypeformAsset
 
-from workflow.forms import CSSCallForm
-from workflow.models import CSSCall, PDCase, CRWCase, CSSCase
+from workflow.forms.report_forms import ReportForm
+from workflow.models import CSSCall, PDCase, CRWCase, CSSCase, Verification
 from workflow.sql import CALLS_DATA_SQL, AUDIT_LOG_DATA_SQL, CALLS_IDX_COLUMN_MAP, AUDIT_LOG_IDX_COLUMN_MAP
 
 log = logging.getLogger('consolelogger')
@@ -27,21 +27,21 @@ LOG_AUDIT_HISTORY = False
 
 
 @login_required(login_url='/admin/login/')
-def add_call(request):
-    form = CSSCallForm(request.POST or None, initial={'reported_datetime': datetime.now()})
+def add_report(request):
+    form = ReportForm(request.POST or None, initial={'reported_datetime': datetime.now()})
     if form.is_valid():
         form.save()
         messages.add_message(request, messages.SUCCESS, 'Report successfully added.')
 
-        return HttpResponseRedirect('/workflow/calls')
+        return HttpResponseRedirect('/workflow/reports')
 
-    return render(request, 'workflow/css_call.html', {'form': form, 'is_new_report': True})
+    return render(request, 'workflow/add_report.html', {'form': form})
 
 
 @login_required(login_url='/admin/login/')
-def call(request, call_id):
-    instance = get_object_or_404(CSSCall, id=call_id)
-    form = CSSCallForm(request.POST or None, instance=instance)
+def report(request, report_id):
+    instance = get_object_or_404(CSSCall, id=report_id)
+    form = ReportForm(request.POST or None, instance=instance)
 
     if form.errors:
         messages.add_message(request, messages.ERROR, form.errors)
@@ -60,7 +60,7 @@ def call(request, call_id):
 
         messages.add_message(request, messages.SUCCESS, 'Report successfully updated.')
 
-        return HttpResponseRedirect('/workflow/calls')
+        return HttpResponseRedirect('/workflow/reports')
 
     # either the form was not valid, or we're just loading the page
     pd_cases = []
@@ -82,25 +82,28 @@ def call(request, call_id):
 
     # TODO, join this on the actual csscall address number and street name
     if instance.address:
-        css_calls = CSSCall.objects.filter(address=instance.address).values_list('id', 'reported_datetime')
+        reports = CSSCall.objects.filter(address=instance.address).values_list('id', 'reported_datetime')
     else:
-        css_calls = [(instance.id, instance.reported_datetime)]
+        reports = [(instance.id, instance.reported_datetime)]
 
     external_assets = TypeformAsset.objects.filter(css_report=instance.id).order_by('-id')
     external_assets_count = len(external_assets)
 
+    verification_id = Verification.objects.filter(report=instance)
+
     # TODO: fix the history section at db and view level
     return render(
         request,
-        'workflow/css_call.html',
+        'workflow/report.html',
         {
             'id': instance.id,
             'form': form,
             'css_cases': css_cases,
             'external_cases': list(chain(pd_cases, crw_cases)),
-            'css_calls': css_calls,
+            'reports': reports,
             'external_assets': external_assets,
-            'external_assets_count': external_assets_count
+            'external_assets_count': external_assets_count,
+            'verification_id': verification_id and verification_id[0] or None
         }
     )
 
@@ -125,7 +128,7 @@ def call_audit_log(request):
 
 
 @login_required(login_url='/admin/login/')
-def calls_data(request):
+def reports_data(request):
     request_dict = dict(request.GET.items())
 
     try:
@@ -139,5 +142,5 @@ def calls_data(request):
 
 
 @login_required(login_url='/admin/login/')
-def calls(request):
-    return render(request, 'workflow/calls.html')
+def reports(request):
+    return render(request, 'workflow/reports.html')

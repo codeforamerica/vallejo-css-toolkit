@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from common.datatables import get_datatables_data
 from workflow.models import CSSCase, CSSCaseAssignee
 
-from workflow.forms import CSSCaseDetailsForm, CSSCaseOwnerForm
+from workflow.forms.case_forms import CSSCaseDetailsForm, CSSCaseOwnerForm
 from workflow.sql import CSS_CASES_DATA_SQL, CSS_CASES_IDX_COLUMN_MAP
 
 log = logging.getLogger('consolelogger')
@@ -72,7 +72,7 @@ def case(request, case_id):
 
     return render(
         request,
-        'workflow/verification.html',
+        'workflow/case.html',
         {
             'case_assignees': CSSCaseAssignee.objects.filter(case=instance).values_list('assignee_name', flat=True),
             'case_details_form': case_details_form,

@@ -7,7 +7,7 @@ $(document).ready(function(){
         "processing": true,
         "bLengthChange": false,
         "serverSide": true,
-        "ajax": "/workflow/calls_data",
+        "ajax": "/workflow/reports_data",
         "order": [[ 2, "desc" ]],
         "columnDefs": [
             {

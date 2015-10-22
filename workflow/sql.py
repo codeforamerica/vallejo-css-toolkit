@@ -68,22 +68,22 @@ CALLS_DATA_SQL = """
         SELECT
             c.id AS id,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.reported_datetime AT TIME ZONE 'America/Los_Angeles'  || '</a>', '') AS reported_datetime_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.reported_datetime AT TIME ZONE 'America/Los_Angeles'  || '</a>', '') AS reported_datetime_link,
             c.reported_datetime AT TIME ZONE 'America/Los_Angeles' AS reported_datetime,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.name  || '</a>', '') AS caller_name_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.name  || '</a>', '') AS caller_name_link,
             c.name AS caller_name,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.phone  || '</a>', '') AS caller_number_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.phone  || '</a>', '') AS caller_number_link,
             c.phone AS caller_number,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.address  || '</a>', '') AS problem_address_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.address  || '</a>', '') AS problem_address_link,
             c.address AS problem_address,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.problem  || '</a>', '') AS status_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.problem  || '</a>', '') AS status_link,
             c.problem AS status,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.resolution  || '</a>', '') AS resolution_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.resolution  || '</a>', '') AS resolution_link,
             c.resolution AS resolution
 
         FROM workflow_csscall as c
