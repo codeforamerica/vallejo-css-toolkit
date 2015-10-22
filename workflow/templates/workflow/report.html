@@ -48,11 +48,11 @@
             <ul class="nav nav-pills pull-right">
                 <li role="presentation" class="active"><a href="#">Report</a></li>
                 {% if verification_id %}
-                    <li role="presentation"><a href="/workflow/verification/{{verification_id}}">Verification</a></li>
-                {% else %}
-                    <li role="presentation" class="disabled"><a href="#">Verification</a></li>
+                    <li role="presentation"><a href="/workflow/verification/{{ verification_id }}">Verification</a></li>
+                    {% if case_id %}
+                        <li role="presentation"><a href="/workflow/case/{{ case_id }}">Case</a></li>
+                    {% endif %}
                 {% endif %}
-                <li role="presentation" class="disabled"><a href="#">Case</a></li>
             </ul>
         </div>
     </div>
@@ -275,36 +275,9 @@
                                         <td>459</td>
                                         <td>This is the description of the service call</td>
                                     </tr>
-                                    <tr>
-                                        <td>10/15/15</td>
-                                        <td><b>RMS</b></td>
-                                        <td>670</td>
-                                        <td>This is the description of the service call</td>
-                                    </tr>
-                                    <tr>
-                                        <td>10/10/15</td>
-                                        <td><b>CRW</b></td>
-                                        <td>E12</td>
-                                        <td>This is the description of the service call</td>
-                                    </tr>
-                                    <tr>
-                                        <td>10/1/15</td>
-                                        <td><b>RMS</b></td>
-                                        <td>459</td>
-                                        <td>This is the description of the service call</td>
-                                    </tr>
-                                    <tr>
-                                        <td>8/8/15</td>
-                                        <td><b>RMS</b></td>
-                                        <td>670</td>
-                                        <td>This is the description of the service call</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1/23/15</td>
-                                        <td><b>CRW</b></td>
-                                        <td>E12</td>
-                                        <td>This is the description of the service call</td>
-                                    </tr>
+                                    {% for external_case in external_cases %}
+                                        <!-- TODO: need to include these -->
+                                    {% endfor %}
                                 </tbody>
                             </table>
                         </div> <!--table wrapper-->
@@ -321,9 +294,11 @@
         <div class="row">
             <div class="col-sm-6 col-sm-offset-6">
                 <div class="form-group col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
-                    <select class="form-control">
+                    <select class="form-control" name="next-action">
                         <option>Save Report</option>
-                        <option>Move to Verification</option>
+                        {% if not verification_id %}
+                            <option>Move to Verification</option>
+                        {% endif %}
                         <option>Forward</option>
                         <option>Resolve</option>
                     </select>

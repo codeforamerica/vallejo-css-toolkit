@@ -48,7 +48,7 @@ class CSSCall(models.Model):
 
 class Verification(models.Model):
     report = models.ForeignKey(CSSCall)
-    property_desciption = models.CharField(max_length=256, null=True, blank=True)
+    property_description = models.CharField(max_length=256, null=True, blank=True)
     owner_name = models.CharField(max_length=256, null=True, blank=True)
     owner_address = models.CharField(max_length=256, null=True, blank=True)
     owner_primary_contact = models.CharField(max_length=256, null=True, blank=True)
@@ -65,6 +65,7 @@ class CSSCase(models.Model):
     owner_address = models.CharField(max_length=256, null=True, blank=True)
     owner_phone = models.CharField(max_length=256, null=True, blank=True)
     owner_email = models.CharField(max_length=256, null=True, blank=True)
+    verification = models.ForeignKey(Verification)
 
 
 class RecordingType(models.Model):

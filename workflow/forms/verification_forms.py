@@ -10,15 +10,6 @@ class VerificationDetailsForm(forms.ModelForm):
 
         fields = (
             'property_description',
-        )
-
-
-class VerificationOwnerForm(forms.ModelForm):
-
-    class Meta:
-        model = Verification
-
-        fields = (
             'owner_name',
             'owner_address',
             'owner_primary_contact',

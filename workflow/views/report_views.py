@@ -40,9 +40,6 @@ def add_report(request):
 
 @login_required(login_url='/admin/login/')
 def report(request, report_id):
-
-    print request.POST
-
     instance = get_object_or_404(CSSCall, id=report_id)
     form = ReportForm(request.POST or None, instance=instance)
 
@@ -51,6 +48,7 @@ def report(request, report_id):
 
     if form.is_valid():
         call = form.save()
+        messages.add_message(request, messages.SUCCESS, 'Report successfully updated.')
 
         if LOG_AUDIT_HISTORY:
 
@@ -61,9 +59,18 @@ def report(request, report_id):
                 if (old_value or new_value) and old_value != new_value:
                     CallAuditItem.objects.create(user=user, call=call, changed_field=field, old_value=old_value, new_value=new_value)
 
-        messages.add_message(request, messages.SUCCESS, 'Report successfully updated.')
+        if request.POST.get('next-action') == 'Move to Verification':
+            if not Verification.objects.filter(report=call):
+                verification = Verification.objects.create(report=call)
+            else:
+                verification = Verification.objects.filter(report=call)[0]
+                # add message warning that it exists
 
-        return HttpResponseRedirect('/workflow/reports')
+            return HttpResponseRedirect('/workflow/verification/{}'.format(verification.id))
+
+        # TODO: handle other conditions
+        else:
+            return HttpResponseRedirect('/workflow/reports')
 
     # either the form was not valid, or we're just loading the page
     pd_cases = []
@@ -92,7 +99,16 @@ def report(request, report_id):
     external_assets = TypeformAsset.objects.filter(css_report=instance.id).order_by('-id')
     external_assets_count = len(external_assets)
 
-    verification_id = Verification.objects.filter(report=instance)
+    verification_id = None
+    case_id = None
+
+    verifications = Verification.objects.filter(report=instance)
+    if verifications:
+        verification = verifications[0]
+        verification_id = verification.id
+        cases = CSSCase.objects.filter(verification=verification)
+        if cases:
+            case_id = cases[0].id
 
     # TODO: fix the history section at db and view level
     return render(
@@ -106,7 +122,8 @@ def report(request, report_id):
             'reports': reports,
             'external_assets': external_assets,
             'external_assets_count': external_assets_count,
-            'verification_id': verification_id and verification_id[0] or None
+            'verification_id': verification_id,
+            'case_id': case_id
         }
     )
 

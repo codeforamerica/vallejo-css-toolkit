@@ -78,8 +78,10 @@ def case(request, case_id):
             'case_details_form': case_details_form,
             'contact_owner_form': contact_owner_form,
             'uploaded_docs': uploaded_docs,
-            'property_address': "{} {}".format(instance.address_number, instance.street_name.capitalize()),
-            'case_id': instance.pk
+            'property_address': instance.verification.report.address,
+            'case_id': instance.pk,
+            'verification_id': instance.verification.id,
+            'report_id': instance.verification.report.id
         }
     )
 
