@@ -40,6 +40,9 @@ def add_report(request):
 
 @login_required(login_url='/admin/login/')
 def report(request, report_id):
+
+    print request.POST
+
     instance = get_object_or_404(CSSCall, id=report_id)
     form = ReportForm(request.POST or None, instance=instance)
 
