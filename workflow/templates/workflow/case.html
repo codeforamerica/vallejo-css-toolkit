@@ -27,221 +27,224 @@
 <div class="container">
 
     <div class="row subnav">
-        <div class="col-md-8">
+        <div class="col-md-8 col-sm-7 col-xs-12">
             <h1>{{ property_address }}</h1>
+            <p class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</p>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-4 col-sm-5 col-xs-12">
             <ul class="nav nav-pills pull-right">
                 <li role="presentation"><a href="/workflow/report/{{ report_id }}">Reports</a></li>
                 <li role="presentation"><a href="/workflow/verification/{{ verification_id }}">Verification</a></li>
                 <li role="presentation" class="active"><a href="#">Case</a></li>
             </ul>
         </div>
-
     </div>
 
     <div class="row">
-        <div class="col-md-3 pane-selectors">
+        <div class="col-sm-4 pane-selectors">
             <div class="list-group">
-                <h5 class="list-group-item">Investigation</h5>
+                <h5 class="list-group-item list-group-item-title">Case</h5>
                 <a href="#case-details" class="list-group-item active">Case Details<span class="fa fa-list-item fa-angle-right"></span></a>
-                <a href="#contact-sheet" class="list-group-item">Contact Sheet<span class="fa fa-list-item fa-angle-right"></span></a>
-                <a href="#prop-details" class="list-group-item">Property Details<span class="fa fa-list-item fa-angle-right"></span></a>
+                <a href="#incident-log" class="list-group-item">Incident Log<span class="fa fa-list-item fa-angle-right"></span></a>
                 <a href="#docs" class="list-group-item">Documents<span class="fa fa-list-item fa-angle-right"></span></a>
-
             </div>
         </div>
 
-        <div class="col-md-8 col-md-offset-1 report">
-
-            <div class="tab-pane" id="prop-details">
-                <h4>Property Details</h4>
-                <p>(coming soon)</p>
+        <!--Case Details pane-->
+        <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="case-details">
+          <div class="row">
+            <div class="col-sm-12">
+              <h4>Case Details</h4>
             </div>
+          </div>
 
-            <div class="tab-pane" id="docs">
-                <h4>Documents</h4>
+          <form id="owner-contact-form" method="POST">
+              {% csrf_token %}
 
-                {% for uploaded_doc in uploaded_docs %}
-                    <hr>
-                    <div class="row uploaded-doc">
-                        <img class="inline" src="{{ uploaded_doc.thumbnail_url }}">
-                        <ul class="inline doc-attrs">
-                            <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.name }}</h5></li>
-                            <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
-                            <li></li>
-                            <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.added }}</p></li>
-                        </ul>
-                    </div>
-
-                {% endfor %}
-
-                <hr>
-
-                <form id="file-upload-form">
-                    <h5>Upload a new file</h5>
-                    <input type="file" name="uploadDoc">
-                    <button class="btn btn-primary upload-submit-button" type="submit" form="file-upload-form" value="Submit">Submit</button>
-                </form>
-            </div>
-
-            <div class="tab-pane" id="case-details">
-                <h4>Case Details</h4>
-
-                <form id="case-details-form" method="POST">
-                    {% csrf_token %}
-
-                    {{ case_details_form.non_field_errors }}
-
-                    <input id="case_id" type="hidden" value="{{case_id}}">
-
-                    <div class="fieldWrapper form-group owner-phone">
-                        <label for="{{ form.address_number.id_for_label }}">Address Number:</label>
-                        {{ case_details_form.address_number|add_class:"form-control" }}
-                        {{ case_details_form.address_number.errors }}
-                    </div>
-
-                    <div class="fieldWrapper form-group owner-email">
-                        <label for="{{ form.street_name.id_for_label }}">Street Name:</label>
-                        {{ case_details_form.street_name|add_class:"form-control" }}
-                        {{ case_details_form.street_name.errors }}
-                    </div>
-
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.description.id_for_label }}">Description:</label>
-                        {{ case_details_form.description|add_class:"form-control" }}
-                        {{ case_details_form.description.errors }}
-                    </div>
-
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.resolution.id_for_label }}">Resolution:</label>
-                        {{ case_details_form.resolution|add_class:"form-control" }}
-                        {{ case_details_form.resolution.errors }}
-                    </div>
-
-                    <div class="form-group">
-                        <label>Assignees:</label>
-                        <table id="assignee-table">
-                            <tr id="case-assignees">
-                                {% for case_assignee in case_assignees %}
-                                    <td class='assignee-row-cell'>
-                                        {{ case_assignee }}&nbsp&nbsp&nbsp
-                                        <a class='unassign' onclick="removeAssignee(event, this.parentElement, '{{case_assignee}}')" href='#'>
-                                            <i class='fa fa-close'></i>
-                                        </a>
-                                    </td>
-                                {% endfor %}
-                            </tr>
-                        </table>
-                    </div>
-
-                    <div class="form-group" id="assignee-selector">
-                        <label>Add Assignees:</label>
-                        <input id="assignee-selection" name="assignee" class="typeahead form-control" type="text" placeholder="">
-                        <button id="add-assignee-submit" style="margin-top: 10px;" class="btn btn-primary">Add</button>
-                    </div>
-
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.status.id_for_label }}">Status:</label>
-                        {{ case_details_form.status|add_class:"form-control" }}
-                        {{ case_details_form.status.errors }}
-                    </div>
-
-                    <button class="btn btn-primary case-details-submit-button" type="submit" form="case-details-form" value="Submit">Save</button>
-                </form>
-            </div>
-
-            <div class="tab-pane" id="contact-sheet">
-                <h4>Contact Sheet</h4>
-
-                <form id="owner-contact-form" method="POST">
-                    {% csrf_token %}
-
-                    {{ contact_owner_form.non_field_errors }}
-
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.owner_name.id_for_label }}">Property Owner:</label>
-                        {{ contact_owner_form.owner_name|add_class:"form-control" }}
-                        {{ contact_owner_form.owner_name.errors }}
-                    </div>
-
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.owner_address.id_for_label }}">Owner Address:</label>
-                        {{ contact_owner_form.owner_address|add_class:"form-control" }}
-                        {{ contact_owner_form.owner_address.errors }}
-                    </div>
-
-                    <div class="fieldWrapper form-group owner-phone">
-                        <label for="{{ form.owner_phone.id_for_label }}">Phone:</label>
-                        {{ contact_owner_form.owner_phone|add_class:"form-control" }}
-                        {{ contact_owner_form.owner_phone.errors }}
-                    </div>
-
-                    <div class="fieldWrapper form-group owner-email">
-                        <label for="{{ form.owner_email.id_for_label }}">Email:</label>
-                        {{ contact_owner_form.owner_email|add_class:"form-control" }}
-                        {{ contact_owner_form.owner_email.errors }}
-                    </div>
-
-                    <button class="btn btn-primary owner-info-submit-button" type="submit" form="owner-contact-form" value="Submit">Save</button>
-                </form>
-
-                <div class="contact-log-section">
-                    <label>Contact Log</label>
-                        <div class="container">
-                            <div class="col-md-7 col-md-offset-1" id="call-log">
-                              <div class="row">
-                                <div class="col-sm-12">
-                                  <div class="table-wrapper">
-                                    <table class="table table-hover">
-                                      <thead>
-                                        <tr>
-                                          <th>Date</th>
-                                          <th>Caller</th>
-                                          <th>Type</th>
-                                          <th>Description</th>
-                                        </tr>
-                                      </thead>
-
-                                      <tbody>
-                                        <tr>
-                                          <td>Today</td>
-                                          <td>TinaE</td>
-                                          <td>Phone</td>
-                                          <td>Left message with assistant to call back</td>
-                                        </tr>
-
-                                        <tr>
-                                          <td>10/15/15</td>
-                                          <td>TinaE</td>
-                                          <td>Phone</td>
-                                          <td>Left message asking if she received email</td>
-                                        </tr>
-
-                                        <tr>
-                                          <td>10/10/15</td>
-                                          <td>Karen</td>
-                                          <td>Email</td>
-                                          <td>First contact; informed her of squatters</td>
-                                        </tr>
-                                    </table>
-                                  </div>
-
-                                  <a class="pull-right" href="#">Add Contact</a>
-
-                                </div>
-                              </div>
-
-                            </div>
-                          </div>
-                      </div>
-
+              {{ contact_owner_form.non_field_errors }}
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="fieldWrapper form-group">
+                      <label for="{{ form.owner_name.id_for_label }}">Case Number:</label>
+                      {{ contact_owner_form.owner_name|add_class:"form-control" }}
+                      {{ contact_owner_form.owner_name.errors }}
+                  </div>
                 </div>
 
+                <div class="col-sm-12">
+                  <div class="fieldWrapper form-group">
+                      <label for="{{ form.owner_address.id_for_label }}">Assignees:</label>
+                      {{ contact_owner_form.owner_address|add_class:"form-control" }}
+                      {{ contact_owner_form.owner_address.errors }}
+                  </div>
+                </div>
+
+                <div class="col-sm-12">
+                  <div class="fieldWrapper form-group owner-phone">
+                      <label for="{{ form.owner_phone.id_for_label }}">Case Description/Goals:</label>
+                      <textarea id="" maxlength="256" name="" class="form-control" rows="3"></textarea>
+                  </div>
+                </div>
+
+                <div class="col-sm-12">
+                  <div class="fieldWrapper form-group owner-email">
+                      <label for="{{ form.owner_email.id_for_label }}">Priority:</label>
+                      <select class="form-control">
+                        <option>Medium</option>
+                        <option>Low</option>
+                        <option>High</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div class="col-sm-12">
+                  <div class="fieldWrapper form-group">
+                      <label for="{{ form.resolution.id_for_label }}">Resolution:</label>
+                      {{ case_details_form.resolution|add_class:"form-control" }}
+                      {{ case_details_form.resolution.errors }}
+                  </div>
+                </div>
+
+              </div>
+          </form>
+        </div><!--End Case Details pane-->
+
+
+        <!-- Incident Log pane -->
+        <div class="tab-pane" id="incident-log">
+            <div class="col-md-7 col-md-offset-1 report">
+                <h4>Incident Log</h4>
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="table-wrapper">
+                          <table class="table table-hover small-table" id="call-log">
+                            <thead>
+                              <tr>
+                                <th>Date</th>
+                                <th>Source</th>
+                                <th>Code</th>
+                                <th>Description</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              <tr>
+                                <td>Today</td>
+                                <td><b>RMS</b></td>
+                                <td>459</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/15/15</td>
+                                <td><b>RMS</b></td>
+                                <td>670</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/10/15</td>
+                                <td><b>CRW</b></td>
+                                <td>E12</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/1/15</td>
+                                <td><b>RMS</b></td>
+                                <td>459</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>8/8/15</td>
+                                <td><b>RMS</b></td>
+                                <td>670</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>1/23/15</td>
+                                <td><b>CRW</b></td>
+                                <td>E12</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+                          </table>
+                        </div> <!--table wrapper-->
+
+                        <a href="#" class="pull-right">Add Incident</a>
+
+                      </div>
+                    </div>
+
+                  </div><!--contact log table-->
+
+        </div><!-- end Incident Log pane -->
+
+
+
+        <!-- Documents pane -->
+        <div class="tab-pane" id="docs">
+            <div class="col-sm-7 col-sm-offset-1 report">
+              <h4>Case Documents</h4>
+
+              {% for uploaded_doc in uploaded_docs %}
+                  <div class="row uploaded-doc">
+                    <div class="col-sm-4">
+                      <img src="{{ uploaded_doc.thumbnail_url }}">
+                    </div>
+
+                    <div class="col-sm-8">
+                      <ul class="doc-attrs">
+                          <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.name }}</h5></li>
+                          <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
+                          <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.added }}</p></li>
+                      </ul>
+                    </div>
+                  </div>
+
+              {% endfor %}
+
+
+                  <div class="row new-upload">
+                    <div class="col-sm-12">
+                      <form id="file-upload-form">
+                          <h4>Upload a new file</h4>
+                          <input type="file" name="uploadDoc">
+                      </form>
+                    </div>
+                  </div>
+
             </div>
-        </div>
-    </div>
+        </div> <!-- end Documents pane -->
+
+
+  </div>
+</div>
+
+<div class="footer container-fluid">
+  <div class="container next-actions">
+    <form>
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-6">
+          <div class="form-group col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
+            <select class="form-control">
+              <option>Save Case</option>
+              <option>Forward</option>
+              <option>Resolve</option>
+              <option>Revert to Verification</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-4 submit-btn">
+            <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Confirm</button>
+          </div>
+      </div>
+
+    </form>
+  </div>
 </div>
 
 {% endblock %}
