@@ -15,6 +15,7 @@
 
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/css_call2.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/>
 
 <script type='text/javascript' src="{% static "workflow/js/street_names.js" %}"></script>
 <script type='text/javascript' src="{% static "workflow/js/call.js" %}"></script>
@@ -52,9 +53,9 @@
                 <ul class="nav nav-pills pull-right">
                     <li role="presentation" class="active"><a href="#">Report</a></li>
                     {% if css_cases %}
-                        <li role="presentation"><a href="/workflow/case/{{css_cases.0.0}}">Investigation</a></li>
+                        <li role="presentation"><a href="/workflow/case/{{css_cases.0.0}}">Verification</a></li>
                     {% else %}
-                        <li role="presentation" class="disabled"><a href="#">Investigation</a></li>
+                        <li role="presentation" class="disabled"><a href="#">Verification</a></li>
                     {% endif %}
                     <li role="presentation" class="disabled"><a href="#">Case</a></li>
                 </ul>
@@ -244,25 +245,37 @@
 
         <!-- Report Attachments pane -->
         <div class="tab-pane" id="report-attachments">
-            <div class="col-md-7 col-md-offset-1 report">
+            <div class="col-sm-7 col-sm-offset-1 report">
                 <h4>Report Attachments</h4>
 
                 {% for external_asset in external_assets %}
-                    <hr>
                     <div class="row uploaded-doc">
-                        <a href="{{ external_asset.asset_url }}" target="_blank"><img class="inline external-asset" src="{{ external_asset.asset_url }}"></a>
-                        <ul class="inline doc-attrs">
-                            <li class="doc-name"><h5 class="doc-name-text">Submitted via web form</h5></li>
-    <!--                             <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
-                            <li></li> -->
-                            <li class="doc-date"><p class="doc-date-text">Added: {{ external_asset.css_report.reported_datetime|date }}</p></li>
-                        </ul>
+                        <div class="col-sm-4">
+                          <a href="{{ external_asset.asset_url }}" target="_blank"><img class="external-asset" src="{{ external_asset.asset_url }}"></a>
+                        </div>
+
+                        <div class="col-sm-8">
+                          <ul class="doc-attrs">
+                              <li class="doc-name"><h5 class="doc-name-text">Submitted via web form</h5></li>
+                              <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
+                              <li class="doc-date"><p class="doc-date-text">Added: {{ external_asset.css_report.reported_datetime|date }}</p></li>
+                          </ul>
+                        </div>
                     </div>
 
                 {% endfor %}
 
+                    <div class="row new-upload">
+                      <div class="col-sm-12">
+                        <form id="file-upload-form">
+                            <h4>Upload a new file</h4>
+                            <input type="file" name="uploadDoc">
+                        </form>
+                      </div>
+                    </div>
+
                 {% if external_assets %}
-                    <hr>
+
                 {% endif %}
 
                 <!-- TODO: write the middleware to handle file upload -->
@@ -280,29 +293,70 @@
         <div class="tab-pane" id="report-history">
             <div class="col-md-7 col-md-offset-1 report">
                 <h4>Report History</h4>
-                    {% if external_cases %}
-                        <div class="form-group">
-                            <label for="exampleInputEmail1">History lookup:</label>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <table class="table table-hover table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Source</th>
-                                            </tr>
-                                        </thead>
-                                        {% for external_case in external_cases %}
-                                            <tr>
-                                                <td>{{ external_case.0 }}</td>
-                                                <td>{{ external_case.3 }}</td>
-                                            </tr>
-                                        {% endfor %}
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    {% endif %}
+
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="table-wrapper">
+                          <table class="table table-hover small-table" id="call-log">
+                            <thead>
+                              <tr>
+                                <th>Date</th>
+                                <th>Source</th>
+                                <th>Code</th>
+                                <th>Description</th>
+                              </tr>
+                            </thead>
+
+                            <tbody>
+                              <tr>
+                                <td>Today</td>
+                                <td><b>RMS</b></td>
+                                <td>459</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/15/15</td>
+                                <td><b>RMS</b></td>
+                                <td>670</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/10/15</td>
+                                <td><b>CRW</b></td>
+                                <td>E12</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>10/1/15</td>
+                                <td><b>RMS</b></td>
+                                <td>459</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>8/8/15</td>
+                                <td><b>RMS</b></td>
+                                <td>670</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+
+                              <tr>
+                                <td>1/23/15</td>
+                                <td><b>CRW</b></td>
+                                <td>E12</td>
+                                <td>This is the description of the service call</td>
+                              </tr>
+                          </table>
+                        </div> <!--table wrapper-->
+
+                      </div>
+                    </div>
+
+                  </div><!--contact log table-->
+
             </div>
         </div>  <!-- end Report Attachments pane -->
     </div>
@@ -311,12 +365,25 @@
 
 <div class="footer container-fluid">
   <div class="container next-actions">
-    <div class="row">
-      <div class="col-sm-4 pull-right">
-        <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Save</button>
+    <form>
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-6">
+          <div class="form-group col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
+            <select class="form-control">
+              <option>Save Report</option>
+              <option>Move to Verification</option>
+              <option>Forward</option>
+              <option>Resolve</option>
+            </select>
+          </div>
+
+          <div class="col-md-4 col-sm-4 col-xs-4 submit-btn">
+            <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Confirm</button>
+          </div>
       </div>
-    </div>
-  </footer>
+
+    </form>
+  </div>
 </div>
 
 {% endblock %}

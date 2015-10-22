@@ -72,7 +72,7 @@ def case(request, case_id):
 
     return render(
         request,
-        'workflow/css_case.html',
+        'workflow/verification.html',
         {
             'case_assignees': CSSCaseAssignee.objects.filter(case=instance).values_list('assignee_name', flat=True),
             'case_details_form': case_details_form,

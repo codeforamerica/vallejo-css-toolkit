@@ -1,0 +1,304 @@
+body{
+  padding-bottom:0;
+}
+
+/**Header**/
+.subnav h1{
+  margin-bottom:5px;
+  font-weight:bold;
+}
+
+p.reporter-subheader{
+  margin-left:5px;
+}
+
+.reporter-subheader {
+  color: #777;
+}
+
+.nav-pills{
+  margin-top: 60px;
+}
+
+.nav-pills>li>a{
+  padding:5px 15px;
+}
+
+.nav-pills>li.active>a{
+  background-color: #F6661B;
+  border-radius:8px;
+}
+
+.subnav{
+  border-bottom:2px solid #eee;
+  padding-bottom:10px;
+  margin-bottom:50px;
+  margin-top:50px;
+}
+
+
+
+/**Sidebar**/
+th, td { padding: 10px 15px; }
+
+th, td { text-align: center; }
+
+.fa-list-item {
+    float: right;
+}
+
+.list-group-item{
+  border-color:#ddd;
+  padding:15px 15px 10px;
+}
+
+.list-group-item-title {
+  color: #fff;
+  background-color: #1F4E81;
+  padding-top:20px;
+  border-color:#1F4E81;
+}
+
+.list-group-item.active{
+  border-color:#ddd;
+}
+
+.list-group-item.active,
+.list-group-item.active:focus,
+.list-group-item.active:hover  {
+  color: #F6661B;
+  background-color: #fff;
+  font-weight:500;
+  border-color:#ddd;
+}
+
+
+/**Pane Body**/
+.tab-pane{
+  min-height:550px;
+}
+
+.report h4{
+  font-size:22px;
+  font-weight: bold;
+  color:#1F4E81;
+  margin-bottom: 30px;
+}
+
+.form-group{
+  margin-bottom:35px;
+
+}
+
+.form-control{
+  border-color: #ddd;
+  box-shadow:none;
+  height:40px;
+  color:#696969;
+}
+
+label{
+  font-weight:500;
+  color:#3e3e3e;
+}
+
+.tt-menu {
+  text-align: left;
+}
+
+.typeahead,
+.tt-query,
+.tt-hint {
+/*  width: 396px;*/
+  width: 100%;
+  height: 40px;
+  padding: 8px 12px;
+  line-height: 30px;
+  border: 1px solid #ddd;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  outline: none;
+}
+
+.typeahead {
+  background-color: #fff;
+}
+
+.typeahead:focus {
+  border: 2px solid #0097cf;
+}
+
+.tt-query {
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.tt-hint {
+  color: #999
+}
+
+.twitter-typeahead {
+    display: block !important;
+}
+
+.tt-menu {
+  width: 422px;
+  margin: 12px 0;
+  padding: 8px 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-border-radius: 8px;
+     -moz-border-radius: 8px;
+          border-radius: 8px;
+  -webkit-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+     -moz-box-shadow: 0 5px 10px rgba(0,0,0,.2);
+          box-shadow: 0 5px 10px rgba(0,0,0,.2);
+}
+
+.tt-suggestion {
+  padding: 3px 20px;
+  font-size: 18px;
+  line-height: 24px;
+}
+
+.tt-suggestion:hover {
+  cursor: pointer;
+  color: #fff;
+  background-color: #0097cf;
+}
+
+.tt-suggestion.tt-cursor {
+  color: #fff;
+  background-color: #0097cf;
+
+}
+
+.tt-suggestion p {
+  margin: 0;
+}
+
+
+/**Documents Pane**/
+.uploaded-doc{
+  border-bottom: 1px solid #eee;
+  padding-top:30px;
+  padding-bottom:30px;
+}
+
+.upload-submit-button {
+    margin-top: 10px;
+}
+
+ul.doc-attrs {
+    list-style-type: none;
+    padding-left:0
+}
+
+.doc-date-text {
+    font-size: 1.2rem;
+    color: grey;
+}
+
+.external-asset {
+  max-width: 100%;
+  height: auto;
+}
+
+.doc-name-text {
+    font-size: 1.9rem;
+}
+
+.new-upload h4{
+  font-size:16px;
+  font-weight:bold;
+  margin-top:30px;
+  margin-bottom:15px;
+}
+
+/**Small tables**/
+.small-table{
+  margin-bottom:0;
+  font-size:14px;
+  color:#3e3e3e;
+}
+
+.table-wrapper{
+  border:1px solid #eeeeee;
+  border-radius:4px;
+  overflow: hidden;
+  margin-bottom:20px;
+}
+
+.small-table thead{
+  background-color:#E8E8E8;
+  color:#3e3e3e;
+  border-bottom:none;
+}
+
+.small-table th{
+  font-weight: normal;
+
+}
+
+.small-table>thead>tr>th, .table>tbody>tr>td{
+  padding-top: 15px;
+  padding-bottom:8px;
+  padding-left: 25px;
+  border-color:#eeeeee;
+}
+
+.small-table th, .small-table td{
+  text-align:left;
+  font-size:12px;
+}
+
+
+/**Footer**/
+.footer{
+  background-color:#1F4E81;
+  height:100%;
+  padding-bottom:50px;
+  margin-top:100px;
+}
+
+.footer button.btn.btn-success.btn-lg.pull-right, .footer .form-group{
+  margin-top:35px;
+}
+
+.footer .form-control{
+  height:45px;
+}
+
+.submit-btn{
+  padding-right: 0;
+}
+
+
+/**Media Queries**/
+
+@media (min-width:992px) {
+   .container {
+    width:900px
+  }
+
+  .list-group{
+    width:250px;
+  }
+}
+
+@media (min-width:900px){
+  .footer .form-control{
+    margin-left:30px;
+  }
+
+}
+
+@media (max-width:768px){
+  .footer .form-control{
+    margin-left:100px;
+  }
+
+}
