@@ -259,12 +259,21 @@ ul.doc-attrs {
 /**Footer**/
 .footer{
   background-color:#1F4E81;
-  height:120px;
+  height:100%;
+  padding-bottom:50px;
   margin-top:100px;
 }
 
-.footer button.btn.btn-success.btn-lg.pull-right{
+.footer button.btn.btn-success.btn-lg.pull-right, .footer .form-group{
   margin-top:35px;
+}
+
+.footer .form-control{
+  height:45px;
+}
+
+.submit-btn{
+  padding-right: 0;
 }
 
 
@@ -274,11 +283,22 @@ ul.doc-attrs {
    .container {
     width:900px
   }
-}
 
-@media (min-width:992px) {
   .list-group{
     width:250px;
+  }
+}
+
+@media (min-width:900px){
+  .footer .form-control{
+    margin-left:30px;
+  }
+
+}
+
+@media (max-width:768px){
+  .footer .form-control{
+    margin-left:100px;
   }
 
 }
