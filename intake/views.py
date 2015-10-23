@@ -19,6 +19,196 @@ log = logging.getLogger('consolelogger')
 
 
 @twilio_view
+def step_one(request):
+    resp = twilio.twilio.Response()
+
+    with resp.gather(action="/intake/step-two/", numDigits=1, method="POST") as g:
+        g.say("Hello, you’ve reached the CSS-tool. Here you can report issues in your neighborhood or leave a question or message for the Community Services Section. If you are experiencing an emergency, please call 911. Press 1 if you’re calling to report an issue, press 2 if you’re calling to ask a question or leave a message.")
+
+    return resp
+
+
+@twilio_view
+def step_two(request):
+    digit_pressed = request.POST.get('Digits', None)
+
+    resp = twilio.twiml.Response()
+
+    if digit_pressed and digit_pressed.isdigit():
+        if int(digit_pressed) == 2:
+            resp.say("What is your message or question? When you are finished, press pound.")
+            resp.record(
+                action="/intake/step-nine",
+                finishOnKey="#",
+                method="POST",
+                timeout=30
+            )
+
+        else:
+            resp.say("Where is the issue occurring? Please say the address or cross streets.")
+            resp.record(
+                action="/intake/step-three",
+                finishOnKey="#",
+                method="POST",
+                timeout=30
+            )
+
+    return resp
+
+
+@twilio_view
+def step_three():
+    resp = twilio.twiml.Response()
+
+    resp.say("Describe the issue you’re calling about. When you are finished, press pound.")
+
+    resp.record(
+        action="/intake/step-four",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+    return resp
+
+
+@twilio_view
+def step_four(request):
+    resp = twilio.twilio.Response()
+
+    resp.say("How long has this issue been occurring?")
+
+    resp.record(
+        action="/intake/step-five",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+
+@twilio_view
+def step_five(request):
+    resp = twilio.twilio.Response()
+
+    resp.say("Around what time of day does this issue occur?")
+
+    resp.record(
+        action="/intake/step-six",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+
+@twilio_view
+def step_six(request):
+    resp = twilio.twilio.Response()
+
+    with resp.gather(action="/intake/step-seven/", numDigits=1, method="POST") as g:
+        g.say("How many people are involved in this issue? Answer using a number on your keyboard. If you are unsure, press pound.")
+
+    return resp
+
+
+@twilio_view
+def step_seven(request):
+    resp = twilio.twilio.Response()
+
+    with resp.gather(action="/intake/step-eight/", numDigits=1, method="POST") as g:
+        g.say("Are there safety concerns at this location that we should be aware of? If yes, press 1. If no, press 2. If you are unsure, press 3")
+
+    return resp
+
+
+@twilio_view
+def step_eight(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("Have you ever reported this issue before? If so, when? If not, press pound.")
+
+    resp.record(
+        action="/intake/step-nine",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+
+@twilio_view
+def step_nine(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("It’s helpful if we have your name and contact information in case we need any further details on how to best resolve this issue. We will never share your information with anyone other than authorized city staff.")
+    resp.say("What is your name?")
+
+    resp.record(
+        action="/intake/step-ten",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+
+@twilio_view
+def step_ten(request):
+    resp = twilio.twiml.Response()
+
+    with resp.gather(action="/intake/step-eleven", numDigits=10, method="POST") as g:
+        g.say("What is your phone number, starting with the area code? Answer using the numbers on your keyboard.")
+
+    return resp
+
+
+@twilio_view
+def step_eleven(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("What is your email address?")
+
+    resp.record(
+        action="/intake/step-twelve",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+
+@twilio_view
+def step_twelve(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("What is your home address?")
+
+    resp.record(
+        action="/intake/step-thirteen",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+
+@twilio_view
+def step_thirteen(request):
+    resp = twilio.twiml.Response()
+
+    with resp.gather(action="/intake/step-fourteen", numDigits=1, method="POST") as g:
+        g.say("Where should we send you the receipt and progress updates for this report? Press 1 for email updates, press 2 for text message updates, press 3 if you would not like a receipt and progress updates.")
+
+    return resp
+
+
+@twilio_view
+def step_fourteen(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("Thank you, your report has been sent to the Community Services Section. Have a good day.")
+
+    return resp
+
+
+### Original intake view below ###
+
+@twilio_view
 def welcome(request):
     resp = twilio.twiml.Response()
     resp.say("Hello! Thank you for calling the Community Services Section of the Vallejo Police Department.")
