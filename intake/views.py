@@ -23,7 +23,7 @@ def step_one(request):
     resp = twilio.twilio.Response()
 
     with resp.gather(action="/intake/step-two/", numDigits=1, method="POST") as g:
-        g.say("Hello, you’ve reached the CSS-tool. Here you can report issues in your neighborhood or leave a question or message for the Community Services Section. If you are experiencing an emergency, please call 911. Press 1 if you’re calling to report an issue, press 2 if you’re calling to ask a question or leave a message.")
+        g.say("Hello, you've reached the CSS-tool. Here you can report issues in your neighborhood or leave a question or message for the Community Services Section. If you are experiencing an emergency, please call 911. Press 1 if you're calling to report an issue, press 2 if you're calling to ask a question or leave a message.")
 
     return resp
 
@@ -60,7 +60,7 @@ def step_two(request):
 def step_three():
     resp = twilio.twiml.Response()
 
-    resp.say("Describe the issue you’re calling about. When you are finished, press pound.")
+    resp.say("Describe the issue you're calling about. When you are finished, press pound.")
 
     resp.record(
         action="/intake/step-four",
@@ -138,7 +138,7 @@ def step_eight(request):
 def step_nine(request):
     resp = twilio.twiml.Response()
 
-    resp.say("It’s helpful if we have your name and contact information in case we need any further details on how to best resolve this issue. We will never share your information with anyone other than authorized city staff.")
+    resp.say("It's helpful if we have your name and contact information in case we need any further details on how to best resolve this issue. We will never share your information with anyone other than authorized city staff.")
     resp.say("What is your name?")
 
     resp.record(
