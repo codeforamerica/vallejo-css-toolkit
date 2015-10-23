@@ -57,7 +57,7 @@ def step_two(request):
 
 
 @twilio_view
-def step_three():
+def step_three(request):
     resp = twilio.twiml.Response()
 
     resp.say("Describe the issue you're calling about. When you are finished, press pound.")
@@ -85,6 +85,8 @@ def step_four(request):
         timeout=30
     )
 
+    return resp
+
 
 @twilio_view
 def step_five(request):
@@ -98,6 +100,8 @@ def step_five(request):
         method="POST",
         timeout=30
     )
+
+    return resp
 
 
 @twilio_view
@@ -133,6 +137,8 @@ def step_eight(request):
         timeout=30
     )
 
+    return resp
+
 
 @twilio_view
 def step_nine(request):
@@ -147,6 +153,8 @@ def step_nine(request):
         method="POST",
         timeout=30
     )
+
+    return resp
 
 
 @twilio_view
@@ -172,6 +180,8 @@ def step_eleven(request):
         timeout=30
     )
 
+    return resp
+
 
 @twilio_view
 def step_twelve(request):
@@ -185,6 +195,8 @@ def step_twelve(request):
         method="POST",
         timeout=30
     )
+
+    return resp
 
 
 @twilio_view
