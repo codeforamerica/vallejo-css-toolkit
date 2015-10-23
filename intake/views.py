@@ -20,7 +20,7 @@ log = logging.getLogger('consolelogger')
 
 @twilio_view
 def step_one(request):
-    resp = twilio.twilio.Response()
+    resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-two/", numDigits=1, method="POST") as g:
         g.say("Hello, you've reached the CSS-tool. Here you can report issues in your neighborhood or leave a question or message for the Community Services Section. If you are experiencing an emergency, please call 911. Press 1 if you're calling to report an issue, press 2 if you're calling to ask a question or leave a message.")
@@ -74,7 +74,7 @@ def step_three():
 
 @twilio_view
 def step_four(request):
-    resp = twilio.twilio.Response()
+    resp = twilio.twiml.Response()
 
     resp.say("How long has this issue been occurring?")
 
@@ -88,7 +88,7 @@ def step_four(request):
 
 @twilio_view
 def step_five(request):
-    resp = twilio.twilio.Response()
+    resp = twilio.twiml.Response()
 
     resp.say("Around what time of day does this issue occur?")
 
@@ -102,7 +102,7 @@ def step_five(request):
 
 @twilio_view
 def step_six(request):
-    resp = twilio.twilio.Response()
+    resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-seven/", numDigits=1, method="POST") as g:
         g.say("How many people are involved in this issue? Answer using a number on your keyboard. If you are unsure, press pound.")
@@ -112,7 +112,7 @@ def step_six(request):
 
 @twilio_view
 def step_seven(request):
-    resp = twilio.twilio.Response()
+    resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-eight/", numDigits=1, method="POST") as g:
         g.say("Are there safety concerns at this location that we should be aware of? If yes, press 1. If no, press 2. If you are unsure, press 3")
