@@ -34,9 +34,6 @@
       </div>
   </div>
 
-
-
-  <!-- Report Details pane -->
   <div class="col-sm-7 report">
     <div class="row">
       <div class="col-sm-12">
@@ -44,10 +41,6 @@
       </div>
     </div>
 
-<!--                 {% if form.reported_datetime.value and form.name.value %}
-        <h4> Reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</h4>
-    {% endif %}
--->
     <form class="form-contact" id="css-call-form" method="POST">
         {% csrf_token %}
 
@@ -173,11 +166,6 @@
             </div>
           </div>
 
-          <!-- TODO: remove this -->
-          <div hidden="true" class="form-group">
-              {{ form.date|add_class:"form-control" }}
-          </div>
-
           <!-- TODO: need to implement this at view and db level -->
           <div class="col-sm-12">
             <div class="form-group">
@@ -205,10 +193,6 @@
                 </form>
             </div>
           </div>
-
-          <!--<div class="col-sm-4 pull-right">
-            <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Save</button>
-          </div>-->
         </div>
 
     </form>
