@@ -33,7 +33,11 @@ def add_report(request):
         form.save()
         messages.add_message(request, messages.SUCCESS, 'Report successfully added.')
 
-        return HttpResponseRedirect('/workflow/reports')
+        if request.POST.get('next-action') == "Another report":
+            return HttpResponseRedirect('/workflow/add_report')
+
+        else:
+            return HttpResponseRedirect('/workflow/reports')
 
     return render(request, 'workflow/add_report.html', {'form': form})
 

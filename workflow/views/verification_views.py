@@ -39,7 +39,7 @@ def verification(request, verification_id):
 
         # TODO: handle other conditions
         else:
-            return HttpResponseRedirect('/workflow/verifications')
+            return HttpResponseRedirect('/workflow/verification/{}'.format(verification.id))
 
     case_id = None
     cases = CSSCase.objects.filter(verification=instance)
