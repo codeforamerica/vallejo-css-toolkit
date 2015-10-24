@@ -19,7 +19,10 @@ def process_row(row, commit=False):
 
     name, address, phone, problem, date, resolution = row
 
-    date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d')).astimezone(UTC)
+    if date:
+        date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d')).astimezone(UTC)
+    else:
+        date_converted = None
 
     # try:
     #     tagged = usaddress.tag(address)

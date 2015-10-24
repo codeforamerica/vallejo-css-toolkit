@@ -117,6 +117,7 @@ CALLS_DATA_SQL = """
     FROM data, total_count
     %s
     ORDER BY %s %s
+    NULLS LAST
     OFFSET %s
     LIMIT %s
     ;
