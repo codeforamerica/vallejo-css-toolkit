@@ -1,14 +1,25 @@
 import csv
+from datetime import datetime
 
-import usaddress
+import pytz
+
+# import usaddress
 from django.core.management.base import BaseCommand
 
 from workflow.models import CSSCall
 
+tz = pytz.timezone('America/Los_Angeles')
+UTC = pytz.utc
+
 
 def process_row(row, commit=False):
 
+    if not row:
+        return
+
     name, address, phone, problem, date, resolution = row
+
+    date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d')).astimezone(UTC)
 
     # try:
     #     tagged = usaddress.tag(address)
@@ -34,18 +45,20 @@ def process_row(row, commit=False):
             address=address,
             phone=phone,
             problem=problem,
-            date=date,
+            reported_datetime=date_converted,
             resolution=resolution
         )
 
+
 def process_csv(f, commit=False):
-    dialect = csv.Sniffer().sniff(f.read(104857600), delimiters=",")
+    dialect = csv.Sniffer().sniff(f.read(104857600), delimiters="\t")
     f.seek(0)
     reader = csv.reader(f, dialect)
     next(reader)
 
     for row in reader:
         process_row(row, commit)
+
 
 class Command(BaseCommand):
 
