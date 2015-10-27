@@ -47,6 +47,9 @@ urlpatterns = patterns(
     # endpoint for ETL process to check high water mark
     url(r'^get_latest_case_no/$', 'intake.views.get_latest_case_no', name='get_latest_case_no'),
 
+    # endpoint for ETL process to check crw high water mark
+    url(r'^get_latest_crw_case_nos/$', 'intake.views.get_latest_crw_case_nos', name='get_latest_crw_case_nos'),
+
     # TODO: add case audit items to audit log
 
     # landing page view
