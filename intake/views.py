@@ -450,6 +450,17 @@ def handle_typeform(request):
 
 
 @csrf_exempt
+def handle_rms_post(request):
+    log.info(request.POST)
+    log.info('hanlding update from rms')
+
+#   CASE_NO, CASE_NAME, STARTED, STARTED_BY, CLOSED, CLOSED_BY, LASTACTION, CaseType, CaseSubType,
+#    SITE_NUMBER, SITE_STREETNAME, ASSIGNED_TO, STATUS
+
+    return JsonResponse({'status': 'OK'})
+
+
+@csrf_exempt
 def handle_crw_post(request):
     log.info(request.POST)
     log.info('hanlding update from crw')

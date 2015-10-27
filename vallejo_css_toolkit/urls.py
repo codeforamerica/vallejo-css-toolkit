@@ -38,8 +38,11 @@ urlpatterns = patterns(
     # endpoint for zapier to post typeform submissions to
     url(r'^handle_typeform/$', 'intake.views.handle_typeform', name='handle_typeform'),
 
-    # endpoint for zapier to post crw updates
+    # endpoint for ETL process to post crw updates
     url(r'^handle_crw_post/$', 'intake.views.handle_crw_post', name='handle_crw_post'),
+
+    # endpoint for ETL process to post crw updates
+    url(r'^handle_rms_post/$', 'intake.views.handle_rms_post', name='handle_rms_post'),
 
     # TODO: add case audit items to audit log
 
