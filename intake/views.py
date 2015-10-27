@@ -478,7 +478,7 @@ def handle_rms_post(request):
         date = case[1]
         date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
 
-        rms_case = RMSCase.objects.get_or_create(case_no=case[0])
+        rms_case, _ = RMSCase.objects.get_or_create(case_no=case[0])
         rms_case.date = date_converted
         rms_case.code = case[2]
         rms_case.desc = case[3]
