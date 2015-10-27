@@ -176,3 +176,15 @@ a#properties{
 .message-item {
     text-align: center;
 }
+
+.form-control{
+  border-color: #ddd;
+  box-shadow:none;
+  height:40px;
+  color:#696969;
+}
+
+label{
+  font-weight:500;
+  color:#3e3e3e;
+}

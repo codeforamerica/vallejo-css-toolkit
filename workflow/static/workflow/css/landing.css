@@ -1,0 +1,32 @@
+h2{
+  margin-bottom:25px;
+  margin-top:80px;
+}
+
+.form-control{
+  height:50px;
+}
+
+.search{
+  margin-bottom:60px;
+}
+
+
+.panel{
+  margin-bottom:30px;
+  height:360px;
+}
+
+.map-panel{
+  height:520px;
+}
+
+.panel-title{
+  padding-top:5px;
+  padding-bottom:2px;
+  color:#ffffff;
+}
+
+.panel-default>.panel-heading{
+  background-color:#1F4E81;
+}

@@ -13,6 +13,7 @@
 
 
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/landing.css" %}"/>
 
 <style>
     td, th {
@@ -22,13 +23,6 @@
 
     .recent-activity {padding: 15px;}
 
-    .row, .main {
-        margin-right: auto;
-        margin-left: auto;
-        width: 80%;
-    }
-    h3, h4 {
-        padding: 15px;
 
     }
     #map { height: 320px; }
@@ -40,70 +34,69 @@
 {% block body %}
 
 
-<div class="container-fluid main">
-    <div clas="row">
-
-        <h3>
-            In the past 24 hours, there have been {{ new_report_count }} new reports.
-        </h3>
-
-        <div class="col-md-4">
-            <h4>
-                Here are the most recent reports:
-            </h4>
-
-            <table>
-                <thead><tr>
-                    <th>Date</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                </tr></thead>
-                {% for newest_call in newest_calls %}
-                    <tr>
-                        <td><a href="/workflow/call/{{ newest_call.4 }}">{{ newest_call.0 }}</a></td>
-                        <td>{{ newest_call.1 }}</td>
-                        <td>{{ newest_call.2 }}</td>
-                    </tr>
-                {% endfor %}
-                </table>
-
-          <div id="add-new-case">
-            <a class="btn btn-success" href="/workflow/add_report"><i class="fa fa-plus"></i>&nbsp; New Report</a>
-          </div>
-
-
+<div class="container">
+    <div class="row landing-header">
+      <div class="col-sm-12 welcome">
+        <h2>Hey Tina, here's what's happened since you left.</h2>
+      </div>
+      <div class="col-md-8 col-sm-12 search">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="">
+          <span class="input-group-addon">Search</span>
         </div>
-
-
-        <div class="col-md-4">
-            <h4>
-                Here is where recent activity is located:
-            </h4>
-            <div id="map">
-                <script src="{% static "workflow/js/landing.js" %}"></script>
-            </div>
-            <a href="/workflow/map">view the full map here</a>
-        </div>
-
-        <div class="col-md-4">
-            <h4>
-                Here are the most recent staff actions:
-            </h4>
-
-            <ul>
-            {% for recent_activity in recent_activities %}
-
-                <li class="recent-activity">{{ recent_activity }}</li>
-
-            {% endfor %}
-            </ul>
-        </div>
-
-
-
+      </div>
     </div>
-</div>
 
+    <div class="row">
+      <div class="col-md-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Monthly Overview</h3>
+          </div>
+          <div class="panel-body">
+            Panel content
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 ">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">12 New Reports</h3>
+          </div>
+          <div class="panel-body">
+            Panel content
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-4 ">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Recent Activity</h3>
+          </div>
+          <div class="panel-body">
+            Panel content
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="col-sm-12">
+        <div class="panel panel-default map-panel">
+          <div class="panel-heading">
+            <h3 class="panel-title">Where reports are coming from this month</h3>
+          </div>
+          <div class="panel-body">
+            Panel content
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+</div>
 
 
 {% endblock %}
