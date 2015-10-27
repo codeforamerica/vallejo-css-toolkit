@@ -276,6 +276,20 @@ ul.doc-attrs {
   padding-right: 0;
 }
 
+/**Modals**/
+.modal-header{
+  background-color: #1F4E81;
+  color:#ffffff;
+}
+
+.modal-body{
+  padding-top:35px;
+}
+
+.modal-footer{
+  background-color: #eee;
+}
+
 
 /**Media Queries**/
 

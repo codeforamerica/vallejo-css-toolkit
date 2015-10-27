@@ -174,7 +174,7 @@
                           </table>
                         </div> <!--table wrapper-->
 
-                        <a href="#" class="pull-right">Add Incident</a>
+                        <a href="#" class="pull-right" data-toggle="modal" data-target="#addincident">Add Incident</a>
 
                       </div>
                     </div>
@@ -183,6 +183,47 @@
 
         </div><!-- end Incident Log pane -->
 
+        <!-- Incident Log Modal-->
+        <div class="modal fade" id="addincident" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Incident</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                  <form>
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <div class="form-group">
+                            <label for="">Date:</label>
+                            <input type="" class="form-control" id="" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <div class="form-group">
+                            <label for="">Code:</label>
+                            <input type="" class="form-control" id="" placeholder="">
+                        </div>
+                    </div>
+
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <div class="form-group">
+                            <label for="">Description:</label>
+                            <textarea class="form-control" rows="3"></textarea>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
 
 
         <!-- Documents pane -->
