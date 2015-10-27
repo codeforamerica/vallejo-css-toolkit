@@ -17,6 +17,7 @@ def verification(request, verification_id):
     instance = get_object_or_404(Verification, id=verification_id)
 
     verification_form = VerificationDetailsForm(request.POST or None, instance=instance)
+    print verification_form
 
     uploaded_docs = [
         {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
@@ -38,7 +39,7 @@ def verification(request, verification_id):
 
         # TODO: handle other conditions
         else:
-            return HttpResponseRedirect('/workflow/verifications')
+            return HttpResponseRedirect('/workflow/verification/{}'.format(verification.id))
 
     case_id = None
     cases = CSSCase.objects.filter(verification=instance)

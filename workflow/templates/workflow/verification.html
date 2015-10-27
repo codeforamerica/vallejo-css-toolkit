@@ -24,7 +24,7 @@
 
 {% load widget_tweaks %}
 
-<form id="owner-contact-form" method="POST">
+<form id="verification-form" method="POST">
 
     {% csrf_token %}
 
@@ -138,7 +138,7 @@
                     <h4>Contact Sheet</h4>
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="fieldWrapper form-group">
+                            <div class="form-group">
                                 <label for="{{ form.owner_name.id_for_label }}">Property Owner:</label>
                                 {{ verfication_form.owner_name|add_class:"form-control" }}
                                 {{ verfication_form.owner_name.errors }}
@@ -269,7 +269,7 @@
                         </select>
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-4 submit-btn">
-                        <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Confirm</button>
+                        <button type="submit" form="verification-form" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Confirm</button>
                     </div>
                 </div>
             </div>

@@ -32,8 +32,8 @@ class CSSCall(models.Model):
     num_people_involved = models.CharField(max_length=256, null=True, blank=True)
     safety_concerns = models.CharField(max_length=256, null=True, blank=True)
 
-    problem = models.CharField(max_length=256, null=True, blank=True)
-    resolution = models.CharField(max_length=256, null=True, blank=True)
+    problem = models.CharField(max_length=1024, null=True, blank=True)
+    resolution = models.CharField(max_length=1024, null=True, blank=True)
 
     # TODO: this should become a proper datetime field
     date = models.CharField(max_length=256, null=True, blank=True)
