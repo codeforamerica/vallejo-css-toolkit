@@ -464,9 +464,6 @@ def get_latest_case_no(request):
     else:
         latest_case_no = 0
 
-#   CASE_NO, CASE_NAME, STARTED, STARTED_BY, CLOSED, CLOSED_BY, LASTACTION, CaseType, CaseSubType,
-#    SITE_NUMBER, SITE_STREETNAME, ASSIGNED_TO, STATUS
-
     return JsonResponse({'latest_case_no': latest_case_no})
 
 
@@ -475,9 +472,20 @@ def handle_rms_post(request):
     log.info('hanlding update from rms')
 
     cases = json.loads(request.body)
+    tz = pytz.timezone('America/Los_Angeles')
 
     for case in cases:
-        RMSCase.objects.get_or_create(case_no=case[0])
+        date = case[1]
+        date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
+
+        rms_case = RMSCase.objects.get_or_create(case_no=case[0])
+        rms_case.date = date_converted
+        rms_case.code = case[2]
+        rms_case.desc = case[3]
+        rms_case.incnum = case[4]
+        rms_case.address = case[5]
+        rms_case.off_name = case[7]
+        rms_case.save()
 
     return JsonResponse({'status': 'OK'})
 
