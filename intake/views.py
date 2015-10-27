@@ -13,6 +13,8 @@ from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission, TypeformAsset
 from workflow.models import CSSCall
+from data_load.models import RMSCase
+
 # from intake.utils import create_call, update_call
 
 log = logging.getLogger('consolelogger')
@@ -454,8 +456,6 @@ def get_latest_case_no(request):
     log.info(request.POST)
     log.info('fetching latest rms case num')
 
-    from data_load.models import RMSCase
-
     result = list(RMSCase.objects.raw("SELECT id, case_no FROM data_load_rmscase ORDER BY case_no DESC LIMIT 1"))
 
     if result:
@@ -472,11 +472,12 @@ def get_latest_case_no(request):
 
 @csrf_exempt
 def handle_rms_post(request):
-    log.info(request.POST)
     log.info('hanlding update from rms')
 
-#   CASE_NO, CASE_NAME, STARTED, STARTED_BY, CLOSED, CLOSED_BY, LASTACTION, CaseType, CaseSubType,
-#    SITE_NUMBER, SITE_STREETNAME, ASSIGNED_TO, STATUS
+    cases = json.loads(request.body)
+
+    for case in cases:
+        RMSCase.objects.get_or_create(case_no=case[0])
 
     return JsonResponse({'status': 'OK'})
 
