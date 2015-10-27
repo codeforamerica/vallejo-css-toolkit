@@ -450,6 +450,27 @@ def handle_typeform(request):
 
 
 @csrf_exempt
+def get_latest_case_no(request):
+    log.info(request.POST)
+    log.info('fetching latest rms case num')
+
+    from data_load.models import RMSCase
+
+    result = list(RMSCase.objects.raw("SELECT id, case_no FROM data_load_rmscase ORDER BY case_no DESC LIMIT 1"))
+
+    if result:
+        latest_case_no = result[0].case_no
+
+    else:
+        latest_case_no = 0
+
+#   CASE_NO, CASE_NAME, STARTED, STARTED_BY, CLOSED, CLOSED_BY, LASTACTION, CaseType, CaseSubType,
+#    SITE_NUMBER, SITE_STREETNAME, ASSIGNED_TO, STATUS
+
+    return JsonResponse({'latest_case_no': latest_case_no})
+
+
+@csrf_exempt
 def handle_rms_post(request):
     log.info(request.POST)
     log.info('hanlding update from rms')
