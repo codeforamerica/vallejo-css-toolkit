@@ -8,3 +8,5 @@ TODO.txt
 data/*
 static/libs
 dev_prod.py
+intake/import_rms.py
+intake/import_crw.py
