@@ -47,7 +47,7 @@
                 <h5 class="list-group-item list-group-item-title">Case</h5>
                 <a href="#case-details" class="list-group-item active">Case Details<span class="fa fa-list-item fa-angle-right"></span></a>
                 <a href="#incident-log" class="list-group-item">Activity Log<span class="fa fa-list-item fa-angle-right"></span></a>
-                <a href="#docs" class="list-group-item">Documents<span class="fa fa-list-item fa-angle-right"></span></a>
+                <a href="#docs" class="list-group-item">People Contacted<span class="fa fa-list-item fa-angle-right"></span></a>
             </div>
         </div>
 
@@ -302,7 +302,7 @@
         <!-- Documents pane -->
         <div class="tab-pane" id="docs">
             <div class="col-sm-7 col-sm-offset-1 report">
-              <h4>Case Documents</h4>
+              <h4>People Contacted</h4>
 
               {% for uploaded_doc in uploaded_docs %}
                   <div class="row uploaded-doc">
@@ -325,7 +325,7 @@
                   <div class="row new-upload">
                     <div class="col-sm-12">
                       <form id="file-upload-form">
-                          <h4>Upload a new file</h4>
+                          <h4>Upload a new photo</h4>
                           <input type="file" name="uploadDoc">
                       </form>
                     </div>
