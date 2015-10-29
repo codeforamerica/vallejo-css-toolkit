@@ -13,6 +13,7 @@
 
 
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/landing.css" %}"/>
 
 <style>
     td, th {
@@ -22,13 +23,6 @@
 
     .recent-activity {padding: 15px;}
 
-    .row, .main {
-        margin-right: auto;
-        margin-left: auto;
-        width: 80%;
-    }
-    h3, h4 {
-        padding: 15px;
 
     }
     #map { height: 320px; }
@@ -40,69 +34,162 @@
 {% block body %}
 
 
-<div class="container-fluid main">
-    <div clas="row">
+<div class="container">
+    <div class="row landing-header">
+      <div class="col-sm-12 welcome">
+        <h2>Hey Tina, here's what's happened since you left.</h2>
+      </div>
+    </div>
 
-        <h3>
-            In the past 24 hours, there have been {{ new_report_count }} new reports.
-        </h3>
+    <div class="row landing-btns">
+      <div class="col-md-8 col-sm-12 search">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="">
+          <span class="input-group-addon">Search</span>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <a href="/workflow/add_report"><button type="button" class="btn btn-success">+ New Report</button></a>
+      </div>
+    </div>
 
-        <div class="col-md-4">
-            <h4>
-                Here are the most recent reports:
-            </h4>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="panel panel-default monthly-overview">
+          <div class="panel-heading">
+            <h3 class="panel-title">Monthly Overview</h3>
+          </div>
+          <div class="panel-body">
+            <p>Here's what's happened this October:</p>
+            <ul>
+              <li>124 new reports</li>
+              <li>85 open cases</li>
+              <li>33 resolved cases</li>
+            </ul>
+          </div>
+        </div>
+      </div>
 
-            <table>
-                <thead><tr>
-                    <th>Date</th>
-                    <th>Name</th>
-                    <th>Address</th>
-                </tr></thead>
-                {% for newest_call in newest_calls %}
-                    <tr>
-                        <td><a href="/workflow/call/{{ newest_call.4 }}">{{ newest_call.0 }}</a></td>
-                        <td>{{ newest_call.1 }}</td>
-                        <td>{{ newest_call.2 }}</td>
-                    </tr>
-                {% endfor %}
-                </table>
-
-          <div id="add-new-case">
-            <a class="btn btn-success" href="/workflow/add_report"><i class="fa fa-plus"></i>&nbsp; New Report</a>
+      <div class="col-md-4 ">
+        <div class="panel panel-default new-reports">
+          <div class="panel-heading">
+            <h3 class="panel-title">12 New Reports</h3>
           </div>
 
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Received</th>
+                <th>Problem Address</th>
+                <th>Reporter</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Today</td>
+                <td>1017 Louisiana</td>
+                <td>Rose Beck</td>
+              </tr>
+
+              <tr>
+                <td>Yesterday</td>
+                <td>GVRD</td>
+                <td>Sandy</td>
+              </tr>
+
+              <tr>
+                <td>10/25/15</td>
+                <td>---</td>
+                <td>Jerry Hill</td>
+              </tr>
+
+              <tr>
+                <td>10/25/15</td>
+                <td>325 Florida</td>
+                <td>Hilary Clinton</td>
+              </tr>
+
+              <tr>
+                <td>10/25/15</td>
+                <td>Solano and Georgia</td>
+                <td>---</td>
+              </tr>
+
+              <tr>
+                <td>10/24/15</td>
+                <td>117 B St</td>
+                <td>Andrew S</td>
+              </tr>
+            </tbody>
+
+          </table>
 
         </div>
+      </div>
 
+      <div class="col-md-4 ">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title">Recent Activity</h3>
+          </div>
 
-        <div class="col-md-4">
-            <h4>
-                Here is where recent activity is located:
-            </h4>
-            <div id="map">
-                <script src="{% static "workflow/js/landing.js" %}"></script>
-            </div>
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Time</th>
+                <th>Activity</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>12:01pm</td>
+                <td>Hans visited 553 Maine St</td>
+              </tr>
+
+              <tr>
+                <td>10:11am</td>
+                <td>Lt. Park closed a case at 172 Santa Clara</td>
+              </tr>
+
+              <tr>
+                <td>9:00am</td>
+                <td>Garcia made 883 Florida into a case</td>
+              </tr>
+
+              <tr>
+                <td>Yesterday</td>
+                <td>You contacted the owner of 313 B St</td>
+              </tr>
+
+              <tr>
+                <td>Yesterday</td>
+                <td>Karen forwarded you 4676 Georgia St</td>
+              </tr>
+            </tbody>
+
+          </table>
+
         </div>
+      </div>
 
-        <div class="col-md-4">
-            <h4>
-                Here are the most recent staff actions:
-            </h4>
 
-            <ul>
-            {% for recent_activity in recent_activities %}
 
-                <li class="recent-activity">{{ recent_activity }}</li>
-
-            {% endfor %}
-            </ul>
+      <div class="col-sm-12">
+        <div class="panel panel-default map-panel">
+          <div class="panel-heading">
+            <h3 class="panel-title">Where reports are coming from this month</h3>
+          </div>
+          <div class="panel-body">
+            Panel content
+          </div>
         </div>
-
-
-
+      </div>
     </div>
-</div>
 
+
+</div>
 
 
 {% endblock %}

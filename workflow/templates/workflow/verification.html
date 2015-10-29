@@ -106,7 +106,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-sm-4">
+                    <div class="col-md-4 col-sm-6">
                         <div class="form-group">
                             <label>Water Services:</label>
                             <input name="{{ verification_form.water.html_name }}" type="checkbox">
@@ -114,17 +114,41 @@
                         </div>
                     </div>
 
-                    <div class="col-sm-4">
+                    <div class="col-md-4 col-sm-6">
                         <div class="form-group">
-                            <label>PGE Services:</label>
+                            <label>Electric Services:</label>
                             <input name="{{ verification_form.pge.html_name }}" type="checkbox">
                             {{ verification_form.pge.errors }}
                         </div>
                     </div>
 
-                    <div class="col-sm-4">
+                    <div class="col-md-4 col-sm-6">
                         <div class="form-group">
                             <label>Occupied/Boarded:</label>
+                            <input name="{{ verification_form.boarded.html_name }}" type="checkbox">
+                            {{ verification_form.boarded.errors }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label>NLP Assigned:</label>
+                            <input name="{{ verification_form.boarded.html_name }}" type="checkbox">
+                            {{ verification_form.boarded.errors }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label>Code Contacted:</label>
+                            <input name="{{ verification_form.boarded.html_name }}" type="checkbox">
+                            {{ verification_form.boarded.errors }}
+                        </div>
+                    </div>
+
+                    <div class="col-md-4 col-sm-6">
+                        <div class="form-group">
+                            <label>Tresspass Letter:</label>
                             <input name="{{ verification_form.boarded.html_name }}" type="checkbox">
                             {{ verification_form.boarded.errors }}
                         </div>
@@ -164,6 +188,30 @@
                         <div class="col-sm-6">
                             <div class="fieldWrapper form-group owner-email">
                                 <label for="{{ form.owner_secondary_contact.id_for_label }}">Email:</label>
+                                {{ verfication_form.owner_secondary_contact|add_class:"form-control" }}
+                                {{ verfication_form.owner_secondary_contact.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="fieldWrapper form-group">
+                                <label for="{{ form.owner_address.id_for_label }}">Bank Name:</label>
+                                {{ verfication_form.owner_address|add_class:"form-control" }}
+                                {{ verfication_form.owner_address.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="fieldWrapper form-group owner-phone">
+                                <label for="{{ form.owner_primary_contact.id_for_label }}">Bank Contact:</label>
+                                {{ verfication_form.owner_primary_contact|add_class:"form-control" }}
+                                {{ verfication_form.owner_primary_contact.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="fieldWrapper form-group owner-email">
+                                <label for="{{ form.owner_secondary_contact.id_for_label }}">Phone:</label>
                                 {{ verfication_form.owner_secondary_contact|add_class:"form-control" }}
                                 {{ verfication_form.owner_secondary_contact.errors }}
                             </div>
@@ -209,12 +257,63 @@
                                         </tbody>
                                     </table>
                                 </div> <!--table wrapper-->
-                                <a class="pull-right" href="#">Add Contact</a>
+                                <a class="pull-right" href="#" data-toggle="modal" data-target="#addcontact">Add Contact</a>
                             </div>
                         </div>
                     </div><!--contact log table-->
                 </div>
             </div> <!-- end Contact Sheet pane -->
+
+
+
+            <!-- Contact Log Modal-->
+            <div class="modal fade" id="addcontact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Add Contact</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <form>
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label for="">Date:</label>
+                                <input type="" class="form-control" id="" placeholder="">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label for="">Caller:</label>
+                                <input type="" class="form-control" id="" placeholder="">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label for="">Type:</label>
+                                <input type="" class="form-control" id="" placeholder="">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label for="">Description:</label>
+                                <textarea class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                      </form>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Add</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             <!-- Documents pane -->
             <div class="tab-pane" id="docs">
