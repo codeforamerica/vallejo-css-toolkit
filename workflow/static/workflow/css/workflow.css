@@ -78,11 +78,18 @@ th, td { text-align: center; }
   min-height:550px;
 }
 
-.report h4{
+h4{
   font-size:22px;
   font-weight: bold;
   color:#1F4E81;
   margin-bottom: 30px;
+}
+
+.modal-header h4{
+  color:#ffffff;
+  font-weight:normal;
+  margin-bottom:0;
+  font-size:18px;
 }
 
 .form-group{
@@ -274,6 +281,20 @@ ul.doc-attrs {
 
 .submit-btn{
   padding-right: 0;
+}
+
+/**Modals**/
+.modal-header{
+  background-color: #1F4E81;
+  color:#ffffff;
+}
+
+.modal-body{
+  padding-top:35px;
+}
+
+.modal-footer{
+  background-color: #eee;
 }
 
 
