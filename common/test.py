@@ -1,10 +1,15 @@
+from datetime import datetime
+
+import pytz
+
 from django.test import TestCase
 
 from workflow.models import CSSCall
 from common.datatables import get_datatables_data
-from workflow.views.call_views import CALLS_IDX_COLUMN_MAP
+from workflow.views.report_views import CALLS_IDX_COLUMN_MAP
 from workflow.sql import CALLS_DATA_SQL
 
+TZ = pytz.timezone('America/Los_Angeles')
 
 request_dict = {
     "draw": "1",
@@ -77,7 +82,8 @@ request_dict = {
     "_": "1441321395643"
 }
 
-class GeocodeTestCase(TestCase):
+
+class DatatablesTestCase(TestCase):
     def setUp(self):
 
         for i in xrange(0, 4):
@@ -86,20 +92,56 @@ class GeocodeTestCase(TestCase):
                 address="{} Fake Street".format(i),
                 phone="{}{}{}-{}{}{}{}".format(i, i, i, i, i, i, i),
                 problem="Problem #{}".format(i),
-                date="9/{}/2015".format(i),
+                reported_datetime=TZ.localize(datetime(2015, 9, i + 1, 12, 0, 0)),
                 resolution="Some resoltuion #{}".format(i)
             )
 
-    def test_geocode_exact(self):
+    def test_data_fetch(self):
+
+        self.maxDiff = None
+
         """Base case test that GET query params passed from datatables are properly handled."""
 
         results = get_datatables_data(request_dict, CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP)
+
         expected_results = {
             'recordsFiltered': 4,
             'recordsTotal': 4,
             'data': [
-                ('<a href="/workflow/call/4">4</a>', '9/3/2015', 'Fake Name 3', '333-3333', '3 Fake Street', 'Problem #3', 'Some resoltuion #3', 4, 4, 4),
-                ('<a href="/workflow/call/3">3</a>', '9/2/2015', 'Fake Name 2', '222-2222', '2 Fake Street', 'Problem #2', 'Some resoltuion #2', 3, 4, 4)
+                (
+                    4,
+                    datetime(2015, 9, 4, 12, 0),
+                    u'<a href="/workflow/report/4">2015-09-04 12:00</a>',
+                    u'Fake Name 3',
+                    u'<a href="/workflow/report/4">Fake Name 3</a>',
+                    u'333-3333',
+                    u'<a href="/workflow/report/4">333-3333</a>',
+                    u'3 Fake Street',
+                    u'<a href="/workflow/report/4">3 Fake Street</a>',
+                    u'Problem #3',
+                    u'<a href="/workflow/report/4">Problem #3</a>',
+                    u'Some resoltuion #3',
+                    u'<a href="/workflow/report/4">Some resoltuion #3</a>',
+                    4L,
+                    4L
+                ),
+                (
+                    3,
+                    datetime(2015, 9, 3, 12, 0),
+                    u'<a href="/workflow/report/3">2015-09-03 12:00</a>',
+                    u'Fake Name 2',
+                    u'<a href="/workflow/report/3">Fake Name 2</a>',
+                    u'222-2222',
+                    u'<a href="/workflow/report/3">222-2222</a>',
+                    u'2 Fake Street',
+                    u'<a href="/workflow/report/3">2 Fake Street</a>',
+                    u'Problem #2',
+                    u'<a href="/workflow/report/3">Problem #2</a>',
+                    u'Some resoltuion #2',
+                    u'<a href="/workflow/report/3">Some resoltuion #2</a>',
+                    4L,
+                    4L
+                )
             ]
         }
 

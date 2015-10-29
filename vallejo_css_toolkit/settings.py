@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'workflow',
     'data_load',
     'widget_tweaks',
+    'django_twilio'
 )
 
 MIDDLEWARE_CLASSES = (
