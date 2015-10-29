@@ -35,17 +35,6 @@ def cases(request):
 
 
 @login_required(login_url='/admin/login/')
-def visit_queue_data(request):
-    results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
-    return JsonResponse(results)
-
-
-@login_required(login_url='/admin/login/')
-def visit_queue(request):
-    return render(request, 'workflow/visit_queue.html')
-
-
-@login_required(login_url='/admin/login/')
 def case(request, case_id):
     instance = get_object_or_404(CSSCase, id=case_id)
     case_details_form = CSSCaseDetailsForm(request.POST or None, instance=instance)

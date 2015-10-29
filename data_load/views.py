@@ -1,29 +1,40 @@
-import csv
+import logging
 
-from django.shortcuts import render
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
-from data_load.forms import UploadFileForm
-from data_load.management.commands.import_css_calls import process_csv as process_css_calls_csv
-from data_load.management.commands.import_css_cases import process_csv as process_css_cases_csv
-from data_load.management.commands.import_rms_cases import process_csv as process_rms_cases_csv
-# from data_load.management.commands.import_css_calls import process_csv as process_css_call_csv
+from data_load.utils import load_rms_cases, load_crw_cases, get_latest_crw_case_nos_util, get_latest_rms_case_no_util
 
-def import_csv(request):
-    if request.method == "POST":
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            file_type = form.cleaned_data['file_type']
-            if file_type == 'CSS calls':
-                process_css_calls_csv(form.cleaned_data['file'], True)
-            elif file_type == 'CSS cases':
-                process_css_cases_csv(form.cleaned_data['file'], True)
-            elif file_type == 'RMS cases':
-                process_rms_cases_csv(form.cleaned_data['file'], True, True)
+log = logging.getLogger('consolelogger')
 
-        else:
-            print form.errors
-            print request.FILES
-    else:
-        form = UploadFileForm()
 
-    return render(request, 'data_load/import_csv.html', {'form': form})
+@csrf_exempt
+def get_latest_rms_case_no(request):
+    log.info('fetching latest rms case num')
+    latest_case_no = get_latest_rms_case_no_util()
+
+    return JsonResponse({'latest_case_no': latest_case_no})
+
+
+@csrf_exempt
+def get_latest_crw_case_nos(request):
+    log.info('fetching latest crw case nums')
+    latest_yr_no, latest_seq_no = get_latest_crw_case_nos_util()
+
+    return JsonResponse({'latest_yr_no': latest_yr_no, 'latest_seq_no': latest_seq_no})
+
+
+@csrf_exempt
+def handle_rms_post(request):
+    added = load_rms_cases(request.body)
+    log.info('added {} new rms cases'.format(added))
+
+    return JsonResponse({'status': 'OK'})
+
+
+@csrf_exempt
+def handle_crw_post(request):
+    added = load_crw_cases(request.json)
+    log.info('added {} new crw cases'.format(added))
+
+    return JsonResponse({'status': 'OK'})

@@ -2,12 +2,6 @@ $(document).ready(function(){
 
     $('#props-nav-tab').addClass('active');
 
-    $.fn.bootstrapSwitch.defaults.size = 'small';
-    $("#cssCheckbox").bootstrapSwitch('state', true);
-    $("[name='scf']").bootstrapSwitch();
-    $("[name='crw']").bootstrapSwitch();
-    $("[name='rms']").bootstrapSwitch();
-
     L.mapbox.accessToken = 'pk.eyJ1IjoiYWRzY2huZWlkZXIiLCJhIjoiSlcxbGd0NCJ9.9iU2iiEVRUSxpiQXkV_zFg';
     var m = L.mapbox.map('map', 'mapbox.streets')
         .setView([38.113056, -122.235833], 13);

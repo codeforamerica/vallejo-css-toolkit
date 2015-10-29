@@ -13,13 +13,11 @@ from django.http import HttpResponseRedirect, JsonResponse
 
 from common.datatables import get_datatables_data
 
-# from intake.models import Call
-# from intake.forms import CallForm
 from intake.models import CallAuditItem, TypeformAsset
 
 from workflow.forms.report_forms import ReportForm
 from workflow.models import CSSCall, PDCase, CRWCase, CSSCase, Verification
-from workflow.sql import CALLS_DATA_SQL, AUDIT_LOG_DATA_SQL, CALLS_IDX_COLUMN_MAP, AUDIT_LOG_IDX_COLUMN_MAP
+from workflow.sql import CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP
 
 log = logging.getLogger('consolelogger')
 
@@ -130,25 +128,6 @@ def report(request, report_id):
             'case_id': case_id
         }
     )
-
-
-@login_required(login_url='/admin/login/')
-def call_audit_log_data(request):
-    request_dict = dict(request.GET.items())
-
-    try:
-        results = get_datatables_data(request_dict, AUDIT_LOG_DATA_SQL, AUDIT_LOG_IDX_COLUMN_MAP)
-    except Exception:
-        # messages.add()
-        log.error('Error encountered fetching from database: {}'.format(traceback.format_exc().replace('\n', '\t')))
-        results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
-
-    return JsonResponse(results)
-
-
-@login_required(login_url='/admin/login/')
-def call_audit_log(request):
-    return render(request, 'workflow/call_audit_log.html')
 
 
 @login_required(login_url='/admin/login/')

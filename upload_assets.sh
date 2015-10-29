@@ -1,1 +1,0 @@
-s3cmd sync --delete-removed static/libs/ s3://vallejo-css-toolkit/static/libs/

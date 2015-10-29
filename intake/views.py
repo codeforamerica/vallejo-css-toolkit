@@ -13,7 +13,6 @@ from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission, TypeformAsset
 from workflow.models import CSSCall
-from data_load.models import RMSCase, CRWCase
 
 # from intake.utils import create_call, update_call
 
@@ -447,86 +446,5 @@ def handle_typeform(request):
 
     except Exception:
         log.error(traceback.format_exc())
-
-    return JsonResponse({'status': 'OK'})
-
-
-@csrf_exempt
-def get_latest_case_no(request):
-    log.info('fetching latest rms case num')
-
-    result = list(RMSCase.objects.raw("SELECT id, case_no FROM data_load_rmscase ORDER BY case_no DESC LIMIT 1"))
-
-    if result:
-        latest_case_no = result[0].case_no
-
-    else:
-        latest_case_no = 0
-
-    return JsonResponse({'latest_case_no': latest_case_no})
-
-
-@csrf_exempt
-def get_latest_crw_case_nos(request):
-    log.info('fetching latest crw case nums')
-
-    result = list(CRWCase.objects.raw("SELECT id, yr_no, seq_no FROM data_load_crwcase ORDER BY yr_no, seq_no DESC LIMIT 1"))
-
-    if result:
-        latest_yr_no = result[0].yr_no
-        latest_seq_no = result[0].seq_no
-
-    else:
-        latest_yr_no = 14
-        latest_seq_no = 0
-
-    return JsonResponse({'latest_yr_no': latest_yr_no, 'latest_seq_no': latest_seq_no})
-
-
-@csrf_exempt
-def handle_rms_post(request):
-    log.info('hanlding update from rms')
-
-    cases = json.loads(request.body)
-    tz = pytz.timezone('America/Los_Angeles')
-
-    for case in cases:
-        date = case[1]
-        date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
-
-        rms_case, _ = RMSCase.objects.get_or_create(case_no=case[0])
-        rms_case.date = date_converted
-        rms_case.code = case[2]
-        rms_case.desc = case[3]
-        rms_case.incnum = case[4]
-        rms_case.address = case[5]
-        rms_case.off_name = case[7]
-        rms_case.save()
-
-    return JsonResponse({'status': 'OK'})
-
-
-@csrf_exempt
-def handle_crw_post(request):
-    log.info('hanlding update from crw')
-
-    cases = json.loads(request.body)
-    tz = pytz.timezone('America/Los_Angeles')
-
-    for case in cases:
-        date = case[5]
-        date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
-
-        crw_case, _ = CRWCase.objects.get_or_create(yr_no=case[1], seq_no=case[2])
-        crw_case.started = date_converted
-        crw_case.case_no = case[3]
-        crw_case.desc = case[4]
-        crw_case.case_type = case[6]
-        crw_case.case_subtype = case[7]
-        crw_case.address_number = case[8]
-        crw_case.street_name = case[9]
-        crw_case.assigned_to = case[10]
-        crw_case.status = case[11]
-        crw_case.save()
 
     return JsonResponse({'status': 'OK'})

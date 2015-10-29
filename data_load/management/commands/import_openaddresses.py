@@ -10,7 +10,6 @@ import usaddress
 from django.core.management.base import BaseCommand
 
 from geo.models import LocationPosition
-from geo.utils.normalize_address import normalize_address_by_number_and_street
 
 
 OPEN_ADDRESS_URL = "http://data.openaddresses.io.s3.amazonaws.com/us-ca-solano_county.zip"
@@ -18,6 +17,7 @@ EXPECTED_FILENAME = "us-ca-solano_county.csv"
 VALLEJO_LINE_MATCH = "(?P<street_name>.*), Vallejo, Ca(, [0-9]{5})?"
 
 logger = logging.getLogger('consolelogger')
+
 
 def process_row(row, commit=False):
 
@@ -31,40 +31,6 @@ def process_row(row, commit=False):
     r = re.match(VALLEJO_LINE_MATCH, street_address)
     if not r:
         return
-
-    # street_name = r.groupdict()['street_name']
-
-    # lat = float(lat)
-    # lng = float(lng)
-
-    # if not street_number.isdigit():
-    #     logger.info('Rejecting row because street number is not numeric: {}'.format(row))
-    #     return
-
-    # street_number = int(street_number)
-    # normalized = normalize_address_by_number_and_street(street_number, street_name)
-
-    # if not normalized:
-    #     logger.info('Rejecting row because address could not be normalized: {}'.format(row))
-    #     return
-
-    # street_number, street_name, street_descriptor = normalized
-
-    # if commit:
-
-    #     _, created = LocationPosition.objects.get_or_create(
-    #         street_number=street_number,
-    #         street_name=street_name,
-    #         street_descriptor=street_descriptor,
-    #         lat=lat,
-    #         lng=lng,
-    #     )
-
-    #     return created
-
-    # print usaddress.tag("{} {}".format(street_number, street_address))
-
-    # LocationPosition.objects.all().delete()
 
     address = "{} {}".format(address_number, street_address)
     tagged = usaddress.tag(address)
@@ -90,6 +56,7 @@ def process_row(row, commit=False):
                     lng=lng,
                     lat=lat
                 )
+
 
 def import_openaddresses(commit=False, filepath=''):
     new_imports = 0
