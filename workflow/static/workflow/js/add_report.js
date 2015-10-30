@@ -1,5 +1,11 @@
 $(document).ready(function(){
 
+    $('#datepicker').on('changeDate', function(ev){
+        $(this).datepicker('hide');
+    });
+
+    $('#datepicker').datepicker('setDate', new Date());
+
     // constructs the suggestion engine
     var substringMatcher = function(strs) {
         return function findMatches(q, cb) {
@@ -23,7 +29,7 @@ $(document).ready(function(){
         };
     };
 
-    $('#reporter-street-name-selector .typeahead').typeahead({
+    $('.street-name-selector .typeahead').typeahead({
         hint: true,
         highlight: true,
         minLength: 3

@@ -44,6 +44,7 @@ class CSSCall(models.Model):
     problem_duration = models.CharField(max_length=256, null=True, blank=True)
 
     # TODO: we'll eventually need to store geometry objects somewhere
+    active = models.BooleanField(default=True)
 
 
 class Verification(models.Model):
