@@ -1,8 +1,5 @@
 import logging
 import traceback
-from itertools import chain
-
-import usaddress
 
 from django.contrib import messages
 from django.contrib.auth.models import User
@@ -15,8 +12,9 @@ from common.datatables import get_datatables_data
 from intake.models import CallAuditItem, TypeformAsset
 
 from workflow.forms.report_forms import ReportForm
-from workflow.models import CSSCall, PDCase, CRWCase, CSSCase, Verification
+from workflow.models import CSSCall, CSSCase, Verification
 from workflow.sql import CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP
+from workflow.utils import get_location_history
 
 log = logging.getLogger('consolelogger')
 
@@ -25,12 +23,14 @@ LOG_AUDIT_HISTORY = False
 
 @login_required(login_url='/admin/login/')
 def add_report(request):
-    print request.POST
     form = ReportForm(request.POST or None)
-    if form.is_valid():
-        form.save()
-        messages.add_message(request, messages.SUCCESS, 'Report successfully added.')
 
+    if form.errors:
+        messages.add_message(request, messages.ERROR, form.errors)
+
+    if form.is_valid():
+        report = form.save()
+        messages.add_message(request, messages.SUCCESS, 'Report successfully Added. You can access it <a href=/workflow/report/{}>here</a>'.format(report.id), extra_tags='safe')
         if request.POST.get('next-action') == "Another report":
             return HttpResponseRedirect('/workflow/add_report')
 
@@ -50,9 +50,10 @@ def report(request, report_id):
 
     if form.is_valid():
         call = form.save()
-        messages.add_message(request, messages.SUCCESS, 'Report successfully updated.')
+        messages.add_message(request, messages.SUCCESS, 'Report successfully updated. You can access it <a href=/workflow/report/{}>here</a>'.format(call.id), extra_tags='safe')
 
         if LOG_AUDIT_HISTORY:
+            # TODO: refactor and enable this
 
             user = get_object_or_404(User, id=request.user.id)
             for field, new_value in form.cleaned_data.iteritems():
@@ -75,29 +76,9 @@ def report(request, report_id):
             return HttpResponseRedirect('/workflow/reports')
 
     # either the form was not valid, or we're just loading the page
-    pd_cases = []
-    crw_cases = []
-    css_cases = []
+    location_history = get_location_history(instance.address_number, instance.street_name)
 
-    # TODO, join this on the actual csscall address number and street name
-    tagged = usaddress.tag(instance.address)
-    if tagged and tagged[1] == 'Street Address':
-        address_number = tagged[0].get('AddressNumber')
-        street_name = tagged[0].get('StreetName')
-        if address_number and address_number.isdigit() and street_name:
-            pd_cases = PDCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
-            crw_cases = CRWCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
-            css_cases = CSSCase.objects.filter(address_number=int(address_number), street_name=street_name.upper()).values_list('id', 'address_number', 'street_name')
-
-            pd_cases = [list(c) + ['RMS'] for c in pd_cases]
-            crw_cases = [list(c) + ['CRW'] for c in crw_cases]
-
-    # TODO, join this on the actual csscall address number and street name
-    if instance.address:
-        reports = CSSCall.objects.filter(address=instance.address).values_list('id', 'reported_datetime')
-    else:
-        reports = [(instance.id, instance.reported_datetime)]
-
+    # TODO: refactor since we're not using typeform anymore
     external_assets = TypeformAsset.objects.filter(css_report=instance.id).order_by('-id')
     external_assets_count = len(external_assets)
 
@@ -112,16 +93,13 @@ def report(request, report_id):
         if cases:
             case_id = cases[0].id
 
-    # TODO: fix the history section at db and view level
     return render(
         request,
         'workflow/report.html',
         {
             'id': instance.id,
             'form': form,
-            'css_cases': css_cases,
-            'external_cases': list(chain(pd_cases, crw_cases)),
-            'reports': reports,
+            'location_history': location_history,
             'external_assets': external_assets,
             'external_assets_count': external_assets_count,
             'verification_id': verification_id,

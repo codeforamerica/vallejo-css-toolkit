@@ -8,13 +8,7 @@
 <link href="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/js/bootstrap.min.js"></script>
 
-<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}moment/min/moment.min.js"></script>
-<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
-
 <script type='text/javascript' src="{% static "workflow/js/typeahead.bundle.js" %}"></script>
-
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker3.min.css" rel="stylesheet">
-<script type='text/javascript' src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/js/bootstrap-datepicker.min.js"></script>
 
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/add_report.css" %}"/>
@@ -31,7 +25,6 @@
 
 <form class="form-contact" id="css-call-form" method="POST">
     {% csrf_token %}
-
 
     <div class="container">
 
@@ -54,20 +47,15 @@
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="{{ form.reported_date.id_for_label }}">Date:</label>
-                        <div class="input-group date" id="datepicker">
-                            <input type="text" class="form-control" name="{{ form.reported_date.html_name }}" value={% if form.reported_date.value %}{{ form.reported_date.value }}{% endif %}>
-                            <div class="input-group-addon">
-                                <span class="glyphicon glyphicon-th"></span>
-                            </div>
-                        </div>
-                    {{ form.reported_date.errors }}
+                        {{ form.reported_date|add_class:"form-control" }}
+                        {{ form.reported_date.errors }}
                     </div>
                 </div>
 
                 <div class="col-sm-6">
                     <div class="form-group">
                         <label for="{{ form.reported_time.id_for_label }}">Time:</label>
-                        <input type="text" class="form-control" name="{{ form.reported_time.html_name }}" placeholder="e.g., 16:30" value={% if form.reported_time.value %}{{ form.reported_time.value }}{% endif %}>
+                        {{ form.reported_time|add_class:"form-control" }}
                         {{ form.reported_time.errors }}
                     </div>
                 </div>
@@ -96,45 +84,45 @@
                     </div>
                 </div>
 
-                <div class="col-sm-12">
-                    <h5>Reporter address information</h5>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="{{ form.reporter_address_number.id_for_label }}">House number:</label>
-                        <input type="text" class="form-control" name="{{ form.reporter_address_number.html_name }}" placeholder="2" value={% if form.reporter_address_number.value %}{{ form.reporter_address_number.value }}{% endif %}>
-                        {{ form.reporter_address_number.errors }}
+                    <div class="col-sm-12">
+                        <h5>Reporter address information</h5>
                     </div>
-                </div>
 
-                <div class="col-sm-8">
-                    <div class="form-group street-name-selector">
-                        <label for="{{ form.reporter_street_name.id_for_label }}">Street name:</label>
-                        <input type="text" class="form-control typeahead" name="{{ form.reporter_street_name.html_name }}" placeholder="Florida St" value={% if form.reporter_street_name.value %}{{ form.reporter_street_name.value }}{% endif %}>
-                        {{ form.reporter_street_name.errors }}
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="{{ form.reporter_address_number.id_for_label }}">House number:</label>
+                            {{ form.reporter_address_number|add_class:"form-control typeahead" }}
+                            {{ form.reporter_address_number.errors }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-sm-12">
-                    <h5>Issue address information</h5>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="form-group">
-                        <label for="{{ form.address.id_for_label }}">House number:</label>
-                        <input type="text" class="form-control" name="{{ form.address.html_name }}" placeholder="555" value={% if form.address.value %}{{ form.address.value }}{% endif %}>
-                        {{ form.address.errors }}
+                    <div class="col-sm-8">
+                        <div class="form-group street-name-selector">
+                            <label for="{{ form.reporter_street_name.id_for_label }}">Street name:</label>
+                            {{ form.reporter_street_name|add_class:"form-control typeahead" }}
+                            {{ form.reporter_street_name.errors }}
+                        </div>
                     </div>
-                </div>
 
-                <div class="col-sm-8">
-                    <div class="form-group street-name-selector">
-                        <label for="{{ form.address.id_for_label }}">Street name:</label>
-                        <input type="text" class="form-control" name="{{ form.address.html_name }}" placeholder="Santa Clara St" value={% if form.address.value %}{{ form.address.value }}{% endif %}>
-                        {{ form.address.errors }}
+                    <div class="col-sm-12">
+                        <h5>Issue address information</h5>
                     </div>
-                </div>
+
+                    <div class="col-sm-4">
+                        <div class="form-group">
+                            <label for="{{ form.address_number.id_for_label }}">House number:</label>
+                            {{ form.address_number|add_class:"form-control typeahead" }}
+                            {{ form.address_number.errors }}
+                        </div>
+                    </div>
+
+                    <div class="col-sm-8">
+                        <div class="form-group street-name-selector">
+                            <label for="{{ form.street_name.id_for_label }}">Street name:</label>
+                            {{ form.street_name|add_class:"form-control typeahead" }}
+                            {{ form.street_name.errors }}
+                        </div>
+                    </div>
 
                 <div class="col-sm-12">
                     <div class="form-group">

@@ -1,8 +1,12 @@
 from datetime import datetime
 
+import pytz
+
 from django import forms
 
 from workflow.models import CSSCall
+
+TZ = pytz.timezone('America/Los_Angeles')
 
 
 class ReportForm(forms.ModelForm):
@@ -28,15 +32,32 @@ class ReportForm(forms.ModelForm):
             'time_of_day_occurs',
             'num_people_involved',
             'safety_concerns',
-            'reporter_alternate_contact'
+            'reporter_alternate_contact',
+            'address_number',
+            'street_name',
         )
 
     def __init__(self, *args, **kwargs):
         super(ReportForm, self).__init__(*args, **kwargs)
 
+        self.fields['reporter_address_number'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: 555'})
+        self.fields['address_number'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: 2'})
+
+        self.fields['reporter_street_name'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: Santa Clara St'})
+        self.fields['street_name'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: Florida St'})
+
+        self.fields['reported_date'].widget.format = '%m/%d/%Y'
+        self.fields['reported_time'].widget.format = '%H:%M'
+
         if 'instance' in kwargs:
-            self.fields['reported_date'].initial = kwargs['instance'].reported_datetime.date()
-            self.fields['reported_time'].initial = kwargs['instance'].reported_datetime.time()
+            localized = kwargs['instance'].reported_datetime.astimezone(TZ)
+            self.fields['reported_date'].initial = localized.date()
+            self.fields['reported_time'].initial = localized.time()
+        else:
+            now = datetime.utcnow()
+            now_tz = pytz.utc.localize(now).astimezone(TZ)
+            self.fields['reported_date'].initial = now_tz.date()
+            self.fields['reported_time'].initial = now_tz.time()
 
     def save(self, commit=True):
         model = super(ReportForm, self).save(commit=False)

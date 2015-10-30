@@ -35,7 +35,7 @@ $(document).ready(function(){
         };
     };
 
-    $('#reporter-street-name-selector .typeahead').typeahead({
+    $('.street-name-selector .typeahead').typeahead({
         hint: true,
         highlight: true,
         minLength: 3

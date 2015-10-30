@@ -1,11 +1,5 @@
 $(document).ready(function(){
 
-    $('#datepicker').on('changeDate', function(ev){
-        $(this).datepicker('hide');
-    });
-
-    $('#datepicker').datepicker('setDate', new Date());
-
     // constructs the suggestion engine
     var substringMatcher = function(strs) {
         return function findMatches(q, cb) {
