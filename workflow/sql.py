@@ -86,7 +86,8 @@ CALLS_DATA_SQL = """
             COALESCE('<a href="/workflow/report/' || c.id || '">' || c.resolution  || '</a>', '') AS resolution_link,
             c.resolution AS resolution
 
-        FROM workflow_csscall as c
+        FROM workflow_csscall AS c
+        WHERE active = True
     ), total_count AS (
         SELECT COUNT(*) as tcount FROM workflow_csscall
     )

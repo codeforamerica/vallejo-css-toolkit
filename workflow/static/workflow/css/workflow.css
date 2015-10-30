@@ -187,6 +187,11 @@ label{
   margin: 0;
 }
 
+/** Form fields **/
+
+.form-control {
+  color: black;
+}
 
 /**Documents Pane**/
 .uploaded-doc{

@@ -17,4 +17,10 @@ urlpatterns = patterns(
     url(r'^workflow/reports/$', 'workflow.views.report_views.reports', name='reports'),
     url(r'^workflow/reports_data/$', 'workflow.views.report_views.reports_data', name='reports_data'),
     url(r'^workflow/add_report/$', 'workflow.views.report_views.add_report', name='add_report'),
+
+    # property related views
+    # TODO: eventually expose by id
+    # url(r'^workflow/property/(?P<property_id>\d*)/$', 'workflow.views.property_views.property', name='property'),
+    url(r'^workflow/property/$', 'workflow.views.property_views.property', name='property'),
+    url(r'^workflow/properties/$', 'workflow.views.property_views.properties', name='properties'),
 )

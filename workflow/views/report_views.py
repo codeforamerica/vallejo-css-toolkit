@@ -1,7 +1,6 @@
 import logging
 import traceback
 from itertools import chain
-from datetime import datetime
 
 import usaddress
 
@@ -26,7 +25,8 @@ LOG_AUDIT_HISTORY = False
 
 @login_required(login_url='/admin/login/')
 def add_report(request):
-    form = ReportForm(request.POST or None, initial={'reported_datetime': datetime.now()})
+    print request.POST
+    form = ReportForm(request.POST or None)
     if form.is_valid():
         form.save()
         messages.add_message(request, messages.SUCCESS, 'Report successfully added.')
