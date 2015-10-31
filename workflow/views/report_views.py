@@ -14,7 +14,7 @@ from intake.models import CallAuditItem, TypeformAsset
 from workflow.forms.report_forms import ReportForm
 from workflow.models import CSSCall, CSSCase, Verification
 from workflow.sql import CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP
-from workflow.utils import get_location_history
+from workflow.utils import get_location_history, get_reports
 
 log = logging.getLogger('consolelogger')
 
@@ -124,4 +124,6 @@ def reports_data(request):
 
 @login_required(login_url='/admin/login/')
 def reports(request):
-    return render(request, 'workflow/reports.html')
+    reports_data = get_reports(request.GET)
+
+    return render(request, 'workflow/reports.html', {'reports_data': reports_data})
