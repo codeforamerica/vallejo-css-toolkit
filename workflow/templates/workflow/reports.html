@@ -9,13 +9,12 @@
 <link href="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/js/bootstrap.min.js"></script>
 
-<link href="{{ settings.STATIC_LIB_BASE }}datatables/media/css/jquery.dataTables.min.css" rel="stylesheet">
+<!-- <link href="{{ settings.STATIC_LIB_BASE }}datatables/media/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="{{ settings.STATIC_LIB_BASE }}datatables/media/js/jquery.dataTables.min.js"></script>
-
+ -->
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/table_page_new.css" %}"/>
-<link rel="stylesheet" href="{% static "workflow/css/reports.css" %}">
-<!-- <script src="{% static "workflow/js/reports.js" %}"></script> -->
+<script src="{% static "workflow/js/reports.js" %}"></script>
 
 {% endblock %}
 
@@ -23,32 +22,72 @@
 
 <div class="container">
 
-  <div id="add-new-case">
-    <a class="btn btn-success" href="/workflow/add_report"><i class="fa fa-plus"></i>&nbsp; New Report</a>
-  </div>
-
-  <div class="row">
-    <div class="col-md-12 table-responsive">
-        <div class="table">
-            <div class="table-row">
-                <div class="table-header-cell">Received</div>
-                <div class="table-header-cell">Reporter</div>
-                <div class="table-header-cell">Address</div>
-                <div class="table-header-cell">Description</div>
-                <div class="table-header-cell">Notes</div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="pull-right">
+            <a class="btn btn-success" href="/workflow/add_report"><i class="fa fa-plus"></i>&nbsp; New Report</a>
             </div>
-            {% for report in reports_data %}
-            <a class="table-row" href="/workflow/report/{{ report.0 }}">
-                <div class="table-cell">{{ report.1 }}</div>
-                <div class="table-cell">{{ report.2 }}</div>
-                <div class="table-cell">{{ report.3 }}</div>
-                <div class="table-cell">{{ report.4 }}</div>
-                <div class="table-cell">{{ report.5 }}</div>
-            </a>
-            {% endfor %}
         </div>
     </div>
-  </div>
 
-</div>
+    <div class="row">
+        <div class="col-md-12">
+            <form id="search" method="get">
+                <input type="text" name="search">
+                <button form="search" class="btn btn-primary" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            {% if pagination_keys %}
+                <div class="pagination">
+                    <ul>
+                        {% for pagination_key in pagination_keys %}
+                            <li class="{% if pagination_key.0 == active_page_number %}active{% endif %}"><a class="{% if pagination_key.1 == None %}inactive{% endif %}" href="{% if pagination_key.1 == None %}#{% else %}/workflow/reports/{{ base_url }}{{ pagination_key.1}} {% endif %}">{{ pagination_key.0 }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button form="delete-selected" class="btn btn-danger" type="submit">Delete selected</button>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <form id="delete-selected" method="post">
+                {% csrf_token %}
+                <input type="hidden" name="redirect_url_params" value="{{ current_url_params }}">
+
+                <div class="table">
+                    <div class="table-row">                               
+                        <div class="table-header-cell"></div>
+                        <div class="table-header-cell">Received</div>
+                        <div class="table-header-cell">Reporter</div>
+                        <div class="table-header-cell">Address</div>
+                        <div class="table-header-cell">Description</div>
+                        <div class="table-header-cell">Notes</div>
+                    </div>
+                    {% for report in reports_data %}
+                        <a class="table-row" href="/workflow/report/{{ report.0 }}">
+                            <div class="table-cell table-cell-checkbox"><div><input type="checkbox" name="to_delete" value="{{ report.0 }}"></div></div>
+                            <div class="table-cell">{{ report.1 }}</div>
+                            <div class="table-cell">{{ report.2 }}</div>
+                            <div class="table-cell">{{ report.3 }}</div>
+                            <div class="table-cell">{{ report.4 }}</div>
+                            <div class="table-cell">{{ report.5 }}</div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>  <!-- End container -->
 {% endblock %}

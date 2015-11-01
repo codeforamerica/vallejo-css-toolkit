@@ -124,6 +124,38 @@ def reports_data(request):
 
 @login_required(login_url='/admin/login/')
 def reports(request):
-    reports_data = get_reports(request.GET)
+    if request.method == "GET":
+        reports_data, pagination_keys, page_idx, base_url, current_url_params = get_reports(request.GET)
 
-    return render(request, 'workflow/reports.html', {'reports_data': reports_data})
+        return render(
+            request,
+            'workflow/reports.html',
+            {
+                'reports_data': reports_data,
+                'pagination_keys': pagination_keys,
+                'base_url': base_url,
+                'active_page_number': page_idx + 1,
+                'current_url_params': current_url_params
+            }
+        )
+
+    elif request.method == "POST":
+        to_delete_ids = request.POST.getlist('to_delete')
+        if to_delete_ids:
+            for id_string in to_delete_ids:
+                report = CSSCall.objects.get(id=int(id_string))
+                report.active = False
+                report.save()
+        messages.add_message(request, messages.INFO, 'Successfully deleted {} report{}.'.format(len(to_delete_ids), len(to_delete_ids) > 1 and "s" or ""))
+        # TODO: catch exceptions and message warning
+
+        # TODO: delete the selected report(s)
+        redirect_url_params = request.POST.get('redirect_url_params')
+        print redirect_url_params
+        if redirect_url_params is None:
+            redirect_url_params = ""
+        redirect_url_params = redirect_url_params.replace("offset=0", "")
+        if redirect_url_params == "?":
+            redirect_url_params = ""
+
+        return HttpResponseRedirect('/workflow/reports/{}'.format(redirect_url_params))

@@ -9,7 +9,6 @@ log = logging.getLogger('consolelogger')
 
 
 def get_location_history(address_number, street_name):
-
     query = """
         SELECT TO_CHAR(data.date, 'MM/DD/YYYY'), data.source, data.case_no, data.case_type, data.description
         FROM (
@@ -52,17 +51,17 @@ def get_location_history(address_number, street_name):
 
 def get_reports(request_params):
     sortable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'notes']
+    searchable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'notes']
     default_limit = 25
     max_limit = 100
-    default_offset = 25
+    default_offset = 0
     default_sort_key = 'reported_datetime'
     default_sort_order = 'DESC'
 
-    search = request_params.get('search')
+    search = request_params.get('search') and request_params['search'].strip()
     search_clause = ''
     if search:
-        # TODO
-        pass
+        search_clause = "WHERE {} ".format("OR".join([" {} ilike '%{}%' ".format(field, search) for field in searchable_fields]))
 
     sort = request_params.get('sort')
     if sort:
@@ -116,9 +115,10 @@ def get_reports(request_params):
                 c.problem AS problem,
                 c.resolution AS notes
             FROM workflow_csscall AS c
-            WHERE active = True
+            WHERE c.active = True
         ), total_count AS (
-            SELECT COUNT(*) as tcount FROM workflow_csscall
+            SELECT COUNT(*) AS tcount FROM workflow_csscall
+            WHERE active = True
         )
         SELECT
             data.id,
@@ -140,33 +140,43 @@ def get_reports(request_params):
     params = {'sort_key': AsIs(sort_key), 'sort_order': AsIs(sort_order), 'search_clause': AsIs(search_clause), 'offset': offset, 'limit': limit}
     cursor = connection.cursor()
 
+    base_url_parts = []
+    if limit and limit != default_limit:
+        base_url_parts.append("limit={}".format(limit))
+    if sort_key and sort_key != default_sort_key and sort_order and sort_order != default_sort_order:
+        base_url_parts.append("sort={}".format(sort))
+    if search:
+        base_url_parts.append("search={}".format(search))
+    base_url_parts.append("offset=")
+
+    base_url = base_url_parts and "?{}".format("&".join(base_url_parts)) or ""
+
     try:
         cursor.execute(query, params)
         results = cursor.fetchall()
 
+        pagination_keys = None
+        page_idx = None
         if results:
             num_results = results[0][-2]
             num_pages = int(math.ceil(float(num_results) / limit))
             page_idx = offset // limit
 
             if num_pages <= 7:
-                pagination_keys = [(i, (i - 1) * limit) for i in range(1, num_pages + 1)]
+                page_indices = range(1, num_pages + 1)
             else:
-                if page_idx < 5:
-                    pagination_keys_first_half = [(i, (i - 1) * limit) for i in range(1, page_idx)]
+                if page_idx < 4:
+                    page_indices = range(1, 6) + ['...'] + [num_pages]
+                elif num_pages - page_idx < 5:
+                    page_indices = [1, '...'] + range(num_pages - 4, num_pages + 1)
                 else:
-                    pagination_keys_first_half = [(1, 0), ('...', None), (page_idx - 1, (page_idx - 2) * limit)]
+                    page_indices = [1, '...', page_idx, page_idx + 1, page_idx + 2, '...', num_pages]
 
-                if num_pages - page_idx < 5:
-                    pagination_keys_second_half = [(i, (i - 1) * limit) for i in range(page_idx, num_pages + 1)]
-                else:
-                    pagination_keys_second_half = [(page_idx + 1, page_idx * limit), ('...', None), (num_pages, (num_pages - 1) * limit)]
+            pagination_keys = [(i, (i - 1) * limit) if i != '...' else (i, None) for i in page_indices]
 
-                pagination_keys = pagination_keys_first_half + [(page_idx, (page_idx - 1) * limit)] + pagination_keys_second_half
+        current_url_params = "{}{}".format(base_url, offset)
 
-            print pagination_keys
-
-        return results
+        return results, pagination_keys, page_idx, base_url, current_url_params
     except Exception:
         # TODO: log these
         raise
