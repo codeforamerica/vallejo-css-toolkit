@@ -33,7 +33,7 @@
     <div class="row">
         <div class="col-md-12">
             <form id="search" method="get">
-                <input type="text" name="search">
+                <input type="text" name="search" value="{% if search_get_param %}{{search_get_param}}{% endif %}">
                 <button form="search" class="btn btn-primary" type="submit">Search</button>
             </form>
         </div>
@@ -45,7 +45,7 @@
                 <div class="pagination">
                     <ul>
                         {% for pagination_key in pagination_keys %}
-                            <li class="{% if pagination_key.0 == active_page_number %}active{% endif %}"><a class="{% if pagination_key.1 == None %}inactive{% endif %}" href="{% if pagination_key.1 == None %}#{% else %}/workflow/reports/{{ base_url }}{{ pagination_key.1}} {% endif %}">{{ pagination_key.0 }}</a></li>
+                            <li class="{% if pagination_key.0 == active_page_number %}active{% endif %}"><a class="{% if pagination_key.1 == None %}inactive{% endif %}" href="{% if pagination_key.1 == None %}#{% else %}/workflow/reports/?sort_key={{ sort_key }}&amp;sort_order={{ sort_order }}&amp;offset={{ pagination_key.1}}{% if search_get_param %}&amp;search={{ search_get_param }}{% endif %}&amp;limit={{ limit }}{% endif %}">{{ pagination_key.0 }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -63,16 +63,35 @@
         <div class="col-md-12 table-responsive">
             <form id="delete-selected" method="post">
                 {% csrf_token %}
-                <input type="hidden" name="redirect_url_params" value="{{ current_url_params }}">
+                <input type="hidden" name="sort_key" value="{{ sort_key }}">
+                <input type="hidden" name="sort_order" value="{{ sort_order }}">
+                <input type="hidden" name="search_get_param" value="{{ search_get_param }}">
+                <input type="hidden" name="offset" value="{{ offset }}">
+                <input type="hidden" name="limit" value="{{ limit }}">
 
                 <div class="table">
                     <div class="table-row">                               
                         <div class="table-header-cell"></div>
-                        <div class="table-header-cell">Received</div>
-                        <div class="table-header-cell">Reporter</div>
-                        <div class="table-header-cell">Address</div>
-                        <div class="table-header-cell">Description</div>
-                        <div class="table-header-cell">Notes</div>
+                        <a
+                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=reported_datetime&amp;{% if sort_key == 'reported_datetime' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
+                            class="{% if sort_key == 'reported_datetime' %}active {% endif %}{% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}table-header-cell"
+                            >Received</a>
+                        <a
+                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=reporter_name&amp;{% if sort_key == 'reporter_name' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                            class="{% if sort_key == 'reporter_name' %}active {% endif %}{% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}table-header-cell"
+                            >Reporter</a>
+                        <a
+                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=problem_address&amp;{% if sort_key == 'problem_address' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                            class="{% if sort_key == 'problem_address' %}active {% endif %}{% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}table-header-cell"
+                            >Address</a>
+                        <a
+                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=problem&amp;{% if sort_key == 'problem' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                            class="{% if sort_key == 'problem' %}active {% endif %}{% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}table-header-cell"
+                            >Description</a>
+                        <a
+                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=notes&amp;{% if sort_key == 'notes' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                            class="{% if sort_key == 'notes' %}active {% endif %}{% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}table-header-cell"
+                            >Notes</a>
                     </div>
                     {% for report in reports_data %}
                         <a class="table-row" href="/workflow/report/{{ report.0 }}">

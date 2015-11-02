@@ -125,7 +125,7 @@ def reports_data(request):
 @login_required(login_url='/admin/login/')
 def reports(request):
     if request.method == "GET":
-        reports_data, pagination_keys, page_idx, base_url, current_url_params = get_reports(request.GET)
+        reports_data, pagination_keys, page_idx, sort_key, search_get_param, sort_order, limit, offset = get_reports(request.GET)
 
         return render(
             request,
@@ -133,9 +133,12 @@ def reports(request):
             {
                 'reports_data': reports_data,
                 'pagination_keys': pagination_keys,
-                'base_url': base_url,
                 'active_page_number': page_idx + 1,
-                'current_url_params': current_url_params
+                'sort_order': sort_order,
+                'sort_key': sort_key,
+                'limit': limit,
+                'offset': offset,
+                'search_get_param': search_get_param
             }
         )
 
@@ -147,15 +150,16 @@ def reports(request):
                 report.active = False
                 report.save()
         messages.add_message(request, messages.INFO, 'Successfully deleted {} report{}.'.format(len(to_delete_ids), len(to_delete_ids) > 1 and "s" or ""))
-        # TODO: catch exceptions and message warning
+        # TODO: catch exceptions and message error
 
-        # TODO: delete the selected report(s)
-        redirect_url_params = request.POST.get('redirect_url_params')
-        print redirect_url_params
-        if redirect_url_params is None:
-            redirect_url_params = ""
-        redirect_url_params = redirect_url_params.replace("offset=0", "")
-        if redirect_url_params == "?":
-            redirect_url_params = ""
+        previous_url_params = {
+            'sort_key': request.POST.get('sort_key'),
+            'sort_order': request.POST.get('sort_order'),
+            'offset': request.POST.get('offset'),
+            'limit': request.POST.get('limit'),
+            'search': request.POST.get('search_get_param'),
+        }
 
-        return HttpResponseRedirect('/workflow/reports/{}'.format(redirect_url_params))
+        url_params = "?" + "&".join(["{}={}".format(k, v) for k, v in previous_url_params.iteritems() if v not in ('None', '', None)])
+
+        return HttpResponseRedirect('/workflow/reports/{}'.format(url_params))

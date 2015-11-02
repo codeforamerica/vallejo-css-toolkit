@@ -58,50 +58,48 @@ def get_reports(request_params):
     default_sort_key = 'reported_datetime'
     default_sort_order = 'DESC'
 
-    search = request_params.get('search') and request_params['search'].strip()
+    search_get_param = request_params.get('search') and request_params['search'].strip()
     search_clause = ''
-    if search:
-        search_clause = "WHERE {} ".format("OR".join([" {} ilike '%{}%' ".format(field, search) for field in searchable_fields]))
+    if search_get_param:
+        search_clause = "WHERE {} ".format("OR".join([" {} ilike '%{}%' ".format(field, search_get_param) for field in searchable_fields]))
 
-    sort = request_params.get('sort')
-    if sort:
-        if sort[0] == '-':
-            sort_order = 'DESC'
-            sort_key = sort[1:]
+    sort_key_get_param = request_params.get('sort_key')
+    if sort_key_get_param:
+        if sort_key_get_param in sortable_fields:
+            sort_key = sort_key_get_param
         else:
-            sort_key = sort
-            sort_order = 'ASC'
+            log.warning('Unexpected get query param for reports sort: {}, falling back to default sort key'.format(sort_key))
     else:
         sort_key = default_sort_key
+
+    sort_order_get_param = request_params.get('sort_order')
+    if sort_order_get_param and sort_order_get_param.lower() == 'asc':
+        sort_order = 'ASC'
+    else:
         sort_order = default_sort_order
 
-    if sort_key not in sortable_fields:
-        log.warning('Unexpected get query param for reports sort: {}, falling back to default sort key'.format(sort_key))
-        sort_key = default_sort_key
-        sort_order = default_sort_order
-
-    offset = request_params.get('offset')
-    if offset:
-        if type(offset) in (str, unicode) and offset.isdigit():
-            offset = int(offset)
-        elif type(offset) == int:
+    offset_get_param = request_params.get('offset')
+    if offset_get_param:
+        if type(offset_get_param) in (str, unicode) and offset_get_param.isdigit():
+            offset = int(offset_get_param)
+        elif type(offset_get_param) == int:
             pass
         else:
-            log.warning('Unexpected get query param for reports offset: {} of type {}, falling back to default offset'.format(offset, type(offset)))
+            log.warning('Unexpected get query param for reports offset: {} of type {}, falling back to default offset'.format(offset_get_param, type(offset_get_param)))
             offset = default_offset
     else:
         offset = default_offset
 
-    limit = request_params.get('limit')
-    if limit:
-        if type(limit) in (str, unicode) and limit.isdigit():
-            limit = int(limit)
-        elif type(limit) == int:
+    limit_get_param = request_params.get('limit')
+    if limit_get_param:
+        if type(limit_get_param) in (str, unicode) and limit_get_param.isdigit():
+            limit_get_param = int(limit_get_param)
+        elif type(limit_get_param) == int:
             pass
         else:
-            log.warning('Unexpected get query param for reports limit: {} of type {}, falling back to default limit'.format(limit, type(limit)))
+            log.warning('Unexpected get query param for reports limit: {} of type {}, falling back to default limit'.format(limit_get_param, type(limit_get_param)))
             limit = default_limit
-        limit = min(limit, max_limit)
+        limit = min(limit_get_param, max_limit)
     else:
         limit = default_limit
 
@@ -131,25 +129,20 @@ def get_reports(request_params):
             total_count.tcount
         FROM data, total_count
         %(search_clause)s
-        ORDER BY %(sort_key)s %(sort_order)s
+        ORDER BY %(sort_key)s %(sort_order)s, id
         NULLS LAST
         OFFSET %(offset)s
         LIMIT %(limit)s
     """
 
-    params = {'sort_key': AsIs(sort_key), 'sort_order': AsIs(sort_order), 'search_clause': AsIs(search_clause), 'offset': offset, 'limit': limit}
+    params = {
+        'sort_key': AsIs(sort_key),
+        'sort_order': AsIs(sort_order),
+        'search_clause': AsIs(search_clause),
+        'offset': offset,
+        'limit': limit
+    }
     cursor = connection.cursor()
-
-    base_url_parts = []
-    if limit and limit != default_limit:
-        base_url_parts.append("limit={}".format(limit))
-    if sort_key and sort_key != default_sort_key and sort_order and sort_order != default_sort_order:
-        base_url_parts.append("sort={}".format(sort))
-    if search:
-        base_url_parts.append("search={}".format(search))
-    base_url_parts.append("offset=")
-
-    base_url = base_url_parts and "?{}".format("&".join(base_url_parts)) or ""
 
     try:
         cursor.execute(query, params)
@@ -174,9 +167,7 @@ def get_reports(request_params):
 
             pagination_keys = [(i, (i - 1) * limit) if i != '...' else (i, None) for i in page_indices]
 
-        current_url_params = "{}{}".format(base_url, offset)
-
-        return results, pagination_keys, page_idx, base_url, current_url_params
+        return results, pagination_keys, page_idx, sort_key, search_get_param, sort_order, limit, offset
     except Exception:
         # TODO: log these
         raise
