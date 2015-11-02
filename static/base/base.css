@@ -145,6 +145,7 @@ a#properties{
     padding: 0px;
     background-repeat: no-repeat;
     background-position: 5px center;
+    text-align: center;
 }
 
 .info {
@@ -157,7 +158,6 @@ a#properties{
     color: #264409;
     border-color: #C6D880;
     background-color: #E6EFC2;
-    text-align: center;
 }
 
 .warning {
@@ -170,7 +170,6 @@ a#properties{
     color: #8A1F11;
     border-color: #FBC2C4;
     background-color: #FBE3E4;
-    text-align: center;
 }
 
 .message-item {

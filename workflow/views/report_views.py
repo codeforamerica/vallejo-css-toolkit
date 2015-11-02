@@ -14,7 +14,7 @@ from intake.models import CallAuditItem, TypeformAsset
 from workflow.forms.report_forms import ReportForm
 from workflow.models import CSSCall, CSSCase, Verification
 from workflow.sql import CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP
-from workflow.utils import get_location_history
+from workflow.utils import get_location_history, get_reports
 
 log = logging.getLogger('consolelogger')
 
@@ -124,4 +124,42 @@ def reports_data(request):
 
 @login_required(login_url='/admin/login/')
 def reports(request):
-    return render(request, 'workflow/reports.html')
+    if request.method == "GET":
+        reports_data, pagination_keys, page_idx, sort_key, search_get_param, sort_order, limit, offset = get_reports(request.GET)
+
+        return render(
+            request,
+            'workflow/reports.html',
+            {
+                'reports_data': reports_data,
+                'pagination_keys': pagination_keys,
+                'active_page_number': page_idx + 1,
+                'sort_order': sort_order,
+                'sort_key': sort_key,
+                'limit': limit,
+                'offset': offset,
+                'search_get_param': search_get_param
+            }
+        )
+
+    elif request.method == "POST":
+        to_delete_ids = request.POST.getlist('to_delete')
+        if to_delete_ids:
+            for id_string in to_delete_ids:
+                report = CSSCall.objects.get(id=int(id_string))
+                report.active = False
+                report.save()
+        messages.add_message(request, messages.INFO, 'Successfully deleted {} report{}.'.format(len(to_delete_ids), len(to_delete_ids) > 1 and "s" or ""))
+        # TODO: catch exceptions and message error
+
+        previous_url_params = {
+            'sort_key': request.POST.get('sort_key'),
+            'sort_order': request.POST.get('sort_order'),
+            'offset': request.POST.get('offset'),
+            'limit': request.POST.get('limit'),
+            'search': request.POST.get('search_get_param'),
+        }
+
+        url_params = "?" + "&".join(["{}={}".format(k, v) for k, v in previous_url_params.iteritems() if v not in ('None', '', None)])
+
+        return HttpResponseRedirect('/workflow/reports/{}'.format(url_params))
