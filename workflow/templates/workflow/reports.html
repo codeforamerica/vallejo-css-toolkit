@@ -75,23 +75,23 @@
                         <a
                             href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=reported_datetime&amp;{% if sort_key == 'reported_datetime' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
                             class="{% if sort_key == 'reported_datetime' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Received</a>
+                            >Received{% if sort_key == 'reported_datetime' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
                         <a
                             href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=reporter_name&amp;{% if sort_key == 'reporter_name' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
                             class="{% if sort_key == 'reporter_name' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Reporter</a>
+                            >Reporter{% if sort_key == 'reporter_name' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
                         <a
                             href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=problem_address&amp;{% if sort_key == 'problem_address' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
                             class="{% if sort_key == 'problem_address' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Address</a>
+                            >Address{% if sort_key == 'problem_address' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
                         <a
                             href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=problem&amp;{% if sort_key == 'problem' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
                             class="{% if sort_key == 'problem' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Description</a>
+                            >Description{% if sort_key == 'problem' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
                         <a
                             href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=notes&amp;{% if sort_key == 'notes' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
                             class="{% if sort_key == 'notes' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Notes</a>
+                            >Notes{% if sort_key == 'notes' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
                     </div>
                     {% for report in reports_data %}
                         <a class="table-row" href="/workflow/report/{{ report.0 }}">
