@@ -1,9 +1,13 @@
 import json
+import logging
+import traceback
 from datetime import datetime
 
 import pytz
 
 from data_load.models import RMSCase, CRWCase
+
+log = logging.getLogger('consolelogger')
 
 
 def get_latest_rms_case_no_util():
@@ -57,23 +61,29 @@ def load_crw_cases(cases_json):
     tz = pytz.timezone('America/Los_Angeles')
 
     added = 0
+    skipped = 0
     for case in cases:
         date = case[5]
         date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
 
-        CRWCase.objects.create(
-            yr_no=case[1],
-            seq_no=case[2],
-            started=date_converted,
-            case_no=case[3],
-            desc=case[4],
-            case_type=case[6],
-            case_subtype=case[7],
-            address_number=case[8],
-            street_name=case[9],
-            assigned_to=case[10],
-            status=case[11]
-        )
-        added += 1
+        try:
+            CRWCase.objects.create(
+                yr_no=case[1],
+                seq_no=case[2],
+                started=date_converted,
+                case_no=case[3],
+                desc=case[4],
+                case_type=case[6],
+                case_subtype=case[7],
+                address_number=case[8] or None,
+                street_name=case[9],
+                assigned_to=case[10],
+                status=case[11]
+            )
+            added += 1
 
-    return added
+        except:
+            log.error("Error adding CRW case: {} - {}".format(','.join(case), traceback.format_exc()))
+            skipped += 1
+
+    return added, skipped

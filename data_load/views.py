@@ -36,8 +36,8 @@ def handle_rms_post(request):
 @csrf_exempt
 def handle_crw_post(request):
     try:
-        added = load_crw_cases(request.body)
-        log.info('added {} new crw cases'.format(added))
+        added, skipped = load_crw_cases(request.body)
+        log.info('added {} new and skipped {} crw cases'.format(added, skipped))
 
         return JsonResponse({'status': 'OK'})
 
