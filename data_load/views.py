@@ -47,7 +47,7 @@ def handle_crw_post(request):
         start = time()
         added, skipped = load_crw_cases(request.body)
         end = time()
-        log.info('added {} new and skipped {} crw cases'.format(added, skipped, end - start))
+        log.info('added {} new and skipped {} crw cases in {} seconds'.format(added, skipped, end - start))
 
         return JsonResponse({'status': 'OK'})
 
