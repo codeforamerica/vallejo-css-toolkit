@@ -61,17 +61,19 @@ def load_crw_cases(cases_json):
         date = case[5]
         date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
 
-        crw_case, _ = CRWCase.objects.get_or_create(yr_no=case[1], seq_no=case[2])
-        crw_case.started = date_converted
-        crw_case.case_no = case[3]
-        crw_case.desc = case[4]
-        crw_case.case_type = case[6]
-        crw_case.case_subtype = case[7]
-        crw_case.address_number = case[8]
-        crw_case.street_name = case[9]
-        crw_case.assigned_to = case[10]
-        crw_case.status = case[11]
-        crw_case.save()
+        CRWCase.objects.create(
+            yr_no=case[1],
+            seq_no=case[2],
+            started=date_converted,
+            case_no=case[3],
+            desc=case[4],
+            case_type=case[6],
+            case_subtype=case[7],
+            address_number=case[8],
+            street_name=case[9],
+            assigned_to=case[10],
+            status=case[11],
+        )
         added += 1
 
     return added

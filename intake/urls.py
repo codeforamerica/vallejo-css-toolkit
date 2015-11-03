@@ -18,6 +18,13 @@ urlpatterns = patterns(
     url(r'^intake/step-thirteen/$', 'intake.views.step_thirteen', name='step_thirteen'),
     url(r'^intake/step-fourteen/$', 'intake.views.step_fourteen', name='step_fourteen'),
 
+    # web intake-related urls
+    url(r'^report/$', 'intake.views.report_intro', name='report_intro'),
+    url(r'^report/$', 'intake.views.report_intro', name='report_intro'),
+    url(r'^report/issue/$', 'intake.views.report_issue', name='report_issue'),
+    url(r'^report/contact/$', 'intake.views.report_contact', name='report_contact'),
+    url(r'^report/finish/$', 'intake.views.report_finish', name='report_finish'),
+
     # old call-in related urls (TODO: deprecate)
     url(r'^intake/welcome/$', 'intake.views.welcome', name='welcome'),
     url(r'^intake/handle-name/$', 'intake.views.handle_name', name='handle_name'),

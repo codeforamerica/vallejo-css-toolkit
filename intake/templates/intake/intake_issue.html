@@ -1,0 +1,138 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}jquery/dist/jquery.min.js"></script>
+
+<link href="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'base/base.css' %}"/>
+<link rel="stylesheet" href="{% static 'intake/css/intake.css' %}">
+
+{% endblock %}
+
+{% block body %}
+
+<div class="intake-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-1">
+                <div class="header-content">
+                    <h1>{% if lang == 'en' %}Tell us what's going on.{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Try to be as detailed as possible and include as much information as you can. The more specific you can be, the easier we can understand and investigate the problem.{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container intake-body">
+
+    <form id="intake-form" method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-1">
+                <h4>{% if lang == 'en' %}Problem Description{% endif %}</h4>
+
+                <div class="form-group">
+                    <label for="problem_location">{% if lang == 'en' %}Where is the problem occuring?{% endif %}</label>
+                    <input name="problem_location" class="form-control" placeholder="{% if lang == 'en' %}Address or cross street{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">{% if lang == 'en' %}Describe what is happening.{% endif %}</label>
+                    <textarea name="description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="how_long">{% if lang == 'en' %}How long has the problem been occuring?{% endif %}</label>
+                    <input name="how_long" class="form-control" placeholder="{% if lang == 'en' %}Ex: 3 days{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="time_of_day">{% if lang == 'en' %}What time of day does the problem occur?{% endif %}</label>
+                    <input type="time_of_day" class="form-control" placeholder="{% if lang == 'en' %}Ex: night{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label for="how_many_people">{% if lang == 'en' %}How many people are involved?{% endif %}</label>
+                    <input name="how_many_people" class="form-control" id="" placeholder="{% if lang == 'en' %}Ex: 4{% endif %}">
+                </div>
+
+                <div class="form-group">
+                    <label>{% if lang == 'en' %}Are there safety concerns at the location you're reporting?{% endif %}</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="safety_concerns" value="yes">
+                            {% if lang == 'en' %}Yes{% endif %}
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="safety_concerns" value="no">
+                            {% if lang == 'en' %}No{% endif %}
+                      </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="safety_concerns" value="unsure">
+                            {% if lang == 'en' %}I'm not sure{% endif %}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="x">{% if lang == 'en' %}How long has the problem been occuring?{% endif %}</label>
+                    <input name="{{ form.x.html_name }}" class="form-control" placeholder="{% if lang == 'en' %}Ex: 3 days{% endif %}">
+                    {{ form.x.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="">{% if lang == 'en' %}Do you have photos of the problem?{% endif %}</label>
+                    <input type="file" name="uploaded_photo">
+                </div>
+
+                <div class="form-group">
+                    <label for="">{% if lang == 'en' %}Have you reported this problem before?{% endif %}</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
+                            {% if lang == 'en' %}Yes{% endif %}
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            {% if lang == 'en' %}No{% endif %}
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
+                            {% if lang == 'en' %}I'm not sure{% endif %}
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="">{% if lang == 'en' %}If yes, when did you last report this problem?{% endif %}</label>
+                    <input type="" class="form-control" id="" placeholder="{% if lang == 'en' %}Ex: yesterday{% endif %}">
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-1">
+                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% endif %}">
+            </div>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

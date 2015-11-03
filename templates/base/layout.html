@@ -12,7 +12,9 @@
     {% endblock %}
   </title>
 
-  <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,100,100italic,300italic,300,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+<!--   <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,100,100italic,300italic,300,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'> -->
+  <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,100,100italic,300italic,300,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+
 
   {% block assets %}
   {% endblock %}
@@ -22,19 +24,20 @@
 </head>
 
 <body>
-    {% include "base/navbar.html" %}
+    {% if not exclude_navbar_msgs %}
 
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-    <li class="{{ message.tags }}">
+        {% include "base/navbar.html" %}
 
-        {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
-        </li>
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <li class="{{ message.tags }}">
+                    {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                </li>
+            {% endfor %}
+        </div>
+        {% endif %}
 
-<!--         <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
- -->        {% endfor %}
-    </div>
     {% endif %}
 
     {% block body %}

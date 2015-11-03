@@ -1,0 +1,81 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+<script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}jquery/dist/jquery.min.js"></script>
+
+<link href="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+<script src="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/js/bootstrap.min.js"></script>
+
+<link rel="stylesheet" href="{% static 'base/base.css' %}"/>
+<link rel="stylesheet" href="{% static 'intake/css/intake.css' %}">
+
+{% endblock %}
+
+{% block body %}
+
+<div class="intake-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-9 col-sm-offset-1">
+          <div class="header-content">
+            <h1>{% if lang == 'en' %}Tell us more about you.{% endif %}</h1>
+            <p>{% if lang == 'en' %}Although it is not required, it’s most helpful to our staff if we have your name and contact information in case we need any further details on how to best resolve this issue. <b>We will never share your information with anyone other than authorized city staff.{% endif %}</b></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container intake-body">
+
+    <form>
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-1">
+
+          <h4>{% if lang == 'en' %}Contact Information{% endif %}</h4>
+
+          <div class="form-group">
+            <label for="">{% if lang == 'en' %}What is your name?{% endif %}</label>
+            <input type="" class="form-control" id="" placeholder="">
+          </div>
+
+          <div class="form-group">
+            <label for="">{% if lang == 'en' %}What is your phone number?{% endif %}</label>
+            <textarea class="form-control" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="">{% if lang == 'en' %}What is your home address?{% endif %}</label>
+            <input type="" class="form-control" id="" placeholder="Ex: 3 days">
+          </div>
+
+          <div class="form-group">
+            <label for="">{% if lang == 'en' %}What is your email address?{% endif %}</label>
+            <input type="" class="form-control" id="" placeholder="Ex: night">
+          </div>
+
+          <div class="form-group">
+            <label for="">{% if lang == 'en' %}Where should we send you the receipt for this report and updates on any progress?{% endif %}</label>
+            <select class="form-control">
+              <option>{% if lang == 'en' %}I don't want updates{% endif %}</option>
+              <option>{% if lang == 'en' %}Phone call{% endif %}</option>
+              <option>{% if lang == 'en' %}Text message{% endif %}</option>
+              <option>{% if lang == 'en' %}Email{% endif %}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-1">
+          <a class="btn btn-success btn-lg" href="/report/finish" role="button">{% if lang == 'en' %}Next{% endif %}</a>
+        </div>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}

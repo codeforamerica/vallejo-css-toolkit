@@ -1,0 +1,114 @@
+body{
+  background-color:#F5F8F7;
+  background-image: url("../img/pw_maze_white.png");
+  font-family: 'PT Sans', sans-serif;
+}
+
+.btn{
+  margin-top:20px;
+}
+
+h1{
+  margin-bottom:20px;
+  font-weight: 700;
+}
+
+
+h4{
+  font-weight:700;
+  color:#1F4E81;
+  font-size:22px;
+  margin-bottom:30px;
+}
+
+.intake-header h1{
+  margin-bottom:10px;
+  color:#1F4E81;
+}
+
+.intake-header p{
+
+  color:#1F4E81;
+  line-height: 1.5;
+  font-size:16px;
+}
+
+.intake-header .container{
+  padding:0;
+  background-color: #56CDFF;
+
+}
+
+.header-content{
+  padding:25px;
+}
+
+form{
+  margin-left:20px;
+}
+
+.container{
+  background-color: #ffffff;
+  padding-bottom:100px;
+
+}
+
+.intake-body{
+  min-height:100%;
+  padding-top:40px;
+}
+
+
+.form-group{
+  margin-bottom:35px;
+
+}
+
+.form-control{
+  border-color: #ddd;
+  box-shadow:none;
+  height:40px;
+  color:#696969;
+}
+
+label{
+  font-weight:500;
+  color:#3e3e3e;
+}
+
+.btn-success{
+  background-color:#44C851;
+  color:#ffffff;
+  border-color:#44C851;
+}
+
+.btn-success:hover{
+  background-color:#22A935;
+  color:#ffffff;
+  border-color:#22A935;
+}
+
+@media (min-width:992px) {
+   .container {
+    width:900px
+  }
+
+}
+
+.intake-body a{
+  margin-right:20px;
+  margin-top:0;
+}
+
+.intro-question h1{
+  margin-bottom:20px;
+}
+
+
+
+@media (max-width:560px) {
+  .btn{
+    display:block;
+    margin-bottom:20px;
+  }
+}

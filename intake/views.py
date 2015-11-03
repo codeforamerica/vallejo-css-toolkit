@@ -7,16 +7,56 @@ import pytz
 import twilio.twiml
 
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
 from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission, TypeformAsset
 from workflow.models import CSSCall
+from intake.forms import IntakeIssueForm
 
 # from intake.utils import create_call, update_call
 
 log = logging.getLogger('consolelogger')
+
+SUPPORTED_LANGS = ('en')
+DEFAULT_LANG = 'en'
+
+
+def report_intro(request):
+    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+
+    return render(request, 'intake/intake_intro.html', {'lang': lang, 'exclude_navbar_msgs': True})
+
+
+def report_issue(request):
+
+    if request.method == 'POST':
+        form = IntakeIssueForm(request.POST, request.FILES)
+        if form.is_valid():
+
+            return HttpResponseRedirect('/report/contact/')
+
+        # if form.errors:
+        #     messages.add_message(request, messages.ERROR, form.errors)
+
+    else:
+        form = IntakeIssueForm()
+
+    return render(request, 'intake/intake_issue.html', {'form': form, 'lang': 'en', 'exclude_navbar_msgs': True})
+
+
+def report_contact(request):
+
+    print request.FILES
+
+    return render(request, 'intake/intake_contact.html', {'lang': 'en', 'exclude_navbar_msgs': True})
+
+
+def report_finish(request):
+
+    return render(request, 'intake/intake_finish.html', {'lang': 'en', 'exclude_navbar_msgs': True})
 
 
 @twilio_view
