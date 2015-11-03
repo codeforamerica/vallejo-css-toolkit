@@ -39,21 +39,28 @@ def load_rms_cases(cases_json):
     tz = pytz.timezone('America/Los_Angeles')
 
     added = 0
+    skipped = 0
     for case in cases:
         date = case[1]
         date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
 
-        rms_case, _ = RMSCase.objects.get_or_create(case_no=case[0])
-        rms_case.date = date_converted
-        rms_case.code = case[2]
-        rms_case.desc = case[3]
-        rms_case.incnum = case[4]
-        rms_case.address = case[5]
-        rms_case.off_name = case[7]
-        rms_case.save()
-        added += 1
+        try:
+            RMSCase.objects.get_or_create(
+                case_no=case[0],
+                date=date_converted,
+                code=case[2],
+                desc=case[3],
+                incnum=case[4] or None,
+                address=case[5],
+                off_name=case[7]
+            )
+            added += 1
 
-    return added
+        except:
+            log.error("Error adding RMS case: {} - {}".format(','.join(case), traceback.format_exc()))
+            skipped += 1
+
+    return added, skipped
 
 
 def load_crw_cases(cases_json):

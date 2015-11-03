@@ -27,10 +27,15 @@ def get_latest_crw_case_nos(request):
 
 @csrf_exempt
 def handle_rms_post(request):
-    added = load_rms_cases(request.body)
-    log.info('added {} new rms cases'.format(added))
+    try:
+        added, skipped = load_rms_cases(request.body)
+        log.info('added {} new and skipped {} rms cases'.format(added, skipped))
 
-    return JsonResponse({'status': 'OK'})
+        return JsonResponse({'status': 'OK'})
+
+    except:
+        log.error('Encountered error while adding new RMS cases: {}'.format(traceback.format_exc()))
+        return JsonResponse({'error_traceback': traceback.format_exc()})
 
 
 @csrf_exempt
