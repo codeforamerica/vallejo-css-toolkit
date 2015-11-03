@@ -72,7 +72,7 @@ def load_crw_cases(cases_json):
             address_number=case[8],
             street_name=case[9],
             assigned_to=case[10],
-            status=case[11],
+            status=case[11]
         )
         added += 1
 

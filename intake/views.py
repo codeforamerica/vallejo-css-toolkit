@@ -6,7 +6,7 @@ from datetime import datetime
 import pytz
 import twilio.twiml
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 
@@ -31,8 +31,10 @@ def report_intro(request):
 
 
 def report_issue(request):
+    # lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
 
     if request.method == 'POST':
+        print request.FILES['uploaded_photo'].chunks()
         form = IntakeIssueForm(request.POST, request.FILES)
         if form.is_valid():
 

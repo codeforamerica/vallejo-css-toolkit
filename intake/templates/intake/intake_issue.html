@@ -15,6 +15,8 @@
 
 {% block body %}
 
+{% load widget_tweaks %}
+
 <div class="intake-header">
     <div class="container">
         <div class="row">
@@ -30,7 +32,7 @@
 
 <div class="container intake-body">
 
-    <form id="intake-form" method="post">
+    <form id="intake-form" enctype="multipart/form-data" method="post">
         {% csrf_token %}
 
         {{ form.non_field_errors }}
@@ -40,89 +42,60 @@
                 <h4>{% if lang == 'en' %}Problem Description{% endif %}</h4>
 
                 <div class="form-group">
-                    <label for="problem_location">{% if lang == 'en' %}Where is the problem occuring?{% endif %}</label>
-                    <input name="problem_location" class="form-control" placeholder="{% if lang == 'en' %}Address or cross street{% endif %}">
+                    <label for="{{ form.problem_location.id_for_label }}">{% if lang == 'en' %}Where is the problem occuring?{% endif %}</label>
+                    {{ form.problem_location|add_class:"form-control" }}
+                    {{ form.problem_location.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="description">{% if lang == 'en' %}Describe what is happening.{% endif %}</label>
-                    <textarea name="description" class="form-control" rows="3"></textarea>
+                    <label for="{{ form.description.id_for_label }}">{% if lang == 'en' %}Describe what is happening.{% endif %}</label>
+                    <textarea name="{{ form.description.html_name }}" class="form-control" rows="3"></textarea>
+                    {{ form.description.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="how_long">{% if lang == 'en' %}How long has the problem been occuring?{% endif %}</label>
-                    <input name="how_long" class="form-control" placeholder="{% if lang == 'en' %}Ex: 3 days{% endif %}">
+                    <label for="{{ form.how_long.id_for_label }}">{% if lang == 'en' %}How long has the problem been occuring?{% endif %}</label>
+                    {{ form.how_long|add_class:"form-control" }}
+                    {{ form.how_long.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="time_of_day">{% if lang == 'en' %}What time of day does the problem occur?{% endif %}</label>
-                    <input type="time_of_day" class="form-control" placeholder="{% if lang == 'en' %}Ex: night{% endif %}">
+                    <label for="{{ form.time_of_day.id_for_label }}">{% if lang == 'en' %}What time of day does the problem occur?{% endif %}</label>
+                    {{ form.time_of_day|add_class:"form-control" }}
+                    {{ form.time_of_day.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="how_many_people">{% if lang == 'en' %}How many people are involved?{% endif %}</label>
-                    <input name="how_many_people" class="form-control" id="" placeholder="{% if lang == 'en' %}Ex: 4{% endif %}">
+                    <label for="{{ form.safety_concerns.id_for_label }}">Are there safety concerns at the location you're reporting?</label>
+                    {{ form.safety_concerns }}
+                    {{ form.safety_concerns.errors }}
                 </div>
 
-                <div class="form-group">
-                    <label>{% if lang == 'en' %}Are there safety concerns at the location you're reporting?{% endif %}</label>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="safety_concerns" value="yes">
-                            {% if lang == 'en' %}Yes{% endif %}
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="safety_concerns" value="no">
-                            {% if lang == 'en' %}No{% endif %}
-                      </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="safety_concerns" value="unsure">
-                            {% if lang == 'en' %}I'm not sure{% endif %}
-                        </label>
-                    </div>
-                </div>
 
                 <div class="form-group">
-                    <label for="x">{% if lang == 'en' %}How long has the problem been occuring?{% endif %}</label>
-                    <input name="{{ form.x.html_name }}" class="form-control" placeholder="{% if lang == 'en' %}Ex: 3 days{% endif %}">
-                    {{ form.x.errors }}
+                    <label for="{{ form.how_many_people.id_for_label }}">{% if lang == 'en' %}How many people are involved?{% endif %}</label>
+                    {{ form.how_many_people|add_class:"form-control" }}
+                    {{ form.how_many_people.errors }}
                 </div>
 
                 <div class="form-group">
                     <label for="">{% if lang == 'en' %}Do you have photos of the problem?{% endif %}</label>
-                    <input type="file" name="uploaded_photo">
+<!--                     <input type="file" name="uploaded_photo"> -->
+                    {{ form.uploaded_photo }}
                 </div>
 
                 <div class="form-group">
-                    <label for="">{% if lang == 'en' %}Have you reported this problem before?{% endif %}</label>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios1" value="option1">
-                            {% if lang == 'en' %}Yes{% endif %}
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                            {% if lang == 'en' %}No{% endif %}
-                        </label>
-                    </div>
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-                            {% if lang == 'en' %}I'm not sure{% endif %}
-                        </label>
-                    </div>
+                    <label for="{{ form.reported_before.id_for_label }}">{% if lang == 'en' %}Have you reported this problem before?{% endif %}</label>
+                    {{ form.reported_before }}
+                    {{ form.reported_before.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="">{% if lang == 'en' %}If yes, when did you last report this problem?{% endif %}</label>
-                    <input type="" class="form-control" id="" placeholder="{% if lang == 'en' %}Ex: yesterday{% endif %}">
+                    <label for="{{ reported_before_details.id_for_label }}">{% if lang == 'en' %}If yes, when and where did you last report this problem?{% endif %}</label>
+                    {{ form.reported_before_details|add_class:"form-control" }}
+                    {{ form.reported_before_details.errors }}
                 </div>
+
             </div>
         </div>
 

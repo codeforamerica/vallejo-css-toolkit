@@ -34,7 +34,7 @@ class TestRMSDataLoad(TestCase):
 
     def test_get_latest_case_no(self):
         c = Client()
-        response = c.get('/get_latest_case_no/')
+        response = c.get('/get_latest_rms_case_no/')
         data = json.loads(response.content)
 
         self.assertEqual(data.get('latest_case_no'), 11500001)

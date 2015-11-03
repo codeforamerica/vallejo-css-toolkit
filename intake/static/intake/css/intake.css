@@ -21,6 +21,13 @@ h4{
   margin-bottom:30px;
 }
 
+ul {
+  padding-left: 0;
+}
+
+li {
+  list-style-type: none;
+}
 .intake-header h1{
   margin-bottom:10px;
   color:#1F4E81;
