@@ -1,5 +1,6 @@
 import logging
 import traceback
+from time import time
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -28,8 +29,10 @@ def get_latest_crw_case_nos(request):
 @csrf_exempt
 def handle_rms_post(request):
     try:
+        start = time()
         added, skipped = load_rms_cases(request.body)
-        log.info('added {} new and skipped {} rms cases'.format(added, skipped))
+        end = time()
+        log.info('added {} new and skipped {} rms cases in {} seconds'.format(added, skipped, end - start))
 
         return JsonResponse({'status': 'OK'})
 
@@ -41,8 +44,10 @@ def handle_rms_post(request):
 @csrf_exempt
 def handle_crw_post(request):
     try:
+        start = time()
         added, skipped = load_crw_cases(request.body)
-        log.info('added {} new and skipped {} crw cases'.format(added, skipped))
+        end = time()
+        log.info('added {} new and skipped {} crw cases'.format(added, skipped, end - start))
 
         return JsonResponse({'status': 'OK'})
 
