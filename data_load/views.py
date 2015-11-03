@@ -1,4 +1,5 @@
 import logging
+import traceback
 
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
@@ -34,7 +35,13 @@ def handle_rms_post(request):
 
 @csrf_exempt
 def handle_crw_post(request):
-    added = load_crw_cases(request.body)
-    log.info('added {} new crw cases'.format(added))
+    try:
+        added = load_crw_cases(request.body)
+        log.info('added {} new crw cases'.format(added))
 
-    return JsonResponse({'status': 'OK'})
+        return JsonResponse({'status': 'OK'})
+
+    except:
+        log.error('Encountered error while adding new CRW cases: {}'.format(traceback.format_exc()))
+
+        return JsonResponse({'error_traceback': traceback.format_exc()})

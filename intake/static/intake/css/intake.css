@@ -25,6 +25,10 @@ ul {
   padding-left: 0;
 }
 
+.errorlist li {
+  color: red;
+}
+
 li {
   list-style-type: none;
 }

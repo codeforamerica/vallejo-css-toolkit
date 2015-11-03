@@ -34,7 +34,6 @@ def report_issue(request):
     # lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
 
     if request.method == 'POST':
-        print request.FILES['uploaded_photo'].chunks()
         form = IntakeIssueForm(request.POST, request.FILES)
         if form.is_valid():
 
@@ -50,8 +49,6 @@ def report_issue(request):
 
 
 def report_contact(request):
-
-    print request.FILES
 
     return render(request, 'intake/intake_contact.html', {'lang': 'en', 'exclude_navbar_msgs': True})
 

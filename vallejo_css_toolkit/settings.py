@@ -104,6 +104,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+MAX_UPLOAD_SIZE = 5242880  # 5 MB
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

@@ -79,9 +79,9 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="">{% if lang == 'en' %}Do you have photos of the problem?{% endif %}</label>
-<!--                     <input type="file" name="uploaded_photo"> -->
+                    <label for="{{ form.uploaded_photo.id_for_label }}">{% if lang == 'en' %}Do you have photos of the problem?{% endif %}</label>
                     {{ form.uploaded_photo }}
+                    {{ form.uploaded_photo.errors }}
                 </div>
 
                 <div class="form-group">
