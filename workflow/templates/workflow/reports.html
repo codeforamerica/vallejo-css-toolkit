@@ -20,29 +20,37 @@
 
 {% block body %}
 
+<!--STOP-->
+
 <div class="container">
 
-    <div class="row">
-        <div class="col-md-12">
+  <div class="row">
+
+    <div class="col-md-6">
+        <div class="report-pg-header">
           <h2>Reports Inbox</h2>
+          <button form="delete-selected" class="btn btn-default" type="submit">Delete selected</button>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
+    <div class="col-md-6">
+        <div class="report-action-btns pull-right">
             <form id="search" method="get">
-                <input type="text" name="search" value="{% if search_get_param %}{{search_get_param}}{% endif %}">
-                <button form="search" class="btn btn-default" type="submit">Search</button>
+              <div class="input-group">
+                <input type="text" class="form-control" name="search" value="{% if search_get_param %}{{search_get_param}}{% endif %}">
+                <span class="input-group-btn">
+                  <button form="search" class="btn btn-default" type="submit">Search</button>
+                </span>
+              </div>
             </form>
-        </div>
 
-        <div class="col-md-6">
-            <div class="pull-right">
-              <button form="delete-selected" class="btn btn-default" type="submit">Delete selected</button>
-              <a class="btn btn-success" href="/workflow/add_report"><i class="fa fa-plus"></i>&nbsp; New Report</a>
-            </div>
+
+            <a href="/workflow/add_report"><button type="button" class="btn btn-success">+ New Report</button></a>
+
         </div>
     </div>
+
+  </div>
 
 
 
@@ -101,6 +109,7 @@
         </div>
     </div>
 
+    <!--old pagination
     <div class="row">
         <div class="col-md-12">
             {% if pagination_keys %}
@@ -114,6 +123,26 @@
             {% endif %}
         </div>
     </div>
+    -->
+
+    <div class="row">
+      <div class="col-md-5">
+        <p class="table-counter">Showing 10 of 158 reports</p>
+      </div>
+
+      <div class="col-md-7">
+        {% if pagination_keys %}
+        <nav class="pull-right">
+            <ul class="pagination">
+                {% for pagination_key in pagination_keys %}
+                    <li class="{% if pagination_key.0 == active_page_number %}active{% endif %}"><a class="{% if pagination_key.1 == None %}inactive{% endif %}" href="{% if pagination_key.1 == None %}#{% else %}/workflow/reports/?sort_key={{ sort_key }}&amp;sort_order={{ sort_order }}&amp;offset={{ pagination_key.1}}{% if search_get_param %}&amp;search={{ search_get_param }}{% endif %}&amp;limit={{ limit }}{% endif %}">{{ pagination_key.0 }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+
+      </div>
+  </div>
 
 </div>  <!-- End container -->
 {% endblock %}
