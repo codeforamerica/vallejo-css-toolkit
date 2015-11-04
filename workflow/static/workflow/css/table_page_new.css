@@ -55,8 +55,6 @@ a:active {
 }
 
 .table { display:table; }
-.table-row { display:table-row; }
-.table-cell, .table-header-cell { display:table-cell; }
 
 /*Pagination*/
 
@@ -119,40 +117,44 @@ a:active {
   margin: 0;
 }
 
-.table-header-cell, .table-cell{
+th, td {
   border-bottom: 1px solid #ddd;
 }
 
-.table-header-cell {
+th:hover, td:hover {
+  cursor: pointer;
+}
+
+th {
   font-weight: normal;
 }
 
-.table-header-cell{
+th{
   background-color:#1F4E81;
   color:#ffffff;
   border-radius: 8px;
 }
 
-.table-header-cell{
+th{
   padding:20px 15px 10px;
 }
 
-.table-header-cell, .table-cell{
+th, td{
   width:200px;
 }
 
-.table-header-cell:hover{
+th:hover{
   background:#2B6CB3;
   color:#ffffff;
 }
 
 
 /**Table rows**/
-.table-header-cell, .table-cell{
+th, td {
   padding:15px;
 }
 
-.table-cell {
+td {
   border-color:#eee;
 }
 

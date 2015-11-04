@@ -24,21 +24,22 @@
 </head>
 
 <body>
-    {% if not exclude_navbar_msgs %}
+    {% if not exclude_navbar %}
 
         {% include "base/navbar.html" %}
 
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <li class="{{ message.tags }}">
-                    {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
-                </li>
-            {% endfor %}
-        </div>
-        {% endif %}
-
     {% endif %}
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">
+                {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+            </li>
+        {% endfor %}
+    </div>
+    {% endif %}
+
 
     {% block body %}
     {% endblock %}
