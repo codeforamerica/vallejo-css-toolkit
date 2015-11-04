@@ -6,6 +6,7 @@ from datetime import datetime
 import pytz
 import twilio.twiml
 
+from django.contrib import messages
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
@@ -27,35 +28,54 @@ DEFAULT_LANG = 'en'
 def report_intro(request):
     lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
 
-    return render(request, 'intake/intake_intro.html', {'lang': lang, 'exclude_navbar_msgs': True})
+    return render(request, 'intake/intake_intro.html', {'lang': lang, 'exclude_navbar': True})
 
 
 def report_issue(request):
-    # lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
 
     if request.method == 'POST':
         form = IntakeIssueForm(request.POST, request.FILES)
         if form.is_valid():
 
-            return HttpResponseRedirect('/report/contact/')
+            now_utc = pytz.UTC.localize(datetime.utcnow())
 
-        # if form.errors:
-        #     messages.add_message(request, messages.ERROR, form.errors)
+            report = CSSCall.objects.create(
+                address=form.cleaned_data.get('problem_location'),
+                problem=form.cleaned_data.get('description'),
+                num_people_involved=form.cleaned_data.get('how_many_people'),
+                safety_concerns=form.cleaned_data.get('safety_concerns'),
+                reported_datetime=now_utc,
+                time_of_day_occurs=form.cleaned_data.get('time_of_day'),
+                problem_duration=form.cleaned_data.get('how_long'),
+                when_last_reported=form.cleaned_data.get('reported_before_details')
+            )
+            # TODO: handle file uploads
+
+            return HttpResponseRedirect(
+                '/report/contact/?report_id={}{}'.format(
+                    report.id,
+                    lang != DEFAULT_LANG and "&lang={}".format(lang) or ""
+                )
+            )
+
+        if form.errors:
+            messages.add_message(request, messages.ERROR, form.errors)
 
     else:
         form = IntakeIssueForm()
 
-    return render(request, 'intake/intake_issue.html', {'form': form, 'lang': 'en', 'exclude_navbar_msgs': True})
+    return render(request, 'intake/intake_issue.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
 
 
 def report_contact(request):
 
-    return render(request, 'intake/intake_contact.html', {'lang': 'en', 'exclude_navbar_msgs': True})
+    return render(request, 'intake/intake_contact.html', {'lang': 'en', 'exclude_navbar': True})
 
 
 def report_finish(request):
 
-    return render(request, 'intake/intake_finish.html', {'lang': 'en', 'exclude_navbar_msgs': True})
+    return render(request, 'intake/intake_finish.html', {'lang': 'en', 'exclude_navbar': True})
 
 
 @twilio_view
