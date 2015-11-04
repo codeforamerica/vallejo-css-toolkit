@@ -10,6 +10,11 @@ body {
   padding-right:50px;
   padding-left:50px;
 }
+
+nav.navbar.navbar-default{
+  margin-bottom: 100px;
+}
+
 .navbar-default{
   border-color:#e8e8e8;
   border-width: 2px;
