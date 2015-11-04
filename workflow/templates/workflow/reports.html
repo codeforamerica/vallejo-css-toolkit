@@ -20,6 +20,17 @@
 
 {% block body %}
 
+<script>
+$(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+    $(".table-header-cell").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
+
 <div class="container">
 
     <div class="row">
@@ -62,41 +73,41 @@
                 <input type="hidden" name="offset" value="{{ offset }}">
                 <input type="hidden" name="limit" value="{{ limit }}">
 
-                <div class="table">
-                    <div class="table-row">
-                        <div class="table-header-cell"></div>
-                        <a
-                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=reported_datetime&amp;{% if sort_key == 'reported_datetime' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
-                            class="{% if sort_key == 'reported_datetime' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Received{% if sort_key == 'reported_datetime' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
-                        <a
-                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=reporter_name&amp;{% if sort_key == 'reporter_name' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                            class="{% if sort_key == 'reporter_name' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Reporter{% if sort_key == 'reporter_name' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
-                        <a
-                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=problem_address&amp;{% if sort_key == 'problem_address' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                            class="{% if sort_key == 'problem_address' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Address{% if sort_key == 'problem_address' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
-                        <a
-                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=problem&amp;{% if sort_key == 'problem' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                            class="{% if sort_key == 'problem' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Description{% if sort_key == 'problem' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
-                        <a
-                            href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=notes&amp;{% if sort_key == 'notes' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                            class="{% if sort_key == 'notes' %}active {% if sort_order = 'DESC' %}desc {% else %}asc {% endif %}{% endif %}table-header-cell"
-                            >Notes{% if sort_key == 'notes' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</a>
-                    </div>
+                <table class="table">
+                    <tr class="table-row">
+                        <th class="table-header-cell"></th>
+                        <th
+                            data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=reported_datetime&amp;{% if sort_key == 'reported_datetime' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
+                            class="{% if sort_key == 'reported_datetime' %}active {% endif %}table-header-cell"
+                            >Received{% if sort_key == 'reported_datetime' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                        <th
+                            data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=reporter_name&amp;{% if sort_key == 'reporter_name' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                            class="{% if sort_key == 'reporter_name' %}active {% endif %}table-header-cell"
+                            >Reporter{% if sort_key == 'reporter_name' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                        <th
+                            data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=problem_address&amp;{% if sort_key == 'problem_address' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                            class="{% if sort_key == 'problem_address' %}active {% endif %}table-header-cell"
+                            >Address{% if sort_key == 'problem_address' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                        <th
+                            data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=problem&amp;{% if sort_key == 'problem' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                            class="{% if sort_key == 'problem' %}active {% endif %}table-header-cell"
+                            >Description{% if sort_key == 'problem' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                        <th
+                            data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=notes&amp;{% if sort_key == 'notes' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                            class="{% if sort_key == 'notes' %}active {% endif %}table-header-cell"
+                            >Notes{% if sort_key == 'notes' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                    </tr>
                     {% for report in reports_data %}
-                        <a class="table-row" href="/workflow/report/{{ report.0 }}">
-                            <div class="table-cell table-cell-checkbox"><div><input type="checkbox" name="to_delete" value="{{ report.0 }}"></div></div>
-                            <div class="table-cell">{{ report.1 }}</div>
-                            <div class="table-cell">{{ report.2 }}</div>
-                            <div class="table-cell">{{ report.3 }}</div>
-                            <div class="table-cell">{{ report.4 }}</div>
-                            <div class="table-cell">{{ report.5 }}</div>
-                        </a>
+                        <tr class="table-row clickable-row" data-href="/workflow/report/{{ report.0 }}">
+                            <td class="table-cell table-cell-checkbox"><div><input type="checkbox" name="to_delete" value="{{ report.0 }}"></div></td>
+                            <td class="table-cell">{{ report.1 }}</td>
+                            <td class="table-cell">{{ report.2 }}</td>
+                            <td class="table-cell">{{ report.3 }}</td>
+                            <td class="table-cell">{{ report.4 }}</td>
+                            <td class="table-cell">{{ report.5 }}</td>
+                        </tr>
                     {% endfor %}
-                </div>
+                </table>
             </form>
         </div>
     </div>

@@ -94,6 +94,10 @@ a:active {
   border-bottom: 1px solid #ddd;
 }
 
+.table-header-cell:hover, .table-cell:hover {
+  cursor: pointer;
+}
+
 .table-header-cell {
   font-weight: normal;
 }
