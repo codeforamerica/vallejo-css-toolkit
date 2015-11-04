@@ -57,7 +57,7 @@ def load_rms_cases(cases_json):
             added += 1
 
         except:
-            log.error("Error adding RMS case: {} - {}".format(','.join(case), traceback.format_exc()))
+            log.error("Error adding RMS case: {} - {}".format(str(case), traceback.format_exc()))
             skipped += 1
 
     return added, skipped
@@ -90,7 +90,7 @@ def load_crw_cases(cases_json):
             added += 1
 
         except:
-            log.error("Error adding CRW case: {} - {}".format(','.join(case), traceback.format_exc()))
+            log.error("Error adding CRW case: {} - {}".format(str(case), traceback.format_exc()))
             skipped += 1
 
     return added, skipped
