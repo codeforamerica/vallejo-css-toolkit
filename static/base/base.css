@@ -6,6 +6,8 @@ body {
     padding-bottom: 100px;
 }
 
+/**Navbar**/
+
 .navbar{
   border-radius: 0;
 }
@@ -30,6 +32,7 @@ nav.navbar.navbar-default{
   margin-bottom: 20px;
 }
 
+/**Logo**/
 .navbar-default .navbar-brand{
   padding-top:40px;
   padding-bottom: 38px;
@@ -42,34 +45,12 @@ nav.navbar.navbar-default{
   background-color:#29364D;
 }
 
+/**Nav Items**/
 .navbar-default .navbar-nav>li>a{
   color:#188EF5;
   padding-top:40px;
   padding-right: 25px;
   font-size: 16px;
-}
-
-.dropdown-menu>li>a{
-  color:#1F4E81;
-  padding-top:5px;
-  padding-bottom:5px;
-}
-
-.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-brand:hover, .dropdown-menu>li>a:hover{
-  font-weight: bold;
-  background:#1F4E81;
-  color:#378BE8;
-}
-
-.navbar-default .navbar-nav>.active>a{
-  font-weight: bold;
-  background:#1F4E81;
-  color:#ffffff;
-}
-
-.navbar-default .navbar-nav>.active>a:hover{
-  background-color:#1F4E81;
-  color:#378BE8;
 }
 
 .navbar-default li{
@@ -81,10 +62,49 @@ a#notifications{
   color:#44C851;
 }
 
-
 a#properties{
   padding-right:30px;
 }
+
+.dropdown-menu>li>a{
+  padding-top:5px;
+  padding-bottom:5px;
+}
+
+/**Navbar Hover Active Focus States**/
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus{
+  font-weight: bold;
+  color:#ffffff;
+}
+
+.navbar-default .navbar-brand:hover, a.navbar-brand:hover, .navbar-default .navbar-brand:focus{
+  background-color: #29364D;
+  color:#ffffff;
+}
+
+
+
+/*.navbar-default .navbar-brand:focus{
+  color:#ffffff;
+  background-color: #29364D;
+}*/
+
+/**Navbar Active States**/
+.navbar-default .navbar-nav>.active>a{
+  font-weight: bold;
+  background:#1F4E81;
+  color:#ffffff;
+}
+
+.navbar-default .navbar-nav>.active>a:hover{
+  background-color:#1F4E81;
+  color:#ffffff;
+}
+
+
+
+
+
 
 [class*="layout-minor"] {
     width: 26%;
