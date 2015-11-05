@@ -9,29 +9,35 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">CSS-tool</a>
+      <a class="navbar-brand" href="/">CSS TOOL</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-right">
-
-<!--         <li class="dropdown" role="presentation" id="props-nav-tab" >
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Properties <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-                <li><a href="/workflow/visit_queue"> Visit List</a></li>
-                <li><a href="/workflow/map"> Map</a></li>
-            </ul>
-        </li>
- -->
+      <ul class="nav navbar-nav">
         <li role="presentation" id="calls-nav-tab"><a href="/workflow/reports"> Reports</a></li>
         <li role="presentation" id="cases-nav-tab"><a href="/workflow/cases"> Cases</a></li>
         <li role="presentation" id="cases-nav-tab"><a href="#" id="properties"> Properties</a></li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
         <li role="presentation" id="cases-nav-tab" class="dropdown">
-          <a href="#" id="user" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ user.get_username }} <span class="caret"></span></a>
+          <a href="#" id="notifications" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-bell" aria-hidden="true"></span> (3)
+          </a>
           <ul class="dropdown-menu">
-            <li><a href="#">Notifications</a></li>
-            <li><a href="#">Settings</a></li>
+            <li><a href="#">175 Red Rock Way inactive for 21 days</a></li>
+            <li><a href="#">Karen wants you to look at 21 Maine St</a></li>
+            <li><a href="#">You've been assigned to 8821 Florida St</a></li>
+          </ul>
+        </li>
+        <li role="presentation" id="cases-nav-tab" class="dropdown">
+          <a href="#" id="user" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+            {{ user.get_username }}
+            <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li><a href="#">Log Out</a></li>
           </ul>
         </li>
 <!--         <li role="presentation" id="audit-nav-tab"><a href="/workflow/call_audit_log"> Audit Log</a></li> -->
