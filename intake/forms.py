@@ -2,6 +2,7 @@ from django import forms
 from django.template.defaultfilters import filesizeformat
 
 from vallejo_css_toolkit.settings import MAX_UPLOAD_SIZE
+from workflow.models import CSSCall
 
 
 class RestrictedFileField(forms.FileField):
@@ -45,3 +46,28 @@ class IntakeIssueForm(forms.Form):
         self.fields['how_long'].widget = forms.TextInput(attrs={'placeholder': 'ex: 3 days'})
         self.fields['reported_before_details'].widget = forms.TextInput(attrs={'placeholder': 'ex: yesterday, to Code Enforcement'})
         self.fields['problem_location'].widget = forms.TextInput(attrs={'placeholder': 'Address or cross street'})
+
+
+class IntakeContactForm(forms.Form):
+    error_css_class = 'form-error'
+
+    CONTACT_METHOD_CHOICES = [
+        (CSSCall.EMAIL_CONTACT_PREFERENCE, 'Email'),
+        (CSSCall.TEXT_CONTACT_PREFERENCE, 'Text Message'),
+        (CSSCall.NO_CONTACT_PREFERENCE, "I don't want to receive updates")
+    ]
+
+    reporter_name = forms.CharField(required=False)
+    reporter_phone = forms.CharField(required=False)
+    reporter_address = forms.CharField(required=False)
+    reporter_email = forms.EmailField(required=False)
+    reporter_contact_method = forms.ChoiceField(choices=CONTACT_METHOD_CHOICES, required=False)
+
+    def clean(self, *args, **kwargs):
+        data = super(IntakeContactForm, self).clean(*args, **kwargs)
+
+        if not data.get('reporter_email') and data.get('reporter_contact_method') == 'email':
+            raise forms.ValidationError('You chose to receive email updates but did not provide an email address.')
+
+        if not data.get('reporter_phone') and data.get('reporter_contact_method') == 'text':
+            raise forms.ValidationError('You chose to receive email updates but did not provide a phone number.')

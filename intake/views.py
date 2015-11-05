@@ -8,14 +8,14 @@ import twilio.twiml
 
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 
 from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission, TypeformAsset
 from workflow.models import CSSCall
-from intake.forms import IntakeIssueForm
+from intake.forms import IntakeIssueForm, IntakeContactForm
 
 # from intake.utils import create_call, update_call
 
@@ -32,12 +32,11 @@ def report_intro(request):
 
 
 def report_issue(request):
-    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
-
     if request.method == 'POST':
         form = IntakeIssueForm(request.POST, request.FILES)
-        if form.is_valid():
+        lang = form.data.get('lang', DEFAULT_LANG)
 
+        if form.is_valid():
             now_utc = pytz.UTC.localize(datetime.utcnow())
 
             report = CSSCall.objects.create(
@@ -63,19 +62,54 @@ def report_issue(request):
             messages.add_message(request, messages.ERROR, form.errors)
 
     else:
+        lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
         form = IntakeIssueForm()
 
     return render(request, 'intake/intake_issue.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
 
 
 def report_contact(request):
+    if request.method == 'POST':
+        form = IntakeContactForm(request.POST, request.FILES)
+        lang = form.data.get('lang', DEFAULT_LANG)
+        report_id = form.data.get('report_id')
+        report = get_object_or_404(CSSCall, id=report_id)
 
-    return render(request, 'intake/intake_contact.html', {'lang': 'en', 'exclude_navbar': True})
+        if form.is_valid():
+
+            # TODO: update the report with contact data
+            report.caller_preferred_contact = form.cleaned_data.get('reporter_contact_method')
+            report.name = form.cleaned_data.get('reporter_name')
+            report.reporter_street_name = form.cleaned_data.get('reporter_address')
+            report.phone = form.cleaned_data.get('reporter_phone')
+            report.reporter_alternate_contact = form.cleaned_data.get('reporter_email')
+
+            report.save()
+
+            return HttpResponseRedirect(
+                '/report/finish/?report_id={}{}'.format(
+                    report.id,
+                    lang != DEFAULT_LANG and "&lang={}".format(lang) or ""
+                )
+            )
+
+        if form.errors:
+            messages.add_message(request, messages.ERROR, "Please resolve the error(s) listed below.")
+
+    else:
+        report_id = request.GET.get('report_id')
+        report = get_object_or_404(CSSCall, id=report_id)
+        lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+        form = IntakeContactForm()
+
+    return render(request, 'intake/intake_contact.html', {'form': form, 'lang': lang, 'report_id': report.id, 'exclude_navbar': True})
 
 
 def report_finish(request):
+    report_id = request.GET.get('report_id')
+    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
 
-    return render(request, 'intake/intake_finish.html', {'lang': 'en', 'exclude_navbar': True})
+    return render(request, 'intake/intake_finish.html', {'report_id': report_id, 'lang': lang, 'exclude_navbar': True})
 
 
 @twilio_view

@@ -16,6 +16,18 @@ class CRWCase(models.Model):
 
 
 class CSSCall(models.Model):
+    NO_CONTACT_PREFERENCE = 1
+    TEXT_CONTACT_PREFERENCE = 2
+    CALL_CONTACT_PREFERENCE = 3
+    EMAIL_CONTACT_PREFERENCE = 4
+
+    CONTACT_PREFERENCES_CHOICES = (
+        (NO_CONTACT_PREFERENCE, 'No Contact'),
+        (NO_CONTACT_PREFERENCE, 'Text'),
+        (CALL_CONTACT_PREFERENCE, 'Call'),
+        (EMAIL_CONTACT_PREFERENCE, 'Email'),
+    )
+
     name = models.CharField(max_length=256, null=True)
     address = models.CharField(max_length=256, null=True, blank=True)
     phone = models.CharField(max_length=256, null=True, blank=True)
@@ -45,6 +57,7 @@ class CSSCall(models.Model):
 
     # TODO: we'll eventually need to store geometry objects somewhere
     active = models.BooleanField(default=True)
+    caller_preferred_contact = models.IntegerField(null=True, blank=True, choices=CONTACT_PREFERENCES_CHOICES)
 
 
 class Verification(models.Model):

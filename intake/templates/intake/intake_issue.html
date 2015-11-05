@@ -37,6 +37,9 @@
 
         {{ form.non_field_errors }}
 
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <input type="hidden" name="report_id" value="{{ report_id }}">
+
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
                 <h4>{% if lang == 'en' %}Problem Description{% endif %}</h4>
