@@ -1,3 +1,9 @@
 .save-buttons{
   padding-top:40px;
 }
+
+.container.save-buttons{
+  background-color: #1F4E81;
+  padding:40px 0 0 0;
+  border:none;
+}
