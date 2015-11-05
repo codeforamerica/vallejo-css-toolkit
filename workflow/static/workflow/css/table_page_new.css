@@ -158,14 +158,8 @@ td {
   border-color:#eee;
 }
 
-.table-cell-checkbox {
-    pointer-events: none;
-    cursor: default;
-}
-
-.table-cell-checkbox input{
-    pointer-events: auto;
-    cursor: default;
+.clickable-cell {
+    cursor: pointer;
 }
 
 .inactive {
