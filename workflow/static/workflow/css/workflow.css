@@ -8,9 +8,9 @@ body{
 
 .container{
   background-color: #ffffff;
-  padding:80px 50px 100px 50px;
   border-right:1px solid #eee;
   border-left:1px solid #eee;
+  padding:50px 20px;
 }
 
 /**Header**/
@@ -322,7 +322,8 @@ ul.doc-attrs {
 
 @media (min-width:992px) {
    .container {
-    width:900px
+    width:900px;
+    padding:80px 50px 100px 50px;
   }
 
   .list-group{
