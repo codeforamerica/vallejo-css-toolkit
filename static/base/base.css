@@ -6,6 +6,10 @@ body {
     padding-bottom: 100px;
 }
 
+.navbar{
+  border-radius: 0;
+}
+
 .navbar-default .container-fluid{
   padding-right:50px;
   padding-left:50px;
@@ -16,9 +20,8 @@ nav.navbar.navbar-default{
 }
 
 .navbar-default{
-  border-color:#e8e8e8;
-  border-width: 2px;
-  background-color:#ffffff;
+  border-color:#1F4E81;
+  background-color:#1F4E81;
 }
 
 .navbar-default .navbar-toggle{
@@ -30,15 +33,16 @@ nav.navbar.navbar-default{
   padding-top:30px;
   padding-bottom:30px;
   font-weight:bold;
-  color:#2965A8;
+  color:#ffffff;
   font-size:24px;
 }
 
 .navbar-default .navbar-nav>li>a{
-  color:#1F4E81;
+  color:#ffffff;
   padding-top:30px;
   padding-bottom: 30px;
   padding-right: 25px;
+  font-size: 16px;
 }
 
 .dropdown-menu>li>a{
@@ -48,30 +52,26 @@ nav.navbar.navbar-default{
 }
 
 .navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-brand:hover, .dropdown-menu>li>a:hover{
-  color:#F6661B;
-  background:#ffffff;
+  font-weight: bold;
+  background:#1F4E81;
+  color:#378BE8;
 }
 
 .navbar-default .navbar-nav>.active>a{
-  font-weight:bold;
-  background-color:#ffffff;
-  color:#F6661B;
+  font-weight: bold;
+  background:#1F4E81;
+  color:#378BE8;
 }
 
 .navbar-default .navbar-nav>.active>a:hover{
-  background-color:#ffffff;
-  color:#F6661B;
+  background-color:#1F4E81;
+  color:#378BE8;
 }
 
 .navbar-default li{
   font-size:14px;
 }
 
-a#user{
-  border-left:2px solid #e8e8e8;
-  padding-left:50px;
-  padding-right:15px;
-}
 
 a#properties{
   padding-right:30px;
@@ -191,4 +191,12 @@ a#properties{
 label{
   font-weight:500;
   color:#3e3e3e;
+}
+
+.btn-default{
+  border-color: #ddd;
+}
+
+.btn-success{
+  background-color: #44C851;
 }

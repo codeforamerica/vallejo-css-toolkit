@@ -33,17 +33,18 @@ $(document).ready(function($) {
 
 <div class="container">
 
-  <div class="row">
+  <div class="row report-pg-header">
 
-    <div class="col-md-6">
-        <div class="report-pg-header">
-          <h2>Reports Inbox</h2>
-          <button form="delete-selected" class="btn btn-default" type="submit">Delete selected</button>
+    <div class="col-md-4">
+        <div class="">
+          <h1>Reports Inbox</h1>
         </div>
     </div>
 
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="report-action-btns pull-right">
+            <button form="delete-selected" class="btn btn-default" type="submit">Delete selected</button>
+
             <form id="search" method="get">
               <div class="input-group">
                 <input type="text" class="form-control" name="search" value="{% if search_get_param %}{{search_get_param}}{% endif %}">
