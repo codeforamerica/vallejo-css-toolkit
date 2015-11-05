@@ -22,6 +22,7 @@ nav.navbar.navbar-default{
 .navbar-default{
   border-color:#1F4E81;
   background-color:#1F4E81;
+  max-height:80px;
 }
 
 .navbar-default .navbar-toggle{
@@ -30,17 +31,20 @@ nav.navbar.navbar-default{
 }
 
 .navbar-default .navbar-brand{
-  padding-top:30px;
-  padding-bottom:30px;
+  padding-top:40px;
+  padding-bottom: 38px;
+  padding-left: 30px;
+  padding-right:30px;
   font-weight:bold;
-  color:#ffffff;
+  color:#188EF5;
   font-size:24px;
+  margin-right: 50px;
+  background-color:#29364D;
 }
 
 .navbar-default .navbar-nav>li>a{
-  color:#ffffff;
-  padding-top:30px;
-  padding-bottom: 30px;
+  color:#188EF5;
+  padding-top:40px;
   padding-right: 25px;
   font-size: 16px;
 }
@@ -60,7 +64,7 @@ nav.navbar.navbar-default{
 .navbar-default .navbar-nav>.active>a{
   font-weight: bold;
   background:#1F4E81;
-  color:#378BE8;
+  color:#ffffff;
 }
 
 .navbar-default .navbar-nav>.active>a:hover{
@@ -70,6 +74,11 @@ nav.navbar.navbar-default{
 
 .navbar-default li{
   font-size:14px;
+}
+
+a#notifications{
+  font-weight: bold;
+  color:#44C851;
 }
 
 
