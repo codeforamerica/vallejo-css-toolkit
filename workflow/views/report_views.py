@@ -9,7 +9,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 
 from common.datatables import get_datatables_data
 
-from intake.models import CallAuditItem, TypeformAsset
+from intake.models import CallAuditItem, PublicUploadedAsset
 
 from workflow.forms.report_forms import ReportForm
 from workflow.models import CSSCall, CSSCase, Verification
@@ -79,7 +79,7 @@ def report(request, report_id):
     location_history = get_location_history(instance.address_number, instance.street_name)
 
     # TODO: refactor since we're not using typeform anymore
-    external_assets = TypeformAsset.objects.filter(css_report=instance.id).order_by('-id')
+    external_assets = PublicUploadedAsset.objects.filter(css_report=instance.id).order_by('-id')
     external_assets_count = len(external_assets)
 
     verification_id = None

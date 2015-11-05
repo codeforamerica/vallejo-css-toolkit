@@ -63,6 +63,11 @@ class TypeformAsset(models.Model):
     asset_url = models.CharField(max_length=256, null=True, blank=True)
 
 
+class PublicUploadedAsset(models.Model):
+    css_report = models.ForeignKey(CSSCall)
+    fpath = models.CharField(max_length=256, null=True, blank=True)
+
+
 class CallAuditItem(models.Model):
     user = models.ForeignKey(User)
     call = models.ForeignKey(Call)

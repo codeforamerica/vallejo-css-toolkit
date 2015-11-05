@@ -1,10 +1,14 @@
+import os
 import json
 import logging
 import traceback
+import tempfile
 from datetime import datetime
 
+import boto
 import pytz
 import twilio.twiml
+from boto.s3.key import Key
 
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponseRedirect
@@ -13,7 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 from django_twilio.decorators import twilio_view
 
-from intake.models import Call, TypeformSubmission, TypeformAsset
+from intake.models import Call, TypeformSubmission, TypeformAsset, PublicUploadedAsset
 from workflow.models import CSSCall
 from intake.forms import IntakeIssueForm, IntakeContactForm
 
@@ -49,7 +53,30 @@ def report_issue(request):
                 problem_duration=form.cleaned_data.get('how_long'),
                 when_last_reported=form.cleaned_data.get('reported_before_details')
             )
-            # TODO: handle file uploads
+
+            try:
+                conn = boto.connect_s3()
+                b = conn.get_bucket('vallejo-css-toolkit')
+
+                if form.files.get('uploaded_photo'):
+                    tmpfile = tempfile.NamedTemporaryFile(delete=False)
+                    for chunk in form.files['uploaded_photo'].chunks():
+                        tmpfile.write(chunk)
+                    tmpfile.close()
+
+                    env = os.environ.get('DJANGO_SETTINGS_MODULE', 'not_set')
+
+                    k = Key(b)
+                    k.key = 'submitted-images/{}/{}/{}'.format(
+                        env.split('.')[-1],
+                        report.id,
+                        tmpfile.name.split('/')[-1]
+                    )
+                    k.set_contents_from_filename(tmpfile.name)
+                    PublicUploadedAsset.objects.create(css_report=report, fpath=k.key)
+
+            except:
+                log.error("Encountered exception attempting to upload submitted file: {}".format(traceback.format_exc()))
 
             return HttpResponseRedirect(
                 '/report/contact/?report_id={}{}'.format(
