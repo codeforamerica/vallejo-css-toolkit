@@ -28,7 +28,7 @@ button.btn.btn-default, button.btn.btn-success{
   height: 40px;
 }
 
-button.btn.btn-success, form#search{
+button.btn.btn-success, #search{
   margin-left:10px;
 }
 
@@ -43,7 +43,6 @@ form#search{
 .report-action-btns{
   margin-bottom:10px;
 }
-
 
 /**Table**/
 .table {
@@ -67,7 +66,6 @@ thead{
 
 th{
   font-weight: bold;
-  cursor: pointer;
 }
 
 .table>thead>tr>th.active{
@@ -81,10 +79,6 @@ th{
   border-color:#eeeeee;
 }
 
-
-
-
-
 .clickable-cell {
     cursor: pointer;
 }
@@ -92,14 +86,6 @@ th{
     pointer-events: none;
     cursor: default;
 }
-
-
-
-
-
-
-
-
 
 /*Pagination*/
 .pagination{

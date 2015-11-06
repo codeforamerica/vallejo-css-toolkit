@@ -51,7 +51,7 @@ def get_location_history(address_number, street_name):
 
 def get_reports(request_params):
     sortable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'notes']
-    searchable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'notes']
+    searchable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'notes', 'id']
     default_limit = 25
     max_limit = 100
     default_offset = 0
@@ -68,7 +68,8 @@ def get_reports(request_params):
         if sort_key_get_param in sortable_fields:
             sort_key = sort_key_get_param
         else:
-            log.warning('Unexpected get query param for reports sort: {}, falling back to default sort key'.format(sort_key))
+            log.warning('Unexpected get query param for reports sort: {}, falling back to default sort key'.format(sort_key_get_param))
+            sort_key = default_sort_key
     else:
         sort_key = default_sort_key
 
@@ -106,7 +107,7 @@ def get_reports(request_params):
     query = """
         WITH data AS (
             SELECT
-                c.id AS id,
+                c.id::text as id,
                 COALESCE(
                     TO_CHAR(
                         c.reported_datetime AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI'
