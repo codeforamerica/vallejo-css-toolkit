@@ -326,6 +326,10 @@ ul.doc-attrs {
     padding:80px 50px 100px 50px;
   }
 
+  .next-actions{
+    padding:0;
+  }
+
   .list-group{
     width:250px;
   }
