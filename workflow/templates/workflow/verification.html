@@ -357,8 +357,10 @@
           <div class="container next-actions">
               <div class="row">
                   <div class="col-sm-6 col-sm-offset-6">
-                      <div class="form-group col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
-                          <select name="next-action" class="form-control">
+                    <div class="row">
+                      <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
+                        <div class="form-group">
+                            <select class="form-control" name="next-action">
                               <option>Save Verification</option>
                               {% if not case_id %}
                                   <option>Move to Case</option>
@@ -366,11 +368,13 @@
                               <option>Forward</option>
                               <option>Resolve</option>
                               <option>Revert to Report</option>
-                          </select>
+                            </select>
+                        </div>
                       </div>
-                      <div class="col-md-4 col-sm-4 col-xs-4 submit-btn">
+                      <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
                           <button type="submit" form="verification-form" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true">Confirm</button>
                       </div>
+                    </div>
                   </div>
               </div>
           </div>

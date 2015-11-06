@@ -285,7 +285,7 @@ ul.doc-attrs {
   padding-bottom:50px;
 }
 
-.footer button.btn.btn-success.btn-lg.pull-right, .footer .form-group{
+.footer button.btn.btn-success.btn-lg, .footer .form-group{
   margin-top:35px;
 }
 
@@ -336,15 +336,11 @@ ul.doc-attrs {
 }
 
 @media (min-width:900px){
-  .footer .form-control{
-    margin-left:30px;
-  }
+
 
 }
 
 @media (max-width:768px){
-  .footer .form-control{
-    margin-left:100px;
-  }
+
 
 }
