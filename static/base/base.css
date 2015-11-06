@@ -112,6 +112,25 @@ a#properties{
   color:#ffffff;
 }
 
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:focus{
+  background-color:#1F4E81;
+  color:#ffffff;
+}
+
+.navbar-nav>li>.dropdown-menu{
+  background-color:#1F4E81;
+  border:none;
+}
+
+.navbar-nav>li>.dropdown-menu>li>a{
+  color:#ffffff;
+}
+
+.navbar-nav>li>.dropdown-menu>li>a:hover{
+  background-color:#29364D;
+}
+
 /**Collapse nav**/
 div#mobile-menu.navbar-collapse.collapse.in,
 div#mobile-menu.navbar-collapse.collapsing{
