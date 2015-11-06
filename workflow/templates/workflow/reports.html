@@ -89,7 +89,7 @@
                   {% for report in reports_data %}
                         <tr>
                             <td><input class="to-delete-checkbox" type="checkbox" name="to_delete" value="{{ report.0 }}"></td>
-                            <td class="data-cell clickable-cell" data-href="/workflow/report/{{ report.0 }}">{{ report.1 }}</td>
+                            <td class="data-cell timestamp-data-cell clickable-cell" data-href="/workflow/report/{{ report.0 }}">{{ report.1 }}</td>
                             <td class="data-cell clickable-cell" data-href="/workflow/report/{{ report.0 }}">{{ report.2 }}</td>
                             <td class="data-cell clickable-cell" data-href="/workflow/report/{{ report.0 }}">{{ report.3 }}</td>
                             <td class="data-cell clickable-cell" data-href="/workflow/report/{{ report.0 }}">{{ report.4 }}</td>

@@ -20,6 +20,10 @@
   min-width: 120px;
 }
 
+.timestamp-data-cell {
+  white-space: nowrap;
+}
+
 button.btn.btn-default, button.btn.btn-success{
   height: 40px;
 }
@@ -81,23 +85,9 @@ th{
 
 
 
-/*<<<<<<< HEAD
-*/.clickable-cell {
+.clickable-cell {
     cursor: pointer;
 }
-/*=======*/
-/**Checkbox*
-/*.table-cell-checkbox {
-    pointer-events: none;
-    cursor: default;
-}*/
-
-/*.table-cell-checkbox input{
-    pointer-events: auto;
-    cursor: default;
->>>>>>> f7e55f3dbbfa047d4f5ebb9e4052ef3cf825031c
-}
-*/
 .inactive {
     pointer-events: none;
     cursor: default;

@@ -107,11 +107,15 @@ def get_reports(request_params):
         WITH data AS (
             SELECT
                 c.id AS id,
-                COALESCE(TO_CHAR(c.reported_datetime AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI'), '') AS reported_datetime,
-                c.name AS reporter_name,
-                c.address AS problem_address,
-                c.problem AS problem,
-                c.resolution AS notes
+                COALESCE(
+                    TO_CHAR(
+                        c.reported_datetime AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI'
+                    )
+                , '') AS reported_datetime,
+                COALESCE(c.name, '') AS reporter_name,
+                COALESCE(c.address, '') AS problem_address,
+                COALESCE(c.problem, '') AS problem,
+                COALESCE(c.resolution, '') AS notes
             FROM workflow_csscall AS c
             WHERE c.active = True
         ), total_count AS (
@@ -130,7 +134,6 @@ def get_reports(request_params):
         FROM data, total_count
         %(search_clause)s
         ORDER BY %(sort_key)s %(sort_order)s, id
-        NULLS LAST
         OFFSET %(offset)s
         LIMIT %(limit)s
     """
