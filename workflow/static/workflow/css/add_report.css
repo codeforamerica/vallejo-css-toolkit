@@ -7,3 +7,18 @@
   padding:40px 0 0 0;
   border:none;
 }
+
+
+@media (max-width:768px){
+  .save-buttons .btn{
+    margin-left:20px;
+  }
+
+}
+
+@media (min-width:992px) {
+  .save-buttons .btn-success{
+    margin-left:40px;
+  }
+
+}

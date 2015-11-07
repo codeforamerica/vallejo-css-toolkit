@@ -27,11 +27,6 @@ nav.navbar.navbar-default{
   max-height:80px;
 }
 
-.navbar-default .navbar-toggle{
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
 /**Logo**/
 .navbar-default .navbar-brand{
   padding-top:40px;
@@ -71,6 +66,20 @@ a#properties{
   padding-bottom:5px;
 }
 
+.navbar-default .navbar-toggle{
+  border-color:#29364D;
+  background-color:#29364D;
+}
+
+.navbar-default .navbar-toggle .icon-bar{
+  background-color:#188EF5;
+}
+
+.navbar-default .navbar-toggle{
+  margin-top: 28px;
+  margin-bottom: 20px;
+}
+
 /**Navbar Hover Active Focus States**/
 .navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus{
   font-weight: bold;
@@ -82,12 +91,14 @@ a#properties{
   color:#ffffff;
 }
 
+.navbar-default .navbar-toggle:hover, .navbar-default .navbar-toggle:focus {
+  background-color:#29364D;
+}
 
+.navbar-default .navbar-toggle:hover .icon-bar, .navbar-default .navbar-toggle:focus .icon-bar{
+  background-color:#ffffff;
+}
 
-/*.navbar-default .navbar-brand:focus{
-  color:#ffffff;
-  background-color: #29364D;
-}*/
 
 /**Navbar Active States**/
 .navbar-default .navbar-nav>.active>a{
@@ -99,6 +110,43 @@ a#properties{
 .navbar-default .navbar-nav>.active>a:hover{
   background-color:#1F4E81;
   color:#ffffff;
+}
+
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:focus{
+  background-color:#1F4E81;
+  color:#ffffff;
+}
+
+.navbar-nav>li>.dropdown-menu{
+  background-color:#1F4E81;
+  border:none;
+}
+
+.navbar-nav>li>.dropdown-menu>li>a{
+  color:#ffffff;
+}
+
+.navbar-nav>li>.dropdown-menu>li>a:hover{
+  background-color:#29364D;
+}
+
+/**Collapse nav**/
+div#mobile-menu.navbar-collapse.collapse.in,
+div#mobile-menu.navbar-collapse.collapsing{
+  border:none;
+  background-color:#29364D;
+}
+
+div#mobile-menu.navbar-collapse.collapse.in ul.navbar-nav>li>a,
+div#mobile-menu.navbar-collapse.collapsing ul.navbar-nav>li>a{
+  padding-top: 15px;
+  padding-left: 30px;
+}
+
+div#mobile-menu.navbar-collapse.collapse.in ul.nav.navbar-nav.navbar-right,
+div#mobile-menu.navbar-collapse.collapsing ul.nav.navbar-nav.navbar-right{
+  border-top: 1px solid #1F4E81;
 }
 
 
@@ -228,4 +276,11 @@ label{
 
 .btn-success{
   background-color: #44C851;
+}
+
+
+@media screen and (max-width: 767px){
+  .table-responsive{
+      border:none;
+  }
 }
