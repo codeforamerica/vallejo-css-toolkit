@@ -93,14 +93,11 @@ th{
 }
 
 
-
-
-
-
-
-
-
 /*Pagination*/
 .pagination{
   margin: 0;
+}
+
+@media (max-width:584px) {
+
 }
