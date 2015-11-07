@@ -9,6 +9,19 @@ body{
   margin-top:20px;
 }
 
+.espanol-link{
+  font-weight: bold;
+  color:#fff;
+  text-decoration: underline;
+  font-size:16px;
+  padding-top: 10px;
+  padding-right:20px;
+}
+
+.espanol-link:hover{
+  color:#1F4E81;
+}
+
 h1{
   margin-bottom:20px;
   font-weight: 700;
@@ -52,7 +65,9 @@ li {
 }
 
 .header-content{
-  padding:25px;
+  padding-right: 25px;
+  padding-left: 25px;
+  padding-bottom:25px;
 }
 
 form{

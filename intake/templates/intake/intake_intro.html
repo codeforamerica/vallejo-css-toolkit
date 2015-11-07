@@ -18,9 +18,13 @@
 <div class="intake-header">
     <div class="container">
         <div class="row">
+          <div class="col-sm-4 col-sm-offset-8">
+            <a href="/report/?lang=es" class="espanol-link pull-right">En Espa&#241;ol</a>
+          </div>
+        </div>
+        <div class="row">
             <div class="col-sm-9 col-sm-offset-1 col-xs-12">
                 <div class="header-content">
-                    <a href="/report/?lang=es"><h4>En Espa&#241;ol</h4></a>
                     <h1>{% if lang == 'en' %}What's going on in your neighborhood?{% endif %}</h1>
                     <p>{% if lang == 'en' %}Here you can report non-emergency issues, ask a question, or leave a message for the Community Services Section of the police department. Your submissions will go directly to the department and they'll work on investigating the problem or answering your questions as soon as possible. <b>If you have an emergency in progress, call 911.</b>{% endif %}</p>
                 </div>
