@@ -1,4 +1,9 @@
+from datetime import datetime
+
+import pytz
+
 from django.db import models
+from django.contrib.auth.models import User
 
 
 class CaseStatus(models.Model):
@@ -80,6 +85,17 @@ class CSSCase(models.Model):
     owner_phone = models.CharField(max_length=256, null=True, blank=True)
     owner_email = models.CharField(max_length=256, null=True, blank=True)
     verification = models.ForeignKey(Verification)
+
+
+class CSSReportView(models.Model):
+    css_report = models.ForeignKey(CSSCall)
+    user = models.ForeignKey(User)
+    timestamp = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.timestamp:
+            self.timestamp = pytz.utc.localize(datetime.utcnow())
+        super(CSSReportView, self).save(*args, **kwargs)
 
 
 class RecordingType(models.Model):

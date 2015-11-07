@@ -12,7 +12,7 @@ from common.datatables import get_datatables_data
 from intake.models import CallAuditItem, PublicUploadedAsset
 
 from workflow.forms.report_forms import ReportForm
-from workflow.models import CSSCall, CSSCase, Verification
+from workflow.models import CSSCall, CSSCase, Verification, CSSReportView
 from workflow.sql import CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP
 from workflow.utils import get_location_history, get_reports
 
@@ -43,6 +43,8 @@ def add_report(request):
 @login_required(login_url='/admin/login/')
 def report(request, report_id):
     instance = get_object_or_404(CSSCall, id=report_id)
+    CSSReportView.objects.create(css_report=instance, user=request.user)
+
     form = ReportForm(request.POST or None, instance=instance)
 
     if form.errors:
