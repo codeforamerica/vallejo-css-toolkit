@@ -129,6 +129,7 @@ def reports(request):
     if request.method == "GET":
         reports_data, pagination_keys, page_idx, sort_key, search_get_param, sort_order, limit, offset = get_reports(request.GET)
 
+        # reports_data = []
         return render(
             request,
             'workflow/reports.html',
@@ -140,6 +141,8 @@ def reports(request):
                 'sort_key': sort_key,
                 'limit': limit,
                 'offset': offset,
+                'page_start': offset + 1,
+                'page_end': min(limit + offset, reports_data and reports_data[0][6] or limit + offset),
                 'search_get_param': search_get_param
             }
         )

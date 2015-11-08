@@ -51,7 +51,7 @@ def get_location_history(address_number, street_name):
 
 def get_reports(request_params):
     sortable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'notes']
-    searchable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'notes', 'id']
+    searchable_fields = ['reported_datetime_str', 'reporter_name', 'problem_address', 'problem', 'notes', 'id']
     default_limit = 25
     max_limit = 100
     default_offset = 0
@@ -107,12 +107,13 @@ def get_reports(request_params):
     query = """
         WITH data AS (
             SELECT
-                c.id::text as id,
+                c.id::text AS id,
+                c.reported_datetime AS reported_datetime,
                 COALESCE(
                     TO_CHAR(
-                        c.reported_datetime AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI'
+                        c.reported_datetime AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
                     )
-                , '') AS reported_datetime,
+                , '') AS reported_datetime_str,
                 COALESCE(c.name, '') AS reporter_name,
                 COALESCE(c.address, '') AS problem_address,
                 COALESCE(c.problem, '') AS problem,
@@ -125,9 +126,9 @@ def get_reports(request_params):
         )
         SELECT
             data.id,
-            data.reported_datetime,
-            data.reporter_name,
+            data.reported_datetime_str,
             data.problem_address,
+            data.reporter_name,
             data.problem,
             data.notes,
             COUNT(*) OVER(),
