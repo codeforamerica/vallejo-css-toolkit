@@ -1,5 +1,6 @@
 import math
 import logging
+import traceback
 
 from psycopg2.extensions import AsIs
 
@@ -43,7 +44,7 @@ def get_location_history(address_number, street_name):
         results = cursor.fetchall()
         return results
     except Exception:
-        # TODO: log these
+        log.error("Encountered error fetching location history from the database: {}".format(traceback.format_exc()))
         raise
     finally:
         cursor.close()
@@ -174,7 +175,7 @@ def get_reports(request_params):
 
         return results, pagination_keys, page_idx, sort_key, search_get_param, sort_order, limit, offset
     except Exception:
-        # TODO: log these
+        log.error("Encountered error fetching results from the database and building pagination: {}".format(traceback.format_exc()))
         raise
     finally:
         cursor.close()

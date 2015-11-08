@@ -79,8 +79,6 @@ def report(request, report_id):
 
     # either the form was not valid, or we're just loading the page
     location_history = get_location_history(instance.address_number, instance.street_name)
-
-    # TODO: refactor since we're not using typeform anymore
     external_assets = PublicUploadedAsset.objects.filter(css_report=instance.id).order_by('-id')
     external_assets_count = len(external_assets)
 
@@ -110,18 +108,19 @@ def report(request, report_id):
     )
 
 
-@login_required(login_url='/login/')
-def reports_data(request):
-    request_dict = dict(request.GET.items())
+# deprecated
+# @login_required(login_url='/login/')
+# def reports_data(request):
+#     request_dict = dict(request.GET.items())
 
-    try:
-        results = get_datatables_data(request_dict, CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP)
-    except Exception:
-        # messages.add()
-        log.error('Error encountered fetching from database: {}'.format(traceback.format_exc()))
-        results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
+#     try:
+#         results = get_datatables_data(request_dict, CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP)
+#     except Exception:
+#         # messages.add()
+#         log.error('Error encountered fetching from database: {}'.format(traceback.format_exc()))
+#         results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
 
-    return JsonResponse(results)
+#     return JsonResponse(results)
 
 
 @login_required(login_url='/login/')
