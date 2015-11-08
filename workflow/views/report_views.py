@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from intake.models import CallAuditItem, PublicUploadedAsset
 
 from workflow.forms.report_forms import ReportForm
-from workflow.models import CSSCall, CSSCase, Verification, CSSReportView
+from workflow.models import CSSCall, CSSCase, Verification, CSSReportView, ReportNotification
 from workflow.utils import get_location_history, get_reports
 
 log = logging.getLogger('consolelogger')
@@ -70,6 +70,9 @@ def report(request, report_id):
 
             return HttpResponseRedirect('/workflow/verification/{}'.format(verification.id))
 
+        elif request.POST.get('next-action') == 'Resolve':
+            return HttpResponseRedirect('/workflow/resolve_report/{}'.format(call.id))
+
         # TODO: handle other conditions
         else:
             return HttpResponseRedirect('/workflow/reports')
@@ -106,6 +109,24 @@ def report(request, report_id):
 
 
 @login_required(login_url='/login/')
+def resolve_report(request, report_id):
+    if request.method == 'POST':
+        report = get_object_or_404(CSSCall, id=report_id)
+        message = request.POST.get('message')
+        if message:
+            ReportNotification.objects.create(report=report, message=message)
+            messages.add_message(request, messages.SUCCESS, "Successfully scheduled outgoing message to reporter.")
+
+        return HttpResponseRedirect('/workflow/reports/')
+
+    else:
+        return render(
+            request,
+            'workflow/resolve_report.html',
+        )
+
+
+@login_required(login_url='/login/')
 def reports(request):
     if request.method == "GET":
         reports_data, pagination_keys, page_idx, sort_key, search_get_param, sort_order, limit, offset = get_reports(request.GET)
@@ -117,13 +138,13 @@ def reports(request):
             {
                 'reports_data': reports_data,
                 'pagination_keys': pagination_keys,
-                'active_page_number': page_idx + 1,
+                'active_page_number': page_idx and page_idx + 1 or 1,
                 'sort_order': sort_order,
                 'sort_key': sort_key,
                 'limit': limit,
                 'offset': offset,
                 'page_start': offset + 1,
-                'page_end': min(limit + offset, reports_data and reports_data[0][6] or limit + offset),
+                'page_end': min(limit + offset, reports_data and reports_data[0][7] or limit + offset),
                 'search_get_param': search_get_param
             }
         )

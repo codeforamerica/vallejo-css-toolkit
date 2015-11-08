@@ -1,16 +1,13 @@
 from django.test import TestCase
 
-from workflow.models import CSSCase, CSSCall, Verification
+from workflow.models import CSSCase
 
 
 class CaseAdmin(TestCase):
 
     def test_resolve(self):
 
-        report = CSSCall.objects.create()
-        verification = Verification.objects.create(report=report)
-        case = CSSCase.objects.create(verification=verification)
-
+        case = CSSCase.objects.create()
         self.assertEqual(None, case.resolved_at)
 
         case.resolve()

@@ -10,6 +10,10 @@ class CaseStatus(models.Model):
     name = models.CharField(max_length=256)
 
 
+class ReportStatus(models.Model):
+    name = models.CharField(max_length=256)
+
+
 # TODO: deprecate
 class PDCase(models.Model):
     address_number = models.IntegerField(null=True)
@@ -65,6 +69,7 @@ class CSSCall(models.Model):
     # TODO: we'll eventually need to store geometry objects somewhere
     active = models.BooleanField(default=True)
     caller_preferred_contact = models.IntegerField(null=True, blank=True, choices=CONTACT_PREFERENCES_CHOICES)
+    status = models.ForeignKey(ReportStatus, null=True, blank=True)
 
 
 class Verification(models.Model):
@@ -87,16 +92,6 @@ class CSSCasePriority(models.Model):
 
 
 class CSSCase(models.Model):
-    LOW_PRIORITY = 1
-    MED_PRIORITY = 2
-    HIGH_PRIORITY = 3
-
-    PRIORITY_CHOICES = (
-        (LOW_PRIORITY, 'Low'),
-        (MED_PRIORITY, 'Medium'),
-        (HIGH_PRIORITY, 'High'),
-    )
-
     description = models.CharField(max_length=1024, null=True, blank=True)
     resolution = models.CharField(max_length=1024, null=True, blank=True)
     status = models.ForeignKey(CaseStatus, null=True, blank=True)
@@ -106,7 +101,7 @@ class CSSCase(models.Model):
     owner_address = models.CharField(max_length=256, null=True, blank=True)
     owner_phone = models.CharField(max_length=256, null=True, blank=True)
     owner_email = models.CharField(max_length=256, null=True, blank=True)
-    verification = models.ForeignKey(Verification)
+    verification = models.ForeignKey(Verification, null=True)
     created_at = models.DateTimeField(null=True, blank=True)
     priority = models.ForeignKey(CSSCasePriority, null=True, blank=True)
     resolved_at = models.DateTimeField(null=True, blank=True)
@@ -147,3 +142,15 @@ class Recording(models.Model):
 class CSSCaseAssignee(models.Model):
     case = models.ForeignKey(CSSCase, null=True, blank=True)
     assignee_name = models.CharField(max_length=256, null=True, blank=True)
+
+
+class ReportNotification(models.Model):
+    report = models.ForeignKey(CSSCall)
+    message = models.CharField(max_length=512)
+    created_at = models.DateTimeField()
+    sent_at = models.DateTimeField(null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.created_at:
+            self.created_at = pytz.utc.localize(datetime.utcnow())
+        super(ReportNotification, self).save(*args, **kwargs)

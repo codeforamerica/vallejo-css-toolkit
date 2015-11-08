@@ -51,8 +51,8 @@ def get_location_history(address_number, street_name):
 
 
 def get_reports(request_params):
-    sortable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'notes']
-    searchable_fields = ['reported_datetime_str', 'reporter_name', 'problem_address', 'problem', 'notes', 'id']
+    sortable_fields = ['reported_datetime', 'reporter_name', 'problem_address', 'problem', 'status']
+    searchable_fields = ['reported_datetime_str', 'reporter_name', 'problem_address', 'problem', 'status_str', 'id']
     default_limit = 25
     max_limit = 100
     default_offset = 0
@@ -118,8 +118,11 @@ def get_reports(request_params):
                 COALESCE(c.name, '') AS reporter_name,
                 COALESCE(c.address, '') AS problem_address,
                 COALESCE(c.problem, '') AS problem,
-                COALESCE(c.resolution, '') AS notes
+                s.id AS status,
+                COALESCE(s.name, '') AS status_str
             FROM workflow_csscall AS c
+            LEFT JOIN workflow_reportstatus s
+                ON c.status_id = s.id
             WHERE c.active = True
         ), total_count AS (
             SELECT COUNT(*) AS tcount FROM workflow_csscall
@@ -131,7 +134,8 @@ def get_reports(request_params):
             data.problem_address,
             data.reporter_name,
             data.problem,
-            data.notes,
+            data.status,
+            data.status_str,
             COUNT(*) OVER(),
             total_count.tcount
         FROM data, total_count

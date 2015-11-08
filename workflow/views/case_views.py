@@ -43,7 +43,7 @@ def cases(request):
             {
                 'cases_data': cases_data,
                 'pagination_keys': pagination_keys,
-                'active_page_number': page_idx + 1,
+                'active_page_number': page_idx and page_idx + 1 or 1,
                 'sort_order': sort_order,
                 'sort_key': sort_key,
                 'limit': limit,

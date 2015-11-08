@@ -4,14 +4,7 @@
 
 {% block assets %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-<link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/table_page_new.css" %}"/>
-
 <script src="{% static "workflow/js/cases.js" %}"></script>
 
 {% endblock %}
@@ -109,25 +102,27 @@
     </div>
 
     <div class="row">
-        <div class="col-md-5">
-            <p class="table-counter">Showing {{ page_start }} to {{ page_end }} of {{ cases_data.0.9 }} cases</p>
-        </div>
+        {% if cases_data %}
+            <div class="col-md-5">
+                <p class="table-counter">Showing {{ page_start }} to {{ page_end }} of {{ cases_data.0.9 }} cases</p>
+            </div>
 
-        <div class="col-md-7">
-            {% if pagination_keys %}
-                <nav class="pull-right">
-                    <ul class="pagination">
-                        {% for pagination_key in pagination_keys %}
-                            <li class="{% if pagination_key.0 == active_page_number %}active{% endif %}">
-                                <a
-                                    class="{% if pagination_key.1 == None %}inactive{% endif %}"
-                                    href="{% if pagination_key.1 == None %}#{% else %}/workflow/cases/?sort_key={{ sort_key }}&amp;sort_order={{ sort_order }}&amp;offset={{ pagination_key.1}}{% if search_get_param %}&amp;search={{ search_get_param }}{% endif %}&amp;limit={{ limit }}{% endif %}">{{ pagination_key.0 }}</a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </nav>
-            {% endif %}
-        </div>
+            <div class="col-md-7">
+                {% if pagination_keys %}
+                    <nav class="pull-right">
+                        <ul class="pagination">
+                            {% for pagination_key in pagination_keys %}
+                                <li class="{% if pagination_key.0 == active_page_number %}active{% endif %}">
+                                    <a
+                                        class="{% if pagination_key.1 == None %}inactive{% endif %}"
+                                        href="{% if pagination_key.1 == None %}#{% else %}/workflow/cases/?sort_key={{ sort_key }}&amp;sort_order={{ sort_order }}&amp;offset={{ pagination_key.1}}{% if search_get_param %}&amp;search={{ search_get_param }}{% endif %}&amp;limit={{ limit }}{% endif %}">{{ pagination_key.0 }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        {% endif %}
     </div>
 </div>  <!-- End container -->
 

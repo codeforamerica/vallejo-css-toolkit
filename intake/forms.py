@@ -52,9 +52,9 @@ class IntakeContactForm(forms.Form):
     error_css_class = 'form-error'
 
     CONTACT_METHOD_CHOICES = [
+        (CSSCall.NO_CONTACT_PREFERENCE, "I don't want to receive updates"),
         (CSSCall.EMAIL_CONTACT_PREFERENCE, 'Email'),
-        (CSSCall.TEXT_CONTACT_PREFERENCE, 'Text Message'),
-        (CSSCall.NO_CONTACT_PREFERENCE, "I don't want to receive updates")
+        (CSSCall.TEXT_CONTACT_PREFERENCE, 'Text Message')
     ]
 
     reporter_name = forms.CharField(required=False)
