@@ -4,21 +4,104 @@
 
 {% block assets %}
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-<link href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet">
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
-
-<link rel="stylesheet" href="{% static "base/base.css" %}"/>
-<link rel="stylesheet" href="{% static "workflow/css/table_page.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/table_page_new.css" %}"/>
+<script src="{% static "workflow/js/properties.js" %}"></script>
 
 {% endblock %}
 
 {% block body %}
 
+<div class="container">
 
+    <div class="row report-pg-header">
+        <div class="col-md-4 col-sm-12">
+            <div class="">
+                <h1>Properties Inbox</h1>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-sm-12">
+            <div class="report-action-btns pull-right">
+                <form id="search" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" value="{% if search_get_param %}{{search_get_param}}{% endif %}">
+                        <span class="input-group-btn">
+                            <button form="search" class="btn btn-default" type="submit">Search</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <div class="table-wrapper">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th
+                                data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=address&amp;{% if sort_key == 'address' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
+                                class="data-cell clickable-cell {% if sort_key == 'address' %}active {% endif %}"
+                                >Address{% if sort_key == 'address' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                            <th
+                                data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=num_incidents&amp;{% if sort_key == 'num_incidents' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                class="data-cell clickable-cell {% if sort_key == 'num_incidents' %}active {% endif %}"
+                                >Number of Incidents{% if sort_key == 'num_incidents' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                            <th
+                                data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=latest_activity&amp;{% if sort_key == 'latest_activity' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                class="data-cell clickable-cell {% if sort_key == 'latest_activity' %}active {% endif %}"
+                                >Latest Activity{% if sort_key == 'latest_activity' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                            <th
+                                data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=status&amp;{% if sort_key == 'status' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                class="data-cell clickable-cell {% if sort_key == 'status' %}active {% endif %}"
+                                >Status{% if sort_key == 'status' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for property in properties_data %}
+                            <tr>
+                                <td class="data-cell clickable-cell" data-href="/workflow/property/{{ property.0 }}">{{ property.0 }}</td>
+                                <td class="data-cell clickable-cell" data-href="/workflow/property/{{ property.0 }}">{{ property.1 }}</td>
+                                <td class="data-cell timestamp-data-cell clickable-cell" data-href="/workflow/property/{{ property.0 }}">{{ property.3 }}</td>
+                                <td class="data-cell clickable-cell" data-href="/workflow/property/{{ property.0 }}">{{ property.4 }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                {% if not properties_data %}
+                    <div class="text-center">
+                        <h3>Your properties inbox is empty</h3>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {% if properties_data %}
+            <div class="col-md-5">
+                <p class="table-counter">Showing {{ page_start }} to {{ page_end }} of {{ properties_data.0.5 }} properties</p>
+            </div>
+            <div class="col-md-7">
+                {% if pagination_keys %}
+                    <nav class="pull-right">
+                        <ul class="pagination">
+                            {% for pagination_key in pagination_keys %}
+                                <li class="{% if pagination_key.0 == active_page_number %}active{% endif %}">
+                                    <a
+                                        class="{% if pagination_key.1 == None %}inactive{% endif %}"
+                                        href="{% if pagination_key.1 == None %}#{% else %}/workflow/properties/?sort_key={{ sort_key }}&amp;sort_order={{ sort_order }}&amp;offset={{ pagination_key.1}}{% if search_get_param %}&amp;search={{ search_get_param }}{% endif %}&amp;limit={{ limit }}{% endif %}">{{ pagination_key.0 }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>  <!-- End container -->
 
 {% endblock %}
