@@ -10,11 +10,13 @@ class CaseStatus(models.Model):
     name = models.CharField(max_length=256)
 
 
+# TODO: deprecate
 class PDCase(models.Model):
     address_number = models.IntegerField(null=True)
     street_name = models.CharField(max_length=256, null=True)
 
 
+# TODO: deprecate
 class CRWCase(models.Model):
     address_number = models.IntegerField(null=True)
     street_name = models.CharField(max_length=256, null=True)
@@ -33,7 +35,7 @@ class CSSCall(models.Model):
         (EMAIL_CONTACT_PREFERENCE, 'Email'),
     )
 
-    name = models.CharField(max_length=256, null=True)
+    name = models.CharField(max_length=256, null=True, blank=True)
     address = models.CharField(max_length=256, null=True, blank=True)
     phone = models.CharField(max_length=256, null=True, blank=True)
 
@@ -49,7 +51,7 @@ class CSSCall(models.Model):
     num_people_involved = models.CharField(max_length=256, null=True, blank=True)
     safety_concerns = models.CharField(max_length=256, null=True, blank=True)
 
-    problem = models.CharField(max_length=1024, null=True, blank=True)
+    problem = models.CharField(max_length=1024, null=True)
     resolution = models.CharField(max_length=1024, null=True, blank=True)
 
     # TODO: this should become a proper datetime field
@@ -72,9 +74,29 @@ class Verification(models.Model):
     owner_address = models.CharField(max_length=256, null=True, blank=True)
     owner_primary_contact = models.CharField(max_length=256, null=True, blank=True)
     owner_secondary_contact = models.CharField(max_length=256, null=True, blank=True)
+    created_at = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.created_at:
+            self.created_at = pytz.utc.localize(datetime.utcnow())
+        super(Verification, self).save(*args, **kwargs)
+
+
+class CSSCasePriority(models.Model):
+    name = models.CharField(max_length=256)
 
 
 class CSSCase(models.Model):
+    LOW_PRIORITY = 1
+    MED_PRIORITY = 2
+    HIGH_PRIORITY = 3
+
+    PRIORITY_CHOICES = (
+        (LOW_PRIORITY, 'Low'),
+        (MED_PRIORITY, 'Medium'),
+        (HIGH_PRIORITY, 'High'),
+    )
+
     description = models.CharField(max_length=1024, null=True, blank=True)
     resolution = models.CharField(max_length=1024, null=True, blank=True)
     status = models.ForeignKey(CaseStatus, null=True, blank=True)
@@ -85,6 +107,20 @@ class CSSCase(models.Model):
     owner_phone = models.CharField(max_length=256, null=True, blank=True)
     owner_email = models.CharField(max_length=256, null=True, blank=True)
     verification = models.ForeignKey(Verification)
+    created_at = models.DateTimeField(null=True, blank=True)
+    priority = models.ForeignKey(CSSCasePriority, null=True, blank=True)
+    resolved_at = models.DateTimeField(null=True, blank=True)
+    active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        if not self.created_at:
+            self.created_at = pytz.utc.localize(datetime.utcnow())
+        super(CSSCase, self).save(*args, **kwargs)
+
+    def resolve(self):
+        if not self.resolved_at:
+            self.resolved_at = pytz.utc.localize(datetime.utcnow())
+        self.save()
 
 
 class CSSReportView(models.Model):

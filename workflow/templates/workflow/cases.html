@@ -9,34 +9,126 @@
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-<link href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.css" rel="stylesheet">
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
-
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
-<link rel="stylesheet" href="{% static "workflow/css/table_page.css" %}"/>
-
+<link rel="stylesheet" href="{% static "workflow/css/table_page_new.css" %}"/>
 
 <script src="{% static "workflow/js/cases.js" %}"></script>
+
 {% endblock %}
 
 {% block body %}
+
 <div class="container">
 
-  <div class="row">
-    <div class="col-md-12">
-        <table id="data-table" class="table table-hover row-border">
-          <thead>
-            <tr>
-<!--                 Same weird bug stripping the first column header... -->
-                <th>Address</th>
-                <th>Address</th>
-                <th>Description</th>
-                <th>Resolution</th>
-            </tr>
-          </thead>
-      </table>
-    </div>
-  </div>
+    <div class="row report-pg-header">
 
-</div>
+        <div class="col-md-4 col-sm-12">
+            <div class="">
+                <h1>Cases Inbox</h1>
+            </div>
+        </div>
+
+        <div class="col-md-8 col-sm-12">
+            <div class="report-action-btns pull-right">
+                <button form="delete-selected" class="btn btn-default to-delete-submit-btn" type="submit">Delete selected</button>
+
+                <form id="search" method="get">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="search" value="{% if search_get_param %}{{search_get_param}}{% endif %}">
+                        <span class="input-group-btn">
+                            <button form="search" class="btn btn-default" type="submit">Search</button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <div class="table-wrapper">
+                <form id="delete-selected" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="sort_key" value="{{ sort_key }}">
+                    <input type="hidden" name="sort_order" value="{{ sort_order }}">
+                    <input type="hidden" name="search_get_param" value="{{ search_get_param }}">
+                    <input type="hidden" name="offset" value="{{ offset }}">
+                    <input type="hidden" name="limit" value="{{ limit }}">
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>ID</th>
+                                <th
+                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=started&amp;{% if sort_key == 'started' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                    class="data-cell clickable-cell {% if sort_key == 'started' %}active {% endif %}"
+                                    >Started{% if sort_key == 'started' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                                <th
+                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=address&amp;{% if sort_key == 'address' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
+                                    class="data-cell clickable-cell {% if sort_key == 'address' %}active {% endif %}"
+                                    >Address{% if sort_key == 'address' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                                <th
+                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=priority&amp;{% if sort_key == 'priority' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                    class="data-cell clickable-cell {% if sort_key == 'priority' %}active {% endif %}"
+                                    >Priority{% if sort_key == 'priority' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                                <th
+                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=description&amp;{% if sort_key == 'description' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                    class="data-cell clickable-cell {% if sort_key == 'description' %}active {% endif %}"
+                                    >Description{% if sort_key == 'description' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                                <th
+                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=status&amp;{% if sort_key == 'status' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                    class="data-cell clickable-cell {% if sort_key == 'status' %}active {% endif %}"
+                                    >Status{% if sort_key == 'status' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for case in cases_data %}
+                                <tr>
+                                    <td><input class="to-delete-checkbox" type="checkbox" name="to_delete" value="{{ case.0 }}"></td>
+                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.0 }}</td>
+                                    <td class="data-cell timestamp-data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.2 }}</td>
+                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.3 }}</td>
+                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.5 }}</td>
+                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.6 }}</td>
+                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.7 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </form>
+
+                {% if not cases_data %}
+                    <div class="text-center">
+                        <h3>Your cases inbox is empty</h3>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <p class="table-counter">Showing {{ page_start }} to {{ page_end }} of {{ cases_data.0.9 }} cases</p>
+        </div>
+
+        <div class="col-md-7">
+            {% if pagination_keys %}
+                <nav class="pull-right">
+                    <ul class="pagination">
+                        {% for pagination_key in pagination_keys %}
+                            <li class="{% if pagination_key.0 == active_page_number %}active{% endif %}">
+                                <a
+                                    class="{% if pagination_key.1 == None %}inactive{% endif %}"
+                                    href="{% if pagination_key.1 == None %}#{% else %}/workflow/cases/?sort_key={{ sort_key }}&amp;sort_order={{ sort_order }}&amp;offset={{ pagination_key.1}}{% if search_get_param %}&amp;search={{ search_get_param }}{% endif %}&amp;limit={{ limit }}{% endif %}">{{ pagination_key.0 }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            {% endif %}
+        </div>
+    </div>
+</div>  <!-- End container -->
+
 {% endblock %}

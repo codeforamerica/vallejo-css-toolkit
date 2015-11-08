@@ -5,6 +5,7 @@
 /**Title and Action Buttons**/
 .report-pg-header{
   margin-bottom:20px;
+  min-height: 70px;
 }
 
 .report-pg-header h1{

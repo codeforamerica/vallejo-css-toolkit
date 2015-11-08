@@ -73,3 +73,7 @@ h2{
 .table{
   font-size: 12px;
 }
+
+.recent-activity {padding: 15px;}
+
+#map { height: 320px; }

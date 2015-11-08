@@ -1,3 +1,4 @@
+import unittest
 from datetime import datetime
 
 import pytz
@@ -6,7 +7,7 @@ from django.test import TestCase
 
 from workflow.models import CSSCall
 from common.datatables import get_datatables_data
-from workflow.views.report_views import CALLS_IDX_COLUMN_MAP
+# from workflow.views.report_views import CALLS_IDX_COLUMN_MAP
 from workflow.sql import CALLS_DATA_SQL
 
 TZ = pytz.timezone('America/Los_Angeles')
@@ -95,7 +96,7 @@ class DatatablesTestCase(TestCase):
                 reported_datetime=TZ.localize(datetime(2015, 9, i + 1, 12, 0, 0)),
                 resolution="Some resoltuion #{}".format(i)
             )
-
+    @unittest.skip("Pending deprecation of datatables API")
     def test_data_fetch(self):
 
         self.maxDiff = None

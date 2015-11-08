@@ -11,23 +11,8 @@
 <script src='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
 <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
 
-
 <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/landing.css" %}"/>
-
-<style>
-    td, th {
-        padding: 15px;
-        text-align: left;
-    }
-
-    .recent-activity {padding: 15px;}
-
-
-    }
-    #map { height: 320px; }
-
-</style>
 
 {% endblock %}
 
@@ -49,7 +34,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <a href="/workflow/add_report"><button type="button" class="btn btn-success">+ New Report</button></a>
+        <a href="/workflow/add_report"><button type="button" class="btn btn-success">+&nbsp;New Report</button></a>
       </div>
     </div>
 
@@ -60,10 +45,16 @@
             <h3 class="panel-title">Monthly Overview</h3>
           </div>
           <div class="panel-body">
-            <p>Here's what's happened this October:</p>
+            <p>Current month (to date):</p>
             <ul>
-              <li>124 new reports</li>
-              <li>85 open cases</li>
+              <li>{{ current_month_new_reports }} new reports</li>
+              <li>{{ current_month_new_cases }} opened cases</li>
+              <li>33 resolved cases</li>
+            </ul>
+            <p>Last month:</p>
+            <ul>
+              <li>{{ last_month_new_reports }} new reports</li>
+              <li>{{ last_month_new_cases }} opened cases</li>
               <li>33 resolved cases</li>
             </ul>
           </div>

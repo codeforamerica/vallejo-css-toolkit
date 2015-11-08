@@ -9,12 +9,6 @@ $(document).ready(function(){
         }
     });
 
-    // $("th").click(function() {
-    //     if ($(this).data("href") !== undefined) {
-    //         window.document.location = $(this).data("href");
-    //     }
-    // });
-
     $(".to-delete-checkbox").click(function() {
         var any_checked = false,
             checkboxes = $(".to-delete-checkbox");

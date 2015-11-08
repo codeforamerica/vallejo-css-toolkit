@@ -1,3 +1,8 @@
+import calendar
+from datetime import datetime
+
+import pytz
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
@@ -5,7 +10,7 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 
-from workflow.models import CSSCall
+from workflow.models import CSSCall, CSSCase
 
 
 @login_required(login_url='/login/')
@@ -21,13 +26,35 @@ def landing(request):
         'Cpl. Garcia conducted a site visit at 111 Amador Street.'
     ]
 
+    now = pytz.timezone('America/Los_Angeles').localize(datetime.now())
+    start_of_month = datetime(now.year, now.month, 1, 0, 0, 0, tzinfo=now.tzinfo)
+    if start_of_month.month == 1:
+        start_of_last_month = datetime(start_of_month.year - 1, 12, 1, 0, 0, 0, tzinfo=start_of_month.tzinfo)
+    else:
+        start_of_last_month = datetime(start_of_month.year, start_of_month.month - 1, 1, 0, 0, 0, tzinfo=start_of_month.tzinfo)
+
+    # one_month_ago = now - timedelta(month=1)
+    _, days_in_month = calendar.monthrange(now.year, now.month)
+
+    current_month_new_reports = CSSCall.objects.filter(reported_datetime__gte=start_of_month).count()
+    last_month_new_reports = CSSCall.objects.filter(reported_datetime__gte=start_of_last_month, reported_datetime__lt=start_of_month).count()
+    current_month_new_cases = CSSCase.objects.filter(created_at__gte=start_of_month).count()
+    last_month_new_cases = CSSCase.objects.filter(created_at__gte=start_of_last_month, created_at__lt=start_of_month).count()
+
     return render(
         request,
         'workflow/landing.html',
         {
-            'newest_calls': newest_calls,
-            'recent_activities': recent_activities,
-            'new_report_count': 17
+            # 'newest_calls': newest_calls,
+            # 'recent_activities': recent_activities,
+            # 'new_report_count': 17
+
+            'current_month_new_reports': current_month_new_reports,
+            'last_month_new_reports': last_month_new_reports,
+
+            'current_month_new_cases': current_month_new_cases,
+            'last_month_new_cases': last_month_new_cases,
+
         }
     )
 

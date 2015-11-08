@@ -35,8 +35,8 @@
                   {% if form.address.value %}
                       <h1>{{ form.address.value }}</h1>
                   {% endif %}
-                  {% if form.reported_datetime.value and form.name.value %}
-                      <p class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</p>
+                  {% if form.reported_date.value and form.name.value %}
+                      <p class="reporter-subheader"> reported on {{ form.reported_date.value|date }} by {{ form.name.value }}</p>
                   {% endif %}
               </div>
 
@@ -71,6 +71,8 @@
                   </div>
 
                   {{ form.non_field_errors }}
+
+                  <input type="hidden" name="address" value="{{ form.address.value }}">
 
                   <div class="row">
                       <div class="col-sm-6">
@@ -256,6 +258,9 @@
                                           {% endfor %}
                                       </tbody>
                                   </table>
+                                  {% if not location_history %}
+                                      <div class="text-center"><h5>No history for this location</h5></div>
+                                  {% endif %}
                               </div> <!--table wrapper-->
                           </div>
                       </div>

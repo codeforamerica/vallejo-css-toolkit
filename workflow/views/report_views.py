@@ -1,19 +1,16 @@
 import logging
-import traceback
+# import traceback
 
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect, JsonResponse
-
-from common.datatables import get_datatables_data
+from django.http import HttpResponseRedirect
 
 from intake.models import CallAuditItem, PublicUploadedAsset
 
 from workflow.forms.report_forms import ReportForm
 from workflow.models import CSSCall, CSSCase, Verification, CSSReportView
-from workflow.sql import CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP
 from workflow.utils import get_location_history, get_reports
 
 log = logging.getLogger('consolelogger')
@@ -106,21 +103,6 @@ def report(request, report_id):
             'case_id': case_id
         }
     )
-
-
-# deprecated
-# @login_required(login_url='/login/')
-# def reports_data(request):
-#     request_dict = dict(request.GET.items())
-
-#     try:
-#         results = get_datatables_data(request_dict, CALLS_DATA_SQL, CALLS_IDX_COLUMN_MAP)
-#     except Exception:
-#         # messages.add()
-#         log.error('Error encountered fetching from database: {}'.format(traceback.format_exc()))
-#         results = {'data': [], 'recordsFiltered': 0, 'recordsTotal': 0}
-
-#     return JsonResponse(results)
 
 
 @login_required(login_url='/login/')
