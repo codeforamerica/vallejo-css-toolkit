@@ -122,7 +122,33 @@ def resolve_report(request, report_id):
     else:
         return render(
             request,
-            'workflow/resolve_report.html',
+            'workflow/message_reporter.html',
+            {
+                'default_resolve_message': '',
+                'title': "Resolve Report"
+            }
+        )
+
+
+@login_required(login_url='/login/')
+def forward_report(request, report_id):
+    if request.method == 'POST':
+        report = get_object_or_404(CSSCall, id=report_id)
+        message = request.POST.get('message')
+        if message:
+            ReportNotification.objects.create(report=report, message=message)
+            messages.add_message(request, messages.SUCCESS, "Successfully scheduled outgoing message to reporter.")
+
+        return HttpResponseRedirect('/workflow/reports/')
+
+    else:
+        return render(
+            request,
+            'workflow/message_reporter.html',
+            {
+                'default_resolve_message': '',
+                'title': "Resolve Report"
+            }
         )
 
 

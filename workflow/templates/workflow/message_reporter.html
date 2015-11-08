@@ -15,7 +15,7 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
-                <h4 class="modal-title">Resolve Report</h4>
+                <h4>{{ title }}</h4>
             </div>
         </div>
 
@@ -23,7 +23,7 @@
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="form-group">
                     <label>Message to Reporter:</label>
-                    <textarea maxlength="256" name="message" class="form-control" rows="5" value="{{ DEFAULT_RESOLVE_MESSAGE }}"></textarea>
+                    <textarea maxlength="256" name="message" class="form-control" rows="5" value="{{ default_resolve_message }}"></textarea>
                 </div>
             </div>
         </div>
