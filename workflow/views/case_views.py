@@ -15,7 +15,7 @@ from workflow.sql import CSS_CASES_DATA_SQL, CSS_CASES_IDX_COLUMN_MAP
 log = logging.getLogger('consolelogger')
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def cases_data(request):
     request_dict = dict(request.GET.items())
 
@@ -29,12 +29,12 @@ def cases_data(request):
     return JsonResponse(results)
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def cases(request):
     return render(request, 'workflow/cases.html')
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def case(request, case_id):
     instance = get_object_or_404(CSSCase, id=case_id)
     case_details_form = CSSCaseDetailsForm(request.POST or None, instance=instance)
@@ -75,7 +75,7 @@ def case(request, case_id):
     )
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def add_case_assignee(request):
     case_id = request.POST.get('case_id')
     assignee = request.POST.get('assignee')
@@ -86,7 +86,7 @@ def add_case_assignee(request):
     return JsonResponse({'status': 'OK'})
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def remove_case_assignee(request):
     case_id = request.POST.get('case_id')
     assignee = request.POST.get('assignee')

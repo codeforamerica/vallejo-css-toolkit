@@ -12,7 +12,7 @@ from workflow.forms.verification_forms import VerificationDetailsForm
 log = logging.getLogger('consolelogger')
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def verification(request, verification_id):
     instance = get_object_or_404(Verification, id=verification_id)
 

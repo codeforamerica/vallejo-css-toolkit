@@ -21,7 +21,7 @@ log = logging.getLogger('consolelogger')
 LOG_AUDIT_HISTORY = False
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def add_report(request):
     form = ReportForm(request.POST or None)
 
@@ -40,7 +40,7 @@ def add_report(request):
     return render(request, 'workflow/add_report.html', {'form': form})
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def report(request, report_id):
     instance = get_object_or_404(CSSCall, id=report_id)
     CSSReportView.objects.create(css_report=instance, user=request.user)
@@ -110,7 +110,7 @@ def report(request, report_id):
     )
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def reports_data(request):
     request_dict = dict(request.GET.items())
 
@@ -124,7 +124,7 @@ def reports_data(request):
     return JsonResponse(results)
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def reports(request):
     if request.method == "GET":
         reports_data, pagination_keys, page_idx, sort_key, search_get_param, sort_order, limit, offset = get_reports(request.GET)

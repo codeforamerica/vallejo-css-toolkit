@@ -8,7 +8,7 @@ from django.http import HttpResponseRedirect
 from workflow.models import CSSCall
 
 
-@login_required(login_url='/admin/login/')
+@login_required(login_url='/login/')
 def landing(request):
 
     # TODO: do a proper filter
