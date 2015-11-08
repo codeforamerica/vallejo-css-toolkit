@@ -80,6 +80,10 @@ class Verification(models.Model):
     owner_primary_contact = models.CharField(max_length=256, null=True, blank=True)
     owner_secondary_contact = models.CharField(max_length=256, null=True, blank=True)
     created_at = models.DateTimeField(null=True, blank=True)
+    water_service = models.BooleanField(default=False)
+    pge_service = models.BooleanField(default=False)
+    boarded = models.BooleanField(default=False)
+    nlp_assigned = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if not self.created_at:
