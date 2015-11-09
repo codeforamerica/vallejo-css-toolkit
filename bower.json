@@ -1,7 +1,7 @@
 {
   "name": "vallejo-css-toolkit",
   "dependencies": {
-    "eonasdan-bootstrap-datetimepicker": "~4.17.37",
-    "moment": "~2.10.6"
+    "bootstrap": "~3.2.0",
+    "datatables": "~1.10.7"
   }
 }

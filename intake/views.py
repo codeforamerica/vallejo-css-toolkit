@@ -1,11 +1,346 @@
-import twilio.twiml
+import os
+import json
+import logging
+import traceback
+import tempfile
+from datetime import datetime
 
-from django.http import JsonResponse
+import boto
+import pytz
+import twilio.twiml
+from boto.s3.key import Key
+
+from django.contrib import messages
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+
 from django_twilio.decorators import twilio_view
 
-from intake.models import Call
+from intake.models import Call, TypeformSubmission, TypeformAsset, PublicUploadedAsset
+from workflow.models import CSSCall
+from intake.forms import IntakeIssueForm, IntakeContactForm
+
 # from intake.utils import create_call, update_call
 
+log = logging.getLogger('consolelogger')
+
+SUPPORTED_LANGS = ('en')
+DEFAULT_LANG = 'en'
+
+
+def report_intro(request):
+    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+
+    return render(request, 'intake/intake_intro.html', {'lang': lang, 'exclude_navbar': True})
+
+
+def report_issue(request):
+    if request.method == 'POST':
+        form = IntakeIssueForm(request.POST, request.FILES)
+        lang = form.data.get('lang', DEFAULT_LANG)
+
+        if form.is_valid():
+            now_utc = pytz.UTC.localize(datetime.utcnow())
+
+            report = CSSCall.objects.create(
+                address=form.cleaned_data.get('problem_location'),
+                problem=form.cleaned_data.get('description'),
+                num_people_involved=form.cleaned_data.get('how_many_people'),
+                safety_concerns=form.cleaned_data.get('safety_concerns'),
+                reported_datetime=now_utc,
+                time_of_day_occurs=form.cleaned_data.get('time_of_day'),
+                problem_duration=form.cleaned_data.get('how_long'),
+                when_last_reported=form.cleaned_data.get('reported_before_details'),
+                source=CSSCall.WEB_SOURCE
+            )
+
+            try:
+                conn = boto.connect_s3()
+                b = conn.get_bucket('vallejo-css-toolkit')
+
+                if form.files.get('uploaded_photo'):
+                    tmpfile = tempfile.NamedTemporaryFile(delete=False)
+                    for chunk in form.files['uploaded_photo'].chunks():
+                        tmpfile.write(chunk)
+                    tmpfile.close()
+
+                    env = os.environ.get('DJANGO_SETTINGS_MODULE', 'not_set')
+
+                    k = Key(b)
+                    k.key = 'submitted-images/{}/{}/{}'.format(
+                        env.split('.')[-1],
+                        report.id,
+                        tmpfile.name.split('/')[-1]
+                    )
+                    k.set_contents_from_filename(tmpfile.name)
+                    PublicUploadedAsset.objects.create(css_report=report, fpath=k.key)
+
+            except:
+                log.error("Encountered exception attempting to upload submitted file: {}".format(traceback.format_exc()))
+
+            return HttpResponseRedirect(
+                '/report/contact/?report_id={}{}'.format(
+                    report.id,
+                    lang != DEFAULT_LANG and "&lang={}".format(lang) or ""
+                )
+            )
+
+        if form.errors:
+            messages.add_message(request, messages.ERROR, form.errors)
+
+    else:
+        lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+        form = IntakeIssueForm()
+
+    return render(request, 'intake/intake_issue.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
+
+
+def report_contact(request):
+    if request.method == 'POST':
+        form = IntakeContactForm(request.POST, request.FILES)
+        lang = form.data.get('lang', DEFAULT_LANG)
+        report_id = form.data.get('report_id')
+        report = get_object_or_404(CSSCall, id=report_id)
+
+        if form.is_valid():
+
+            # TODO: update the report with contact data
+            report.caller_preferred_contact = form.cleaned_data.get('reporter_contact_method')
+            report.name = form.cleaned_data.get('reporter_name')
+            report.reporter_street_name = form.cleaned_data.get('reporter_address')
+            report.phone = form.cleaned_data.get('reporter_phone')
+            report.reporter_alternate_contact = form.cleaned_data.get('reporter_email')
+
+            report.save()
+
+            return HttpResponseRedirect(
+                '/report/finish/?report_id={}{}'.format(
+                    report.id,
+                    lang != DEFAULT_LANG and "&lang={}".format(lang) or ""
+                )
+            )
+
+        if form.errors:
+            messages.add_message(request, messages.ERROR, "Please resolve the error(s) listed below.")
+
+    else:
+        report_id = request.GET.get('report_id')
+        report = get_object_or_404(CSSCall, id=report_id)
+        lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+        form = IntakeContactForm()
+
+    return render(request, 'intake/intake_contact.html', {'form': form, 'lang': lang, 'report_id': report.id, 'exclude_navbar': True})
+
+
+def report_finish(request):
+    report_id = request.GET.get('report_id')
+    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+
+    return render(request, 'intake/intake_finish.html', {'report_id': report_id, 'lang': lang, 'exclude_navbar': True})
+
+
+@twilio_view
+def step_one(request):
+    resp = twilio.twiml.Response()
+
+    with resp.gather(action="/intake/step-two/", numDigits=1, method="POST") as g:
+        g.say("Hello, you've reached the CSS-tool. Here you can report issues in your neighborhood or leave a question or message for the Community Services Section. If you are experiencing an emergency, please call 9 1 1. Press 1 if you're calling to report an issue, press 2 if you're calling to ask a question or leave a message.")
+
+    return resp
+
+
+@twilio_view
+def step_two(request):
+    digit_pressed = request.POST.get('Digits', None)
+
+    resp = twilio.twiml.Response()
+
+    if digit_pressed and digit_pressed.isdigit():
+        if int(digit_pressed) == 2:
+            resp.say("What is your message or question? When you are finished, press pound.")
+            resp.record(
+                action="/intake/step-nine/",
+                finishOnKey="#",
+                method="POST",
+                timeout=30
+            )
+
+        else:
+            resp.say("Where is the issue occurring? Please say the address or cross streets.")
+            resp.record(
+                action="/intake/step-three/",
+                finishOnKey="#",
+                method="POST",
+                timeout=30
+            )
+
+    return resp
+
+
+@twilio_view
+def step_three(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("Describe the issue you're calling about. When you are finished, press pound.")
+
+    resp.record(
+        action="/intake/step-four/",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+    return resp
+
+
+@twilio_view
+def step_four(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("How long has this issue been occurring?")
+
+    resp.record(
+        action="/intake/step-five/",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+    return resp
+
+
+@twilio_view
+def step_five(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("Around what time of day does this issue occur?")
+
+    resp.record(
+        action="/intake/step-six/",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+    return resp
+
+
+@twilio_view
+def step_six(request):
+    resp = twilio.twiml.Response()
+
+    with resp.gather(action="/intake/step-seven/", numDigits=1, method="POST") as g:
+        g.say("How many people are involved in this issue? Answer using a number on your keyboard. If you are unsure, press pound.")
+
+    return resp
+
+
+@twilio_view
+def step_seven(request):
+    resp = twilio.twiml.Response()
+
+    with resp.gather(action="/intake/step-eight/", numDigits=1, method="POST") as g:
+        g.say("Are there safety concerns at this location that we should be aware of? If yes, press 1. If no, press 2. If you are unsure, press 3.")
+
+    return resp
+
+
+@twilio_view
+def step_eight(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("Have you ever reported this issue before? If so, when? If not, press pound.")
+
+    resp.record(
+        action="/intake/step-nine/",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+    return resp
+
+
+@twilio_view
+def step_nine(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("It's helpful if we have your name and contact information in case we need any further details on how to best resolve this issue. We will never share your information with anyone other than authorized city staff.")
+    resp.say("What is your name?")
+
+    resp.record(
+        action="/intake/step-ten/",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+    return resp
+
+
+@twilio_view
+def step_ten(request):
+    resp = twilio.twiml.Response()
+
+    with resp.gather(action="/intake/step-eleven/", numDigits=10, method="POST") as g:
+        g.say("What is your phone number, starting with the area code? Answer using the numbers on your keyboard.")
+
+    return resp
+
+
+@twilio_view
+def step_eleven(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("What is your email address?")
+
+    resp.record(
+        action="/intake/step-twelve/",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+    return resp
+
+
+@twilio_view
+def step_twelve(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("What is your home address?")
+
+    resp.record(
+        action="/intake/step-thirteen/",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
+
+    return resp
+
+
+@twilio_view
+def step_thirteen(request):
+    resp = twilio.twiml.Response()
+
+    with resp.gather(action="/intake/step-fourteen/", numDigits=1, method="POST") as g:
+        g.say("Where should we send you the receipt and progress updates for this report? Press 1 for email updates, press 2 for text message updates, press 3 if you would not like a receipt and progress updates.")
+
+    return resp
+
+
+@twilio_view
+def step_fourteen(request):
+    resp = twilio.twiml.Response()
+
+    resp.say("Thank you, your report has been sent to the Community Services Section. Have a good day.")
+
+    return resp
+
+
+### Original intake view below ###
 
 @twilio_view
 def welcome(request):
@@ -27,12 +362,14 @@ def welcome(request):
 
     return resp
 
+
 @twilio_view
 def sms_reply(request):
     resp = twilio.twiml.Response()
     resp.message("Thank you for your message. We appreciate your input.")
 
     return resp
+
 
 @twilio_view
 def handle_name(request):
@@ -51,6 +388,7 @@ def handle_name(request):
 
     return resp
 
+
 @twilio_view
 def handle_name_transcription(request):
     call_sid = request.POST.get('CallSid', None)
@@ -62,6 +400,7 @@ def handle_name_transcription(request):
     call.save()
 
     return JsonResponse({'status': 'OK'})
+
 
 @twilio_view
 def handle_feedback_pref(request):
@@ -82,6 +421,7 @@ def handle_feedback_pref(request):
         g.say("Please enter your preferred phone number to receive updates, beginning with the area code.")
 
     return resp
+
 
 @twilio_view
 def handle_feedback_number(request):
@@ -105,6 +445,7 @@ def handle_feedback_number(request):
     )
 
     return resp
+
 
 @twilio_view
 def handle_problem_address(request):
@@ -130,6 +471,7 @@ def handle_problem_address(request):
 
     return resp
 
+
 @twilio_view
 def handle_problem_address_transcription(request):
     call_sid = request.POST.get('CallSid', None)
@@ -141,6 +483,7 @@ def handle_problem_address_transcription(request):
     call.save()
 
     return JsonResponse({'status': 'OK'})
+
 
 @twilio_view
 def handle_problem_description(request):
@@ -157,6 +500,7 @@ def handle_problem_description(request):
 
     return resp
 
+
 @twilio_view
 def handle_problem_description_transcription(request):
     call_sid = request.POST.get('CallSid', None)
@@ -166,5 +510,62 @@ def handle_problem_description_transcription(request):
     call.problem_description = description_transcription
 
     call.save()
+
+    return JsonResponse({'status': 'OK'})
+
+
+@csrf_exempt
+def handle_typeform(request):
+    log.info(request.POST)
+
+    try:
+
+        TypeformSubmission.objects.create(typeform_json=json.dumps(request.POST))
+
+        address = request.POST.get("Where is the problem occurring?")
+        phone = request.POST.get("What is your phone number?")
+        name = request.POST.get("What is your name?")
+        problem = request.POST.get("Please describe what is happening.")
+        reporter_street_name = request.POST.get("What is your home address?")
+        problem_duration = request.POST.get("How long has the problem been occurring?")
+        reporter_alternate_contact = request.POST.get("What is your email address?")
+        reported_before = request.POST.get("Have you ever reported this problem before?")
+        if reported_before != "0":
+            when_last_reported = request.POST.get("When did you last report this problem?")
+        else:
+            when_last_reported = None
+        time_of_day_occurs = request.POST.get("What time of day does the problem occur?")
+
+        num_people_involved = request.POST.get("How many people are involved?")
+        safety_concerns = request.POST.get("Are there safety concerns at the location you are reporting?")
+
+        utc = pytz.utc
+        reported_datetime = utc.localize(datetime.utcnow())
+
+        asset_url = request.POST.get("Do you have photos of the problem?")
+
+        c = CSSCall.objects.create(
+            address=address,
+            phone=phone,
+            name=name,
+            problem=problem,
+            reporter_street_name=reporter_street_name,
+            problem_duration=problem_duration,
+            reporter_alternate_contact=reporter_alternate_contact,
+            when_last_reported=when_last_reported,
+            time_of_day_occurs=time_of_day_occurs,
+            num_people_involved=num_people_involved,
+            safety_concerns=safety_concerns,
+            reported_datetime=reported_datetime
+        )
+
+        if asset_url:
+            TypeformAsset.objects.create(
+                css_report=c,
+                asset_url=asset_url
+            )
+
+    except Exception:
+        log.error(traceback.format_exc())
 
     return JsonResponse({'status': 'OK'})

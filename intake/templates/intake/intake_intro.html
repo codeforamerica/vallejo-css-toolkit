@@ -1,0 +1,42 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<link rel="stylesheet" href="{% static 'intake/css/intake.css' %}">
+
+{% endblock %}
+
+{% block body %}
+
+<div class="intake-header">
+    <div class="container">
+        <div class="row">
+          <div class="col-sm-4 col-sm-offset-8">
+            <a href="/report/?lang=es" class="espanol-link pull-right">En Espa&#241;ol</a>
+          </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-1 col-xs-12">
+                <div class="header-content">
+                    <h1>{% if lang == 'en' %}What's going on in your neighborhood?{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Here you can report non-emergency issues, ask a question, or leave a message for the Community Services Section of the police department. Your submissions will go directly to the department and they'll work on investigating the problem or answering your questions as soon as possible. <b>If you have an emergency in progress, call 911.</b>{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container intake-body">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-1 col-xs-12">
+            <h4>{% if lang == 'en' %}What are you here to do?{% endif %}</h4>
+            <a class="btn btn-primary btn-lg" href="/report/issue" role="button">{% if lang == 'en' %}Report an issue{% endif %}</a>
+            <a class="btn btn-default btn-lg disabled" href="/report/msg" role="button">{% if lang == 'en' %}Leave a message{% endif %}</a>
+            <a class="btn btn-default btn-lg disabled" href="/report/question" role="button">{% if lang == 'en' %}Ask a question{% endif %}</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

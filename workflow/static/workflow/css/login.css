@@ -1,0 +1,48 @@
+body{
+  background-color:#1F4E81;
+}
+
+h1{
+  text-align: center;
+
+  color:#188EF5;
+  font-size:68px;
+  margin-top:100px;
+  margin-bottom:30px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.login-form{
+  background-color: #29364D;
+  border:1px solid #29364D;
+  padding:25px;
+  border-radius: 4px;
+}
+
+input.form-control{
+  background-color: #1F4E81;
+  border-color: #1F4E81;
+}
+
+label{
+  color:#188EF5;
+}
+
+.btn-success{
+  border-radius: 4px;
+  border-color:none;
+  margin-top:15px;
+  margin-bottom:25px;
+}
+
+form{
+  margin-top:25px;
+}
+
+.password-group{
+  margin-top:25px;
+}
+
+.form-control{
+  color:#fff;
+}

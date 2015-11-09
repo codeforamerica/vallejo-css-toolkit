@@ -4,18 +4,14 @@
 
 {% block assets %}
 
-<script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
-<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
-<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
 <script type='text/javascript' src="{% static "workflow/js/typeahead.bundle.js" %}"></script>
 
-
-<link rel="stylesheet" href="{% static "base/base.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/css_case.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/>
 
 <script type='text/javascript' src="{% static "workflow/js/css_case.js" %}"></script>
+
+<link href='https://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
 
 {% endblock %}
 
@@ -141,12 +137,6 @@
                         <button id="add-assignee-submit" style="margin-top: 10px;" class="btn btn-primary">Add</button>
                     </div>
 
-<!--                     <div class="fieldWrapper form-group">
-                        <label for="{{ form.assignee.id_for_label }}">Assignee:</label>
-                        {{ case_details_form.assignee|add_class:"form-control" }}
-                        {{ case_details_form.assignee.errors }}
-                    </div>
- -->
                     <div class="fieldWrapper form-group">
                         <label for="{{ form.status.id_for_label }}">Status:</label>
                         {{ case_details_form.status|add_class:"form-control" }}
@@ -194,33 +184,54 @@
 
                 <div class="contact-log-section">
                     <label>Contact Log</label>
-                    <div class="contact-log-table">
-                        <table class="contact-log">
-                            <thead>
-                            <tr>
-                                <th class="contact-log-cell">Date</th>
-                                <th class="contact-log-cell">Type</th>
-                                <th class="contact-log-cell">Notes</th>
-                            </tr>
-                            </thead>
-                            <tr class="contact-log-row">
-                                <td class="contact-log-cell">8/15/15</td>
-                                <td class="contact-log-cell">Email</td>
-                                <td class="contact-log-cell">First contact informing owner of squatters</td>
-                            </tr>
-                            <tr class="contact-log-row">
-                                <td class="contact-log-cell">8/29/15</td>
-                                <td class="contact-log-cell">Phone</td>
-                                <td class="contact-log-cell">No answer; left voicemail</td>
-                            </tr>
-                            <tr class="contact-log-row">
-                                <td class="contact-log-cell">8/15/15</td>
-                                <td class="contact-log-cell">Email</td>
-                                <td class="contact-log-cell">First contact informing owner of squatters</td>
-                            </tr>
-                        </table>
-                        <button class="btn btn-default btn-lg add-new-contact-button"><span class="fa fa-plus"></span>&nbspAdd Contact</button>
-                    </div>
+                        <div class="container">
+                            <div class="col-md-7 col-md-offset-1" id="call-log">
+                              <div class="row">
+                                <div class="col-sm-12">
+                                  <div class="table-wrapper">
+                                    <table class="table table-hover">
+                                      <thead>
+                                        <tr>
+                                          <th>Date</th>
+                                          <th>Caller</th>
+                                          <th>Type</th>
+                                          <th>Description</th>
+                                        </tr>
+                                      </thead>
+
+                                      <tbody>
+                                        <tr>
+                                          <td>Today</td>
+                                          <td>TinaE</td>
+                                          <td>Phone</td>
+                                          <td>Left message with assistant to call back</td>
+                                        </tr>
+
+                                        <tr>
+                                          <td>10/15/15</td>
+                                          <td>TinaE</td>
+                                          <td>Phone</td>
+                                          <td>Left message asking if she received email</td>
+                                        </tr>
+
+                                        <tr>
+                                          <td>10/10/15</td>
+                                          <td>Karen</td>
+                                          <td>Email</td>
+                                          <td>First contact; informed her of squatters</td>
+                                        </tr>
+                                    </table>
+                                  </div>
+
+                                  <a class="pull-right" href="#">Add Contact</a>
+
+                                </div>
+                              </div>
+
+                            </div>
+                          </div>
+                      </div>
+
                 </div>
 
             </div>

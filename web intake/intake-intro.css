@@ -1,0 +1,17 @@
+.intake-body a{
+  margin-right:20px;
+  margin-top:0;
+}
+
+.intro-question h1{
+  margin-bottom:20px;
+}
+
+
+
+@media (max-width:560px) {
+  .btn{
+    display:block;
+    margin-bottom:20px;
+  }
+}

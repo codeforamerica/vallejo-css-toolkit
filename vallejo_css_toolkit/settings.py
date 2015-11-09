@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'workflow',
     'data_load',
     'widget_tweaks',
+    'django_twilio'
 )
 
 MIDDLEWARE_CLASSES = (
@@ -63,6 +64,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django_settings_export.settings_export',
             ],
         },
     },
@@ -102,6 +104,8 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+MAX_UPLOAD_SIZE = 5242880  # 5 MB
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -134,3 +138,9 @@ LOGGING = {
         }
     }
 }
+
+STATIC_LIB_BASE = "https://s3.amazonaws.com/vallejo-css-toolkit/static/libs/"
+
+SETTINGS_EXPORT = [
+    'STATIC_LIB_BASE',
+]

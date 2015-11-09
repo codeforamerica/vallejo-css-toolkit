@@ -2,6 +2,7 @@ import datetime
 
 from django.db import models
 from django.contrib.auth.models import User
+from workflow.models import CSSCall
 
 UNREVIEWED_STATUS = 1
 ACTIVE_STATUS = 2
@@ -18,12 +19,15 @@ STATUS_CHOICES = (
 NO_CONTACT_PREFERENCE = 1
 TEXT_CONTACT_PREFERENCE = 2
 CALL_CONTACT_PREFERENCE = 3
+EMAIL_CONTACT_PREFERENCE = 4
 
 CONTACT_PREFERENCES_CHOICES = (
     (NO_CONTACT_PREFERENCE, 'No Contact'),
     (NO_CONTACT_PREFERENCE, 'Text'),
     (CALL_CONTACT_PREFERENCE, 'Call'),
+    (EMAIL_CONTACT_PREFERENCE, 'Email'),
 )
+
 
 class Call(models.Model):
     call_sid = models.CharField(max_length=256, null=True)
@@ -53,6 +57,17 @@ class Call(models.Model):
             self.call_time = datetime.datetime.utcnow()
         super(Call, self).save(*args, **kwargs)
 
+
+class TypeformAsset(models.Model):
+    css_report = models.ForeignKey(CSSCall)
+    asset_url = models.CharField(max_length=256, null=True, blank=True)
+
+
+class PublicUploadedAsset(models.Model):
+    css_report = models.ForeignKey(CSSCall)
+    fpath = models.CharField(max_length=256, null=True, blank=True)
+
+
 class CallAuditItem(models.Model):
     user = models.ForeignKey(User)
     call = models.ForeignKey(Call)
@@ -60,3 +75,7 @@ class CallAuditItem(models.Model):
     changed_field = models.CharField(max_length=256, null=True, blank=True)
     old_value = models.CharField(max_length=256, null=True, blank=True)
     new_value = models.CharField(max_length=256, null=True, blank=True)
+
+
+class TypeformSubmission(models.Model):
+    typeform_json = models.TextField(null=True)

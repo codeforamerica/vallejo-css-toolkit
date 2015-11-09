@@ -1,87 +1,6 @@
-.nav-pills{
-  margin-top: 30px;
-}
 
-.subnav{
-  border-bottom:2px solid #eee;
-  padding-bottom:10px;
-  margin-bottom:50px;
-  margin-top:30px;
-}
 
-.report h4{
-  font-size:22px;
-  font-weight: bold;
-  color:#337ab7;
-  margin-bottom: 30px;
-}
 
-th, td { padding: 10px 15px; }
-
-th, td { text-align: center; }
-
-.fa-list-item {
-    float: right;
-}
-
-.uploaded-doc, #file-upload-form {
-    margin-left: 20px;
-}
-
-.inline {
-    display: inline-block;
-}
-
-.owner-phone, .owner-email {
-    width: 48%;
-    float: right;
-    display: inline-block;
-}
-
-.owner-email {
-    float: right;
-}
-
-.owner-phone {
-    float: left;
-}
-.contact-log {
-    width: 100%;
-}
-
-.contact-log-row {
-    border-top: 1px solid;
-    border-bottom: 1px solid;
-    border-color: #ccc;
-}
-
-.contact-log-section {
-    margin-top: 30px;
-}
-
-.contact-log-table {
-    width: 100%;
-    border: 1px solid;
-    border-color: #ccc;
-}
-
-.add-new-contact-button {
-    width: 100%;
-    border: none;
-    color: #ccc;
-    height: 30px;
-    padding-bottom: 30px;
-}
-
-.contact-log-cell {
-    padding-top: 15px;
-    padding-bottom: 15px;
-    text-align: left;
-}
-
-.doc-attrs {
-    list-style-type: none;
-}
 
 .unassign {
   background-color: #e7e7e7;
@@ -96,36 +15,8 @@ th, td { text-align: center; }
   color: white;
 }
 
-.doc-date {
-    position: relative;
-    top: 20px;
-}
 
-#assignee-table { 
-    border-spacing: 10px;
-    border-collapse: separate;
-}
 
-.doc-date-text {
-    font-size: 1.2rem;
-    color: grey; 
-}
-
-.doc-name-text {
-    font-size: 1.9rem;
-}
-
-.upload-submit-button {
-    margin-top: 10px;
-}
-
-.owner-info-submit-button {
-    margin-top: 10px;
-}
-
-thead {
-    background-color: #e7e7e7;
-}
 
 .assignee-row-cell {
     background-color: #e7e7e7;
@@ -139,7 +30,8 @@ thead {
 .typeahead,
 .tt-query,
 .tt-hint {
-  width: 396px;
+  width: 100%;
+/*  width: 396px;*/
   height: 30px;
   padding: 8px 12px;
   line-height: 30px;

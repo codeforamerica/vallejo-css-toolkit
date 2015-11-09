@@ -1,0 +1,98 @@
+.container{
+  padding-top: 100px;
+}
+
+/**Title and Action Buttons**/
+.report-pg-header{
+  margin-bottom:20px;
+  min-height: 70px;
+}
+
+.report-pg-header h1{
+  font-weight: 700;
+  margin-bottom: 0;
+}
+
+.input-group{
+  width:300px;
+}
+
+.data-cell {
+  min-width: 120px;
+}
+
+.timestamp-data-cell {
+  white-space: nowrap;
+}
+
+button.btn.btn-default, button.btn.btn-success{
+  height: 40px;
+}
+
+button.btn.btn-success, #search{
+  margin-left:10px;
+}
+
+form#search{
+  display: inline-block;
+}
+
+.report-action-btns .input-group{
+  top:17px;
+}
+
+.report-action-btns{
+  margin-bottom:10px;
+}
+
+/**Table**/
+.table {
+  border-radius:8px;
+  margin-bottom:0;
+  font-size:14px;
+  color:#3e3e3e;
+}
+
+.table-wrapper{
+  border:1px solid #ddd;
+  border-radius:4px;
+  overflow: hidden;
+  margin-bottom:20px;
+}
+
+thead{
+  background-color:#F6F6F7;
+  color:#3E3E3E;
+}
+
+th{
+  font-weight: bold;
+}
+
+.table>thead>tr>th.active{
+  background-color: #ddd;;
+}
+
+.table>thead>tr>th, .table>tbody>tr>td{
+  padding-top: 25px;
+  padding-bottom:8px;
+  padding-left: 25px;
+  border-color:#eeeeee;
+}
+
+.clickable-cell {
+    cursor: pointer;
+}
+.inactive {
+    pointer-events: none;
+    cursor: default;
+}
+
+/*Pagination*/
+.pagination{
+  margin: 0;
+}
+
+@media (max-width:584px) {
+
+}

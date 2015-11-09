@@ -1,3 +1,14 @@
+AUDIT_LOG_IDX_COLUMN_MAP = [
+    'call_time',
+    'timestamp',
+    'name',
+    'changed_field',
+    'old_value',
+    'new_value',
+    'count',
+    'tcount'
+]
+
 AUDIT_LOG_DATA_SQL = """
     SET TIME ZONE 'America/Los_Angeles';
 
@@ -34,65 +45,49 @@ AUDIT_LOG_DATA_SQL = """
     ;
     """
 
-# TODO: determine where we need this...
-CURRENT_USER_ASSIGNMENTS_SQL = """
-    SET TIME ZONE 'America/Los_Angeles';
-
-    SELECT
-        call_data.caller_number,
-        call_data.id,
-        call_data.call_time,
-        call_data.caller_name,
-        call_data.problem_address,
-        call_data.status,
-        update_data.last_updated
-    FROM (
-        SELECT
-            c.id,
-            c.caller_number AS caller_number,
-            COALESCE(TO_CHAR(c.call_time, 'MM-DD-YYYY HH24:MI'), '') AS call_time,
-            COALESCE(c.caller_name, '') AS caller_name,
-            COALESCE(c.problem_address, '') AS problem_address,
-            c.status AS status
-        FROM intake_call c
-        WHERE assignee_id = %s
-        ORDER BY c.call_time DESC
-    ) call_data
-    LEFT JOIN (
-        SELECT
-            COALESCE(TO_CHAR(MAX(cai.timestamp), 'MM-DD-YYYY HH24:MI:SS'), '') AS last_updated,
-            cai.call_id AS call_id
-        FROM intake_callaudititem cai
-        GROUP BY cai.call_id
-    ) update_data
-    ON call_data.id = update_data.call_id
-    ;
-    """
+CALLS_IDX_COLUMN_MAP = [
+    'id',
+    'reported_datetime',
+    'reported_datetime_link',
+    'caller_name',
+    'caller_name_link'
+    'caller_number',
+    'caller_number_link',
+    'problem_address',
+    'problem_address_link',
+    'status',
+    'status_link',
+    'resolution',
+    'resolution_link',
+    'count',
+    'tcount'
+]
 
 CALLS_DATA_SQL = """
     WITH data AS (
         SELECT
             c.id AS id,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.reported_datetime AT TIME ZONE 'America/Los_Angeles'  || '</a>', '') AS reported_datetime_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || TO_CHAR(c.reported_datetime AT TIME ZONE 'America/Los_Angeles', 'YYYY-MM-DD HH24:MI')  || '</a>', '') AS reported_datetime_link,
             c.reported_datetime AT TIME ZONE 'America/Los_Angeles' AS reported_datetime,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.name  || '</a>', '') AS caller_name_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.name  || '</a>', '') AS caller_name_link,
             c.name AS caller_name,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.phone  || '</a>', '') AS caller_number_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.phone  || '</a>', '') AS caller_number_link,
             c.phone AS caller_number,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.address  || '</a>', '') AS problem_address_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.address  || '</a>', '') AS problem_address_link,
             c.address AS problem_address,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.problem  || '</a>', '') AS status_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.problem  || '</a>', '') AS status_link,
             c.problem AS status,
 
-            COALESCE('<a href="/workflow/call/' || c.id || '">' || c.resolution  || '</a>', '') AS resolution_link,
+            COALESCE('<a href="/workflow/report/' || c.id || '">' || c.resolution  || '</a>', '') AS resolution_link,
             c.resolution AS resolution
 
-        FROM workflow_csscall as c
+        FROM workflow_csscall AS c
+        WHERE active = True
     ), total_count AS (
         SELECT COUNT(*) as tcount FROM workflow_csscall
     )
@@ -123,14 +118,22 @@ CALLS_DATA_SQL = """
     FROM data, total_count
     %s
     ORDER BY %s %s
+    NULLS LAST
     OFFSET %s
     LIMIT %s
     ;
     """
 
-TOTAL_CALLS_COUNT_SQL = """
-    SELECT COUNT(*) AS records_total FROM intake_call;
-    """
+CSS_CASES_IDX_COLUMN_MAP = [
+    'address',
+    'id',
+    'description',
+    'resolution',
+    'status_id',
+    'full_address',
+    'count',
+    'tcount'
+]
 
 CSS_CASES_DATA_SQL = """
     WITH data AS (
@@ -162,4 +165,3 @@ CSS_CASES_DATA_SQL = """
     LIMIT %s
     ;
     """
-

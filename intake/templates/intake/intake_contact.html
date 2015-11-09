@@ -1,0 +1,82 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<link rel="stylesheet" href="{% static 'intake/css/intake.css' %}">
+
+{% endblock %}
+
+{% block body %}
+
+{% load widget_tweaks %}
+
+<div class="intake-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-1">
+                <div class="header-content">
+                    <h1>{% if lang == 'en' %}Tell us more about you.{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Although it is not required, it’s most helpful to our staff if we have your name and contact information in case we need any further details on how to best resolve this issue. <b>We will never share your information with anyone other than authorized city staff.{% endif %}</b></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container intake-body">
+    <form method="post">
+        {% csrf_token %}
+
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <input type="hidden" name="report_id" value="{{ report_id }}">
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-1">
+
+                {{ form.non_field_errors }}
+
+                <h4>{% if lang == 'en' %}Contact Information{% endif %}</h4>
+
+                <div class="form-group">
+                    <label for="{{form.reporter_name.id_for_label}}">{% if lang == 'en' %}What is your name?{% endif %}</label>
+                    {{ form.reporter_name|add_class:"form-control" }}
+                    {{ form.reporter_name.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{form.reporter_phone.id_for_label}}">{% if lang == 'en' %}What is your phone number (including area code)?{% endif %}</label>
+                    {{ form.reporter_phone|add_class:"form-control" }}
+                    {{ form.reporter_phone.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{form.reporter_address.id_for_label}}">{% if lang == 'en' %}What is your home address?{% endif %}</label>
+                    {{ form.reporter_address|add_class:"form-control" }}
+                    {{ form.reporter_address.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{form.reporter_email.id_for_label}}">{% if lang == 'en' %}What is your email address?{% endif %}</label>
+                    {{ form.reporter_email|add_class:"form-control" }}
+                    {{ form.reporter_email.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{form.reporter_contact_method.id_for_label}}">{% if lang == 'en' %}Where should we send you the receipt for this report and updates on any progress?{% endif %}</label>
+                    {{ form.reporter_contact_method|add_class:"form-control" }}
+                    {{ form.reporter_contact_method.errors }}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-1">
+                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% endif %}">
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

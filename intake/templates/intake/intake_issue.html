@@ -1,0 +1,109 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<link rel="stylesheet" href="{% static 'intake/css/intake.css' %}">
+
+{% endblock %}
+
+{% block body %}
+
+{% load widget_tweaks %}
+
+<div class="intake-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-1">
+                <div class="header-content">
+                    <h1>{% if lang == 'en' %}Tell us what's going on.{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Try to be as detailed as possible and include as much information as you can. The more specific you can be, the easier we can understand and investigate the problem.{% endif %}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container intake-body">
+
+    <form id="intake-form" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+
+        {{ form.non_field_errors }}
+
+        <input type="hidden" name="lang" value="{{ lang }}">
+        <input type="hidden" name="report_id" value="{{ report_id }}">
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-1">
+                <h4>{% if lang == 'en' %}Problem Description{% endif %}</h4>
+
+                <div class="form-group">
+                    <label for="{{ form.problem_location.id_for_label }}">{% if lang == 'en' %}Where is the problem occuring?{% endif %}</label>
+                    {{ form.problem_location|add_class:"form-control" }}
+                    {{ form.problem_location.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">{% if lang == 'en' %}Describe what is happening.{% endif %}</label>
+                    <textarea name="{{ form.description.html_name }}" class="form-control" rows="3"></textarea>
+                    {{ form.description.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.how_long.id_for_label }}">{% if lang == 'en' %}How long has the problem been occuring?{% endif %}</label>
+                    {{ form.how_long|add_class:"form-control" }}
+                    {{ form.how_long.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.time_of_day.id_for_label }}">{% if lang == 'en' %}What time of day does the problem occur?{% endif %}</label>
+                    {{ form.time_of_day|add_class:"form-control" }}
+                    {{ form.time_of_day.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.safety_concerns.id_for_label }}">Are there safety concerns at the location you're reporting?</label>
+                    {{ form.safety_concerns }}
+                    {{ form.safety_concerns.errors }}
+                </div>
+
+
+                <div class="form-group">
+                    <label for="{{ form.how_many_people.id_for_label }}">{% if lang == 'en' %}How many people are involved?{% endif %}</label>
+                    {{ form.how_many_people|add_class:"form-control" }}
+                    {{ form.how_many_people.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.uploaded_photo.id_for_label }}">{% if lang == 'en' %}Do you have photos of the problem?{% endif %}</label>
+                    {{ form.uploaded_photo }}
+                    {{ form.uploaded_photo.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.reported_before.id_for_label }}">{% if lang == 'en' %}Have you reported this problem before?{% endif %}</label>
+                    {{ form.reported_before }}
+                    {{ form.reported_before.errors }}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ reported_before_details.id_for_label }}">{% if lang == 'en' %}If yes, when and where did you last report this problem?{% endif %}</label>
+                    {{ form.reported_before_details|add_class:"form-control" }}
+                    {{ form.reported_before_details.errors }}
+                </div>
+
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-1">
+                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% endif %}">
+            </div>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}

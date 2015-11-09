@@ -1,0 +1,79 @@
+.container{
+  padding-top:100px;
+}
+
+h2{
+  margin-bottom:25px;
+}
+
+.form-control{
+  height:50px;
+}
+
+.landing-btns{
+  margin-bottom:60px;
+}
+
+
+.panel{
+  margin-bottom:30px;
+  height:360px;
+  overflow:hidden;
+}
+
+.map-panel{
+  height:520px;
+}
+
+.panel-title{
+  padding-top:5px;
+  padding-bottom:2px;
+  color:#ffffff;
+}
+
+.panel-default>.panel-heading{
+  background-color:#1F4E81;
+}
+
+.panel p{
+  font-size:16px;
+}
+
+.panel ul{
+  list-style: none;
+  padding-left:0;
+  margin-top:20px;
+}
+
+.monthly-overview li{
+  font-size:22px;
+  padding-bottom:10px;
+}
+
+.landing-btns .btn{
+  height:50px;
+}
+
+.landing-btns .search{
+  margin-bottom:30px;
+}
+
+.table>thead>tr>th, .table>tbody>tr>td{
+  padding-left:15px;
+}
+
+.table>thead>tr>th{
+  padding-top:20px;
+}
+
+.table>tbody>tr>td, .table>tbody>tr>td{
+  padding-top:15px;
+}
+
+.table{
+  font-size: 12px;
+}
+
+.recent-activity {padding: 15px;}
+
+#map { height: 320px; }

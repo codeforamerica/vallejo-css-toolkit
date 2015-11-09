@@ -1,0 +1,345 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/verification.css" %}"/>
+<script type='text/javascript' src="{% static "workflow/js/verification.js" %}"></script>
+
+{% endblock %}
+
+{% block body %}
+
+{% load widget_tweaks %}
+
+<div class="workflow-pg-wrapper">
+    <div class="container">
+
+        <div class="row subnav">
+            <div class="col-md-8 col-sm-7 col-xs-12">
+                <h1>{{ property_address }}</h1>
+                <p class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</p>
+            </div>
+
+            <div class="col-md-4 col-sm-5 col-xs-12">
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation" class=""><a href="/workflow/report/{{ report_id }}">Report</a></li>
+                    <li role="presentation" class="active"><a href="#">Verification</a></li>
+                    {% if case_id %}
+                        <li role="presentation"><a href="/workflow/case/{{ case_id }}">Case</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-4 pane-selectors">
+                <div class="list-group">
+                    <h5 class="list-group-item list-group-item-title">Verification</h5>
+                    <a href="#prop-details" class="list-group-item active">Property Details<span class="fa fa-list-item fa-angle-right"></span></a>
+                    <a href="#contact-sheet" class="list-group-item">Contact Sheet<span class="fa fa-list-item fa-angle-right"></span></a>
+                    <a href="#docs" class="list-group-item">Documents<span class="fa fa-list-item fa-angle-right"></span></a>
+                </div>
+            </div>
+
+            <!-- Property Details pane -->
+            <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="prop-details">
+                <form id="property-details-form" method="POST">
+                    {% csrf_token %}
+                    {{ property_details_form.non_field_errors }}
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4>Property Details</h4>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="map-placeholder"><p>(map coming soon)</p></div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="pull-right">
+                                <a target="_blank" href="https://www.google.com/maps/search/{{ property_address }} Vallejo, CA">View on Google Maps</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Property Description:</label>
+                                <textarea maxlength="256" name="{{ property_details_form.property_description.html_name }}" class="form-control" rows="5">{% if property_details_form.property_description.value %}{{ property_details_form.property_description.value }}{% endif %}</textarea>
+                                {{ property_details_form.property_description.errors }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.water_service.id_for_label }}">Water Service:</label>
+                                {{ property_details_form.water_service }}
+                                {{ property_details_form.water_service.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.pge_service.id_for_label }}">PG&E Service:</label>
+                                {{ property_details_form.pge_service }}
+                                {{ property_details_form.pge_service.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.boarded.id_for_label }}">Occupied/Boarded:</label>
+                                {{ property_details_form.boarded }}
+                                {{ property_details_form.boarded.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.nlp_assigned.id_for_label }}">NLP Assigned:</label>
+                                {{ property_details_form.nlp_assigned }}
+                                {{ property_details_form.nlp_assigned.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.code_contacted.id_for_label }}">Code Contacted:</label>
+                                {{ property_details_form.code_contacted }}
+                                {{ property_details_form.code_contacted.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.tresspass_letter.id_for_label }}">Tresspass Letter:</label>
+                                {{ property_details_form.trespass_letter }}
+                                {{ property_details_form.trespass_letter.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.property_details_form.id_for_label }}">Property Owner:</label>
+                                {{ property_details_form.owner_name|add_class:"form-control" }}
+                                {{ property_details_form.owner_name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.property_details_form.id_for_label }}">Owner Address:</label>
+                                {{ property_details_form.owner_address|add_class:"form-control" }}
+                                {{ property_details_form.owner_address.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ form.property_details_form.id_for_label }}">Phone:</label>
+                                {{ property_details_form.owner_primary_contact|add_class:"form-control" }}
+                                {{ property_details_form.owner_primary_contact.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ form.owner_secondary_contact.id_for_label }}">Email:</label>
+                                {{ property_details_form.owner_secondary_contact|add_class:"form-control" }}
+                                {{ property_details_form.owner_secondary_contact.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.bank_name.id_for_label }}">Bank Name:</label>
+                                {{ property_details_form.bank_name|add_class:"form-control" }}
+                                {{ property_details_form.bank_name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.bank_contact.id_for_label }}">Bank Contact:</label>
+                                {{ property_details_form.bank_contact|add_class:"form-control" }}
+                                {{ property_details_form.bank_contact.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.bank_contact_phone.id_for_label }}">Bank Contact Phone:</label>
+                                {{ property_details_form.bank_contact_phone|add_class:"form-control" }}
+                                {{ property_details_form.bank_contact_phone.errors }}
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>  <!-- end Report Details pane -->
+
+            <!-- Contact Sheet pane -->
+            <div class="tab-pane" id="contact-sheet">
+                <div class="col-sm-7 col-sm-offset-1 report">
+                    <h4>Contact Sheet</h4>
+                    <div class="contact-log-section">
+                        <label>Contact Log</label>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-wrapper">
+                                    <table class="table table-hover small-table" id="call-log">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Caller</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for contact in contact_log %}
+                                                <tr>
+                                                    <td>{{ contact.0 }}</td>
+                                                    <td>{{ contact.1 }}</td>
+                                                    <td>{{ contact.2 }}</td>
+                                                    <td>{{ contact.3 }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                {% if not contact_log %}
+                                  <div class="text-center"><h5>No contacts have been logged</h5></div>
+                                {% endif %}
+                                </div> <!--table wrapper-->
+                                <a class="pull-right" href="#" data-toggle="modal" data-target="#addcontact">Add Contact</a>
+                            </div>
+                        </div>
+                    </div><!--contact log table-->
+                </div>
+            </div> <!-- end Contact Sheet pane -->
+
+            <!-- Contact Log Modal-->
+            <div class="modal fade" id="addcontact" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title">Add Contact</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <form id="add_contact_form">
+                                    <input type="hidden" name="verification_id" value="{{ verification_id }}">
+                                    <div class="col-sm-10 col-sm-offset-1">
+                                        <div class="form-group">
+                                            <label for="contacter_name">Caller:</label>
+                                            <input class="form-control" name="contacter_name" >
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-10 col-sm-offset-1">
+                                        <div class="form-group">
+                                            <label for="contact_type">Type:</label>
+                                            <input class="form-control" name="contact_type">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-10 col-sm-offset-1">
+                                        <div class="form-group">
+                                            <label for="contact_description">Description:</label>
+                                            <textarea class="form-control" rows="3" name="contact_description"></textarea>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="addContact()">Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Documents pane -->
+            <div class="tab-pane" id="docs">
+                <div class="col-sm-7 col-sm-offset-1 report">
+                    <h4>Verification Documents</h4>
+
+                    {% for uploaded_doc in uploaded_docs %}
+                        <div class="row uploaded-doc">
+                            <div class="col-sm-4">
+                                <img src="{{ uploaded_doc.thumbnail_url }}">
+                            </div>
+                            <div class="col-sm-8">
+                                <ul class="doc-attrs">
+                                    <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.fname }}</h5></li>
+                                    <li class="doc-link"><a href="{{ uploaded_doc.fpath }}">{{ uploaded_doc.fpath }}</a></li>
+                                    <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.timestamp }}</p></li>
+                                </ul>
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    {% if not uploaded_docs %}
+                        <div class="text-center"><h5>No documents have been uploaded</h5></div>
+                    {% endif %}
+
+<!--                     <div class="col-sm-12">
+                        <form id="file-upload-form" class="form-group">
+                            {% csrf_token %}
+                            <h5>Upload a new file</h5>
+                            {{ uploaded_asset_form.uploaded_asset }}
+                            {{ uploaded_asset_form.uploaded_asset.errors }}
+                        </form>
+                        <button type="button" onclick="uploadAsset()" class="disabled btn btn-primary" aria-haspopup="true" aria-expanded="true">Upload</button>
+                    </div>
+ -->
+                </div>
+            </div> <!-- end Documents pane -->
+
+        </div>
+    </div> <!-- container -->
+
+    <div class="footer container-fluid">
+        <div class="container next-actions">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
+                            <div class="form-group">
+                                <select class="form-control" name="next-action">
+                                    <option>Save Verification</option>
+                                    {% if not case_id %}
+                                        <option>Move to Case</option>
+                                    {% endif %}
+<!--                                     <option>Forward</option>
+                                    <option>Resolve</option>
+                                    <option>Revert to Report</option>
+ -->
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
+                            <button type="submit" form="property-details-form" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

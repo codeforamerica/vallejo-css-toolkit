@@ -1,0 +1,205 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<script type='text/javascript' src="{% static "workflow/js/typeahead.bundle.js" %}"></script>
+
+<link rel="stylesheet" href="{% static "workflow/css/add_report.css" %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/>
+
+<script type='text/javascript' src="{% static "workflow/js/street_names.js" %}"></script>
+<script type='text/javascript' src="{% static "workflow/js/add_report.js" %}"></script>
+
+{% endblock %}
+
+{% block body %}
+
+{% load widget_tweaks %}
+<div class="workflow-pg-wrapper">
+  <form class="form-contact" id="css-call-form" method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="container">
+
+          <div class="row subnav">
+              <div class="col-sm-12">
+                  <h1>New Report</h1>
+              </div>
+          </div>
+
+          <div class="col-sm-7 report">
+              <div class="row">
+                  <div class="col-sm-12">
+                      <h4>Report Details</h4>
+                  </div>
+              </div>
+
+              {{ form.non_field_errors }}
+
+              <div class="row">
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label for="{{ form.reported_date.id_for_label }}">Date:</label>
+                          {{ form.reported_date|add_class:"form-control" }}
+                          {{ form.reported_date.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                      <div class="form-group">
+                          <label for="{{ form.reported_time.id_for_label }}">Time:</label>
+                          {{ form.reported_time|add_class:"form-control" }}
+                          {{ form.reported_time.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.name.id_for_label }}">Reporter name:</label>
+                          {{ form.name|add_class:"form-control" }}
+                          {{ form.name.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                      <div class="form-group reporter_primary_contact">
+                          <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
+                          {{ form.phone|add_class:"form-control" }}
+                          {{ form.phone.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                      <div class="form-group reporter_additional_contact">
+                          <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
+                          {{ form.reporter_alternate_contact|add_class:"form-control" }}
+                          {{ form.reporter_alternate_contact.errors }}
+                      </div>
+                  </div>
+
+<!--                       <div class="col-sm-12">
+                          <h5>Reporter address information</h5>
+                      </div>
+
+                      <div class="col-sm-4">
+                          <div class="form-group">
+                              <label for="{{ form.reporter_address_number.id_for_label }}">House number:</label>
+                              {{ form.reporter_address_number|add_class:"form-control typeahead" }}
+                              {{ form.reporter_address_number.errors }}
+                          </div>
+                      </div>
+ -->
+                      <div class="col-sm-12">
+                          <div class="form-group">
+                              <label for="{{ form.reporter_street_name.id_for_label }}">Street name:</label>
+                              {{ form.reporter_street_name|add_class:"form-control" }}
+                              {{ form.reporter_street_name.errors }}
+                          </div>
+                      </div>
+
+                      <div class="col-sm-12">
+                          <h5>Issue address information</h5>
+                      </div>
+
+                      <div class="col-sm-4">
+                          <div class="form-group">
+                              <label for="{{ form.address_number.id_for_label }}">House number:</label>
+                              {{ form.address_number|add_class:"form-control typeahead" }}
+                              {{ form.address_number.errors }}
+                          </div>
+                      </div>
+
+                      <div class="col-sm-8">
+                          <div class="form-group street-name-selector">
+                              <label for="{{ form.street_name.id_for_label }}">Street name:</label>
+                              {{ form.street_name|add_class:"form-control typeahead" }}
+                              {{ form.street_name.errors }}
+                          </div>
+                      </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.problem.id_for_label }}">Description:</label>
+                          <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                          {{ form.problem.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.source.id_for_label }}">Source:</label>
+                          {{ form.source|add_class:"form-control" }}
+                          {{ form.source.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.when_last_reported.id_for_label }}">When last reported:</label>
+                          {{ form.when_last_reported|add_class:"form-control" }}
+                          {{ form.when_last_reported.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.time_of_day_occurs.id_for_label }}">Time of day issues occurs:</label>
+                          {{ form.time_of_day_occurs|add_class:"form-control" }}
+                          {{ form.time_of_day_occurs.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.num_people_involved.id_for_label }}">Number of individuals involved:</label>
+                          {{ form.num_people_involved|add_class:"form-control" }}
+                          {{ form.num_people_involved.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.safety_concerns.id_for_label }}">Safety concerns:</label>
+                          {{ form.safety_concerns|add_class:"form-control" }}
+                          {{ form.safety_concerns.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.resolution.id_for_label }}">Notes:</label>
+                          {{ form.resolution|add_class:"form-control" }}
+                          {{ form.resolution.errors }}
+                      </div>
+                  </div>
+
+  <!--                 <div class="col-sm-12">
+                     <div class="form-group">
+                          <label for="{{ form.resolution.id_for_label }}">Photos:</label>
+                           <form id="file-upload-form">
+                              <input type="file" name="uploadDoc">
+                          </form>
+                      </div>
+                  </div>
+   -->
+              </div>
+          </div>
+      </div>
+
+      <div class="footer container-fluid">
+          <div class="container save-buttons">
+              <div class="row">
+                  <div class="col-sm-4 pull-right">
+                      <input type="submit" name="next-action" class="btn btn-success btn-lg another-rpt" aria-haspopup="true" aria-expanded="true" value="Another report">
+                      <input type="submit" name="next-action" class="btn btn-default btn-lg pull-right" aria-haspopup="true" aria-expanded="true" value="Done">
+                  </div>
+              </div>
+          </div>
+      </div>
+
+  </form>
+</div>
+
+{% endblock %}

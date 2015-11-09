@@ -2,8 +2,7 @@ env
 *.pyc
 *.DS_Store
 staticfiles
-dataload.sh
-us-ca-solano_county*
-TODO.txt
-data/*
 static/libs
+local_prod.py
+temp_utils
+dev_staging.py

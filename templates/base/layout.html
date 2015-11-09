@@ -1,39 +1,54 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8">
+        <!-- Mobile viewport optimized: h5bp.com/viewport -->
+        <meta name="viewport" content="width=device-width">
 
-<head>
-  <meta charset="utf-8">
-  <!-- Mobile viewport optimized: h5bp.com/viewport -->
-  <meta name="viewport" content="width=device-width">
+        {% load staticfiles %}
 
-  <title>
-    {% block page_title %}
-    Vallejo CSS Toolkit
-    {% endblock %}
-  </title>
+        <title>
+            {% block page_title %}
+                Compass
+            {% endblock %}
+        </title>
 
-  <link href='https://fonts.googleapis.com/css?family=Roboto:400,400italic,100,100italic,300italic,300,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=PT+Sans:400,400italic,100,100italic,300italic,300,500,500italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+        <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+<!--         <script type='text/javascript' src="{{ settings.STATIC_LIB_BASE }}jquery/dist/jquery.min.js"></script> -->
+<!--         <link href="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+<!--         <script src="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/js/bootstrap.min.js"></script> -->
 
-  {% block assets %}
-  {% endblock %}
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+        <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 
-</head>
 
-<body>
-    {% include "base/navbar.html" %}
+        {% block assets %}
+        {% endblock %}
 
-    {% if messages %}
-    <div class="messages">
-        {% for message in messages %}
-        <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</div>
-        {% endfor %}
-    </div>
-    {% endif %}
+    </head>
 
-    {% block body %}
-    {% endblock %}
+    <body>
+        {% if not exclude_navbar %}
+            {% include "base/navbar.html" %}
+        {% endif %}
 
-</body>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">
+                        {% if 'safe' in message.tags %}{{ message|safe }}{% else %}{{ message }}{% endif %}
+                    </li>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% block body %}
+        {% endblock %}
+
+    </body>
 </html>
