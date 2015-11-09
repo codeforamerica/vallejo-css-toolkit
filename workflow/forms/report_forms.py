@@ -52,7 +52,7 @@ class ReportForm(forms.ModelForm):
 
         # self.fields['name'].widget.attrs['readonly'] = True
 
-        if 'instance' in kwargs:
+        if 'instance' in kwargs and kwargs['instance'].reported_datetime:
             localized = kwargs['instance'].reported_datetime.astimezone(TZ)
             self.fields['reported_date'].initial = localized.date()
             self.fields['reported_time'].initial = localized.time()
