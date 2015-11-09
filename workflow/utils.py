@@ -198,6 +198,7 @@ def get_cases(request_params):
     search_clause = ''
     if search_get_param:
         search_clause = "WHERE {} ".format("OR".join([" {} ilike '%{}%' ".format(field, search_get_param) for field in searchable_fields]))
+    print search_clause
 
     sort_key_get_param = request_params.get('sort_key')
     if sort_key_get_param:
@@ -329,7 +330,7 @@ def get_cases(request_params):
 
 def get_properties(request_params):
     sortable_fields = ['address', 'num_incidents', 'latest_activity', 'status']
-    searchable_fields = ['address', 'latest_activity_str', 'status']
+    searchable_fields = ['address', 'latest_activity_str']  # TODO: need to escape `status` as a protected psql var name?
     default_limit = 25
     max_limit = 100
     default_offset = 0
@@ -340,6 +341,7 @@ def get_properties(request_params):
     search_clause = ''
     if search_get_param:
         search_clause = "WHERE {} ".format("OR".join([" {} ilike '%{}%' ".format(field, search_get_param) for field in searchable_fields]))
+    print search_clause
 
     sort_key_get_param = request_params.get('sort_key')
     if sort_key_get_param:
@@ -393,7 +395,7 @@ def get_properties(request_params):
                         now() AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
                     )
                 , '') AS latest_activity_str,
-                'Status' AS status
+                '' AS status
             FROM
                 (
                     SELECT

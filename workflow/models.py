@@ -50,7 +50,7 @@ class CSSCall(models.Model):
         (PHONE_SOURCE, 'Phone'),
         (EMAIL_SOURCE, 'Email'),
         (WEB_SOURCE, 'Web'),
-        (CE_REFERRAL_SOURCE, 'Code Enf. Referral'),
+        (CE_REFERRAL_SOURCE, 'Code Enforcement Referral'),
         (OFFICER_REFERRAL_SOURCE, 'Officer Referral'),
         (CITY_REFERRAL_SOURCE, 'Other City Referral')
     )
