@@ -1,3 +1,7 @@
+function uploadAsset() {
+
+}
+
 function addContact() {
     $('#addcontact').modal('hide');
 

@@ -284,22 +284,26 @@
                             </div>
                             <div class="col-sm-8">
                                 <ul class="doc-attrs">
-                                    <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.name }}</h5></li>
-                                    <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
-                                    <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.added }}</p></li>
+                                    <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.fname }}</h5></li>
+                                    <li class="doc-link"><a href="{{ uploaded_doc.fpath }}">{{ uploaded_doc.fpath }}</a></li>
+                                    <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.timestamp }}</p></li>
                                 </ul>
                             </div>
                         </div>
                     {% endfor %}
 
-                    <!-- TODO: need to figure out how to nest upload form inside other form <div class="row new-upload"> -->
+                    {% if not uploaded_docs %}
+                        <div class="text-center"><h5>No documents have been uploaded</h5></div>
+                    {% endif %}
+
                     <div class="col-sm-12">
-                        <form id="file-upload-form">
-                            <h4>Upload a new file</h4>
-                            <input type="file" name="upload-doc">
-                            <br>
-                            <button type="submit" form="file-upload-form" class="btn btn-primary" aria-haspopup="true" aria-expanded="true">Upload</button>
+                        <form id="file-upload-form" class="form-group">
+                            {% csrf_token %}
+                            <h5>Upload a new file</h5>
+                            {{ uploaded_asset_form.uploaded_asset }}
+                            {{ uploaded_asset_form.uploaded_asset.errors }}
                         </form>
+                        <button type="button" onclick="uploadAsset()" class="disabled btn btn-primary" aria-haspopup="true" aria-expanded="true">Upload</button>
                     </div>
 
                 </div>

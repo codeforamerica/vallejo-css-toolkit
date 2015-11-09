@@ -71,6 +71,9 @@ class CSSCall(models.Model):
     caller_preferred_contact = models.IntegerField(null=True, blank=True, choices=CONTACT_PREFERENCES_CHOICES)
     status = models.ForeignKey(ReportStatus, null=True, blank=True)
 
+    def get_address(self):
+        return (self.address_number and self.street_name) and "{} {}".format(self.address_number, self.street_name) or self.address
+
 
 class Verification(models.Model):
     report = models.ForeignKey(CSSCall)
@@ -176,3 +179,15 @@ class ReportNotification(models.Model):
         if not self.created_at:
             self.created_at = pytz.utc.localize(datetime.utcnow())
         super(ReportNotification, self).save(*args, **kwargs)
+
+
+class UploadedAsset(models.Model):
+    verification = models.ForeignKey(Verification)
+    fname = models.CharField(max_length=256, null=True, blank=True)
+    fpath = models.CharField(max_length=256, null=True, blank=True)
+    timestamp = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.timestamp:
+            self.timestamp = pytz.utc.localize(datetime.utcnow())
+        super(UploadedAsset, self).save(*args, **kwargs)

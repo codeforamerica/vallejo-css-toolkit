@@ -5,8 +5,8 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from workflow.models import Verification, CSSCase, VerificationContactAction
-from workflow.forms.verification_forms import PropertyDetailsForm
+from workflow.models import Verification, CSSCase, VerificationContactAction, UploadedAsset
+from workflow.forms.verification_forms import PropertyDetailsForm, UploadAssetForm
 
 log = logging.getLogger('consolelogger')
 
@@ -17,6 +17,8 @@ def verification(request, verification_id):
     instance = get_object_or_404(Verification, id=verification_id)
 
     property_details_form = PropertyDetailsForm(request.POST or None, instance=instance)
+    uploaded_asset_form = UploadAssetForm(request.POST, request.FILES)
+    print uploaded_asset_form
 
     if property_details_form.errors:
         messages.add_message(request, messages.ERROR, property_details_form.errors)
@@ -43,11 +45,8 @@ def verification(request, verification_id):
     if cases:
         case_id = cases[0].id
 
-    uploaded_docs = [
-        {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
-        {"name": 'Deed with signature', "filename": 'deed_updated.pdf', "added": "Sep, 16, 2015", "thumbnail_url": "http://placehold.it/120x120"},
-        {"name": 'Notice to evict - copy', "filename": 'eviction_notice_9_1_15.pdf', "added": "Sep. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"}
-    ]
+    uploaded_docs = UploadedAsset.objects.filter(verification=instance).order_by('timestamp').values_list('timestamp', 'fname', 'fpath')
+    uploaded_docs = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in uploaded_docs]
 
     contact_log = VerificationContactAction.objects.filter(verification=instance).order_by('timestamp').values_list('timestamp', 'contacter_name', 'contact_type', 'contact_description')
     contact_log = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in contact_log]
@@ -58,11 +57,12 @@ def verification(request, verification_id):
         {
             'property_details_form': property_details_form,
             'uploaded_docs': uploaded_docs,
-            'property_address': instance.report.address,
+            'property_address': instance.report.get_address(),
             'verification_id': instance.pk,
             'report_id': instance.report.id,
             'case_id': case_id,
-            'contact_log': contact_log
+            'contact_log': contact_log,
+            'uploaded_asset_form': uploaded_asset_form
         }
     )
 
