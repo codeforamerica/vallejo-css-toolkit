@@ -9,33 +9,47 @@
 <script src="{{ settings.STATIC_LIB_BASE }}bootstrap/dist/js/bootstrap.min.js"></script>
 
 <link rel="stylesheet" href="{% static 'base/base.css' %}"/>
+<link rel="stylesheet" href="{% static "workflow/css/login.css" %}"/>
 
 {% endblock %}
 
 {% block body %}
 
-<div class="login-form">
-    <form method="post">
-        {% csrf_token %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <h1>COMPASS</h1>
+    </div>
+  </div>
 
-        <div class="row">
-            <div class="col-sm-12 col-sm-offset-5">
-                <table>
-                    <tr>
-                        <td><label for="username">Username</label></td>
-                        <td><input type="text" name="username"></td>
-                    </tr>
-                    <tr>
-                        <td><label for="password">Password</label></td>
-                        <td><input type="password" name="password"></td>
-                    </tr>
-                </table>
-            </div>    
-            <div class="col-sm-12 col-sm-offset-5">
-                <input type="submit" class="btn btn-primary btn-lg" value="Submit">
+  <div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+      <div class="login-form">
+        <form method="post">
+            {% csrf_token %}
+          <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+              <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username">
+              </div>
+              <div class="form-group password-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password">
+              </div>
             </div>
-        </div>
-    </form>
+          </div>
+
+          <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+              <input type="submit" class="btn btn-success btn-lg pull-right" value="Log in">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
+
 
 {% endblock %}
