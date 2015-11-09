@@ -21,7 +21,7 @@ def get_latest_rms_case_no_util():
     return latest_case_no
 
 
-def get_latest_crw_case_nos_util():
+def get_latest_crw_case_no_util():
     latest_case_no = 'CE14-0000'
 
     result = list(CRWCase.objects.raw("SELECT id, case_no FROM data_load_crwcase ORDER BY case_no DESC LIMIT 1"))
