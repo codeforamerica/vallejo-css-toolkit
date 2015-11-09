@@ -11,7 +11,7 @@ log = logging.getLogger('consolelogger')
 
 
 def get_latest_rms_case_no_util():
-    latest_case_no = 0
+    latest_case_no = 11400000
 
     result = list(RMSCase.objects.raw("SELECT id, case_no FROM data_load_rmscase ORDER BY case_no DESC LIMIT 1"))
 
@@ -22,16 +22,14 @@ def get_latest_rms_case_no_util():
 
 
 def get_latest_crw_case_nos_util():
-    latest_yr_no = 14
-    latest_seq_no = 0
+    latest_case_no = 'CE14-0000'
 
-    result = list(CRWCase.objects.raw("SELECT id, yr_no, seq_no FROM data_load_crwcase ORDER BY yr_no, seq_no DESC LIMIT 1"))
+    result = list(CRWCase.objects.raw("SELECT id, case_no FROM data_load_crwcase ORDER BY case_no DESC LIMIT 1"))
 
     if result:
-        latest_yr_no = result[0].yr_no
-        latest_seq_no = result[0].seq_no
+        latest_case_no = result[0].case_no
 
-    return latest_yr_no, latest_seq_no
+    return latest_case_no
 
 
 def load_rms_cases(cases_json):
