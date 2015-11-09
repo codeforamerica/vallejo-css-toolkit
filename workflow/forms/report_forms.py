@@ -50,6 +50,8 @@ class ReportForm(forms.ModelForm):
         self.fields['reported_date'].widget.format = '%m/%d/%Y'
         self.fields['reported_time'].widget.format = '%H:%M'
 
+        # self.fields['name'].widget.attrs['readonly'] = True
+
         if 'instance' in kwargs:
             localized = kwargs['instance'].reported_datetime.astimezone(TZ)
             self.fields['reported_date'].initial = localized.date()
