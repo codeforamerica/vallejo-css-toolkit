@@ -11,6 +11,7 @@ urlpatterns = patterns(
 
     # verification related views
     url(r'^workflow/verification/(?P<verification_id>\d*)/$', 'workflow.views.verification_views.verification', name='verfication'),
+    url(r'^workflow/add_contact_action/$', 'workflow.views.verification_views.add_contact_action', name='add_contact_action'),
 
     # report related views
     url(r'^workflow/report/(?P<report_id>\d*)/$', 'workflow.views.report_views.report', name='report'),

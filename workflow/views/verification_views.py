@@ -1,11 +1,11 @@
 import logging
 from django.contrib import messages
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 
-from workflow.models import Verification, CSSCase
+from workflow.models import Verification, CSSCase, VerificationContactAction
 from workflow.forms.verification_forms import PropertyDetailsForm
 
 log = logging.getLogger('consolelogger')
@@ -13,6 +13,7 @@ log = logging.getLogger('consolelogger')
 
 @login_required(login_url='/login/')
 def verification(request, verification_id):
+    print request.POST, request.FILES
     instance = get_object_or_404(Verification, id=verification_id)
 
     property_details_form = PropertyDetailsForm(request.POST or None, instance=instance)
@@ -48,6 +49,9 @@ def verification(request, verification_id):
         {"name": 'Notice to evict - copy', "filename": 'eviction_notice_9_1_15.pdf', "added": "Sep. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"}
     ]
 
+    contact_log = VerificationContactAction.objects.filter(verification=instance).order_by('timestamp').values_list('timestamp', 'contacter_name', 'contact_type', 'contact_description')
+    contact_log = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in contact_log]
+
     return render(
         request,
         'workflow/verification.html',
@@ -57,6 +61,33 @@ def verification(request, verification_id):
             'property_address': instance.report.address,
             'verification_id': instance.pk,
             'report_id': instance.report.id,
-            'case_id': case_id
+            'case_id': case_id,
+            'contact_log': contact_log
         }
     )
+
+
+@login_required(login_url='/login/')
+def add_contact_action(request):
+    print request.POST
+
+    verification_id = request.POST.get('verification_id')
+    contacter_name = request.POST.get('contacter_name')
+    contact_type = request.POST.get('contact_type')
+    contact_description = request.POST.get('contact_description')
+
+    verification = Verification.objects.get(id=verification_id)
+
+    vca = VerificationContactAction.objects.create(
+        verification=verification,
+        contacter_name=contacter_name,
+        contact_type=contact_type,
+        contact_description=contact_description
+    )
+
+    return JsonResponse({
+        'timestamp': vca.timestamp.strftime('%m/%d/%Y'),
+        'contacter_name': vca.contacter_name,
+        'contact_type': vca.contact_type,
+        'contact_description': vca.contact_description,
+    })

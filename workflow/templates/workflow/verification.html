@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
                             <div class="form-group">
                                 <label for="{{ property_details_form.water_service.id_for_label }}">Water Service:</label>
                                 {{ property_details_form.water_service }}
@@ -89,7 +89,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
                             <div class="form-group">
                                 <label for="{{ property_details_form.pge_service.id_for_label }}">PG&E Service:</label>
                                 {{ property_details_form.pge_service }}
@@ -97,7 +97,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
                             <div class="form-group">
                                 <label for="{{ property_details_form.boarded.id_for_label }}">Occupied/Boarded:</label>
                                 {{ property_details_form.boarded }}
@@ -105,7 +105,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
                             <div class="form-group">
                                 <label for="{{ property_details_form.nlp_assigned.id_for_label }}">NLP Assigned:</label>
                                 {{ property_details_form.nlp_assigned }}
@@ -113,7 +113,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
                             <div class="form-group">
                                 <label for="{{ property_details_form.code_contacted.id_for_label }}">Code Contacted:</label>
                                 {{ property_details_form.code_contacted }}
@@ -121,13 +121,70 @@
                             </div>
                         </div>
 
-                        <div class="col-md-4 col-sm-6">
+                        <div class="col-md-4 col-sm-6 checkbox-grid">
                             <div class="form-group">
-                                <label for="{{ property_details_form.tresspass.id_for_label }}">Tresspass Letter:</label>
-                                {{ property_details_form.trespass }}
-                                {{ property_details_form.trespass.errors }}
+                                <label for="{{ property_details_form.tresspass_letter.id_for_label }}">Tresspass Letter:</label>
+                                {{ property_details_form.trespass_letter }}
+                                {{ property_details_form.trespass_letter.errors }}
                             </div>
                         </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.property_details_form.id_for_label }}">Property Owner:</label>
+                                {{ property_details_form.owner_name|add_class:"form-control" }}
+                                {{ property_details_form.owner_name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.property_details_form.id_for_label }}">Owner Address:</label>
+                                {{ property_details_form.owner_address|add_class:"form-control" }}
+                                {{ property_details_form.owner_address.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ form.property_details_form.id_for_label }}">Phone:</label>
+                                {{ property_details_form.owner_primary_contact|add_class:"form-control" }}
+                                {{ property_details_form.owner_primary_contact.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ form.owner_secondary_contact.id_for_label }}">Email:</label>
+                                {{ property_details_form.owner_secondary_contact|add_class:"form-control" }}
+                                {{ property_details_form.owner_secondary_contact.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.bank_name.id_for_label }}">Bank Name:</label>
+                                {{ property_details_form.bank_name|add_class:"form-control" }}
+                                {{ property_details_form.bank_name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.bank_contact.id_for_label }}">Bank Contact:</label>
+                                {{ property_details_form.bank_contact|add_class:"form-control" }}
+                                {{ property_details_form.bank_contact.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ property_details_form.bank_contact_phone.id_for_label }}">Bank Contact Phone:</label>
+                                {{ property_details_form.bank_contact_phone|add_class:"form-control" }}
+                                {{ property_details_form.bank_contact_phone.errors }}
+                            </div>
+                        </div>
+
                     </div>
                 </form>
             </div>  <!-- end Report Details pane -->
@@ -136,102 +193,34 @@
             <div class="tab-pane" id="contact-sheet">
                 <div class="col-sm-7 col-sm-offset-1 report">
                     <h4>Contact Sheet</h4>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="{{ form.owner_name.id_for_label }}">Property Owner:</label>
-                                {{ verfication_form.owner_name|add_class:"form-control" }}
-                                {{ verfication_form.owner_name.errors }}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="fieldWrapper form-group">
-                                <label for="{{ form.owner_address.id_for_label }}">Owner Address:</label>
-                                {{ verfication_form.owner_address|add_class:"form-control" }}
-                                {{ verfication_form.owner_address.errors }}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="fieldWrapper form-group owner-phone">
-                                <label for="{{ form.owner_primary_contact.id_for_label }}">Phone:</label>
-                                {{ verfication_form.owner_primary_contact|add_class:"form-control" }}
-                                {{ verfication_form.owner_primary_contact.errors }}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="fieldWrapper form-group owner-email">
-                                <label for="{{ form.owner_secondary_contact.id_for_label }}">Email:</label>
-                                {{ verfication_form.owner_secondary_contact|add_class:"form-control" }}
-                                {{ verfication_form.owner_secondary_contact.errors }}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="fieldWrapper form-group">
-                                <label for="{{ form.owner_address.id_for_label }}">Bank Name:</label>
-                                {{ verfication_form.owner_address|add_class:"form-control" }}
-                                {{ verfication_form.owner_address.errors }}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="fieldWrapper form-group owner-phone">
-                                <label for="{{ form.owner_primary_contact.id_for_label }}">Bank Contact:</label>
-                                {{ verfication_form.owner_primary_contact|add_class:"form-control" }}
-                                {{ verfication_form.owner_primary_contact.errors }}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <div class="fieldWrapper form-group owner-email">
-                                <label for="{{ form.owner_secondary_contact.id_for_label }}">Phone:</label>
-                                {{ verfication_form.owner_secondary_contact|add_class:"form-control" }}
-                                {{ verfication_form.owner_secondary_contact.errors }}
-                            </div>
-                        </div>
-
-                    </div>
-
                     <div class="contact-log-section">
                         <label>Contact Log</label>
-                          <div class="row">
-                              <div class="col-sm-12">
-                                  <div class="table-wrapper">
-                                      <table class="table table-hover small-table" id="call-log">
-                                          <thead>
-                                              <tr>
-                                                  <th>Date</th>
-                                                  <th>Caller</th>
-                                                  <th>Type</th>
-                                                  <th>Description</th>
-                                              </tr>
-                                          </thead>
-                                          <tbody>
-                                              <tr>
-                                                  <td>Today</td>
-                                                  <td>TinaE</td>
-                                                  <td>Phone</td>
-                                                  <td>Left message with assistant to call back</td>
-                                            </tr>
-
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-wrapper">
+                                    <table class="table table-hover small-table" id="call-log">
+                                        <thead>
                                             <tr>
-                                                <td>10/15/15</td>
-                                                <td>TinaE</td>
-                                                <td>Phone</td>
-                                                <td>Left message asking if she received email</td>
+                                                <th>Date</th>
+                                                <th>Caller</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
                                             </tr>
-
-                                            <tr>
-                                                <td>10/10/15</td>
-                                                <td>Karen</td>
-                                                <td>Email</td>
-                                                <td>First contact; informed her of squatters</td>
-                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for contact in contact_log %}
+                                                <tr>
+                                                    <td>{{ contact.0 }}</td>
+                                                    <td>{{ contact.1 }}</td>
+                                                    <td>{{ contact.2 }}</td>
+                                                    <td>{{ contact.3 }}</td>
+                                                </tr>
+                                            {% endfor %}
                                         </tbody>
                                     </table>
+                                {% if not contact_log %}
+                                  <div class="text-center"><h5>No contacts have been logged</h5></div>
+                                {% endif %}
                                 </div> <!--table wrapper-->
                                 <a class="pull-right" href="#" data-toggle="modal" data-target="#addcontact">Add Contact</a>
                             </div>
@@ -246,36 +235,30 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="myModalLabel">Add Contact</h4>
+                            <h4 class="modal-title">Add Contact</h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <form>
+                                <form id="add_contact_form">
+                                    <input type="hidden" name="verification_id" value="{{ verification_id }}">
                                     <div class="col-sm-10 col-sm-offset-1">
                                         <div class="form-group">
-                                            <label for="">Date:</label>
-                                            <input type="" class="form-control" id="" placeholder="">
+                                            <label for="contacter_name">Caller:</label>
+                                            <input class="form-control" name="contacter_name" >
                                         </div>
                                     </div>
 
                                     <div class="col-sm-10 col-sm-offset-1">
                                         <div class="form-group">
-                                            <label for="">Caller:</label>
-                                            <input type="" class="form-control" id="" placeholder="">
+                                            <label for="contact_type">Type:</label>
+                                            <input class="form-control" name="contact_type">
                                         </div>
                                     </div>
 
                                     <div class="col-sm-10 col-sm-offset-1">
                                         <div class="form-group">
-                                            <label for="">Type:</label>
-                                            <input type="" class="form-control" id="" placeholder="">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-sm-10 col-sm-offset-1">
-                                        <div class="form-group">
-                                            <label for="">Description:</label>
-                                            <textarea class="form-control" rows="3"></textarea>
+                                            <label for="contact_description">Description:</label>
+                                            <textarea class="form-control" rows="3" name="contact_description"></textarea>
                                         </div>
                                     </div>
                                 </form>
@@ -283,7 +266,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Add</button>
+                            <button type="button" class="btn btn-primary" onclick="addContact()">Add</button>
                         </div>
                     </div>
                 </div>
@@ -309,47 +292,48 @@
                         </div>
                     {% endfor %}
 
-                    <!-- TODO: need to figure out how to nest upload form inside other form <div class="row new-upload">
-                        <div class="col-sm-12">
-                            <form id="file-upload-form">
-                                <h4>Upload a new file</h4>
-                                <input type="file" name="uploadDoc">
-                            </form>
-                        </div>
-                    </div>  -->
+                    <!-- TODO: need to figure out how to nest upload form inside other form <div class="row new-upload"> -->
+                    <div class="col-sm-12">
+                        <form id="file-upload-form">
+                            <h4>Upload a new file</h4>
+                            <input type="file" name="upload-doc">
+                            <br>
+                            <button type="submit" form="file-upload-form" class="btn btn-primary" aria-haspopup="true" aria-expanded="true">Upload</button>
+                        </form>
+                    </div>
 
                 </div>
             </div> <!-- end Documents pane -->
 
-          </div>
-      </div> <!-- container -->
+        </div>
+    </div> <!-- container -->
 
-      <div class="footer container-fluid">
-          <div class="container next-actions">
-              <div class="row">
-                  <div class="col-sm-6 col-sm-offset-6">
-                      <div class="row">
-                          <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
-                              <div class="form-group">
-                                  <select class="form-control" name="next-action">
-                                      <option>Save Verification</option>
-                                      {% if not case_id %}
-                                          <option>Move to Case</option>
-                                      {% endif %}
-                                      <option>Forward</option>
-                                      <option>Resolve</option>
-                                      <option>Revert to Report</option>
-                                  </select>
-                              </div>
-                          </div>
-                          <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
-                              <button type="submit" form="property-details-form" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+    <div class="footer container-fluid">
+        <div class="container next-actions">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
+                            <div class="form-group">
+                                <select class="form-control" name="next-action">
+                                    <option>Save Verification</option>
+                                    {% if not case_id %}
+                                        <option>Move to Case</option>
+                                    {% endif %}
+                                    <option>Forward</option>
+                                    <option>Resolve</option>
+                                    <option>Revert to Report</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
+                            <button type="submit" form="property-details-form" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </div>
 

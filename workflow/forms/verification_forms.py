@@ -17,5 +17,10 @@ class PropertyDetailsForm(forms.ModelForm):
             'water_service',
             'pge_service',
             'boarded',
-            'nlp_assigned'
+            'nlp_assigned',
+            'code_contacted',
+            'trespass_letter',
+            'bank_name',
+            'bank_contact',
+            'bank_contact_phone'
         )

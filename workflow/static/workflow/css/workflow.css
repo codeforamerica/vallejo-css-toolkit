@@ -233,6 +233,10 @@ ul.doc-attrs {
     font-size: 1.9rem;
 }
 
+.checkbox-grid {
+    padding-right: 0;
+}
+
 .new-upload h4{
   font-size:16px;
   font-weight:bold;

@@ -84,11 +84,29 @@ class Verification(models.Model):
     pge_service = models.BooleanField(default=False)
     boarded = models.BooleanField(default=False)
     nlp_assigned = models.BooleanField(default=False)
+    code_contacted = models.BooleanField(default=False)
+    trespass_letter = models.BooleanField(default=False)
+    bank_name = models.CharField(max_length=256, null=True, blank=True)
+    bank_contact = models.CharField(max_length=256, null=True, blank=True)
+    bank_contact_phone = models.CharField(max_length=256, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.created_at:
             self.created_at = pytz.utc.localize(datetime.utcnow())
         super(Verification, self).save(*args, **kwargs)
+
+
+class VerificationContactAction(models.Model):
+    verification = models.ForeignKey(Verification)
+    contacter_name = models.CharField(max_length=256, null=True, blank=True)
+    contact_type = models.CharField(max_length=256, null=True, blank=True)
+    contact_description = models.CharField(max_length=256, null=True, blank=True)
+    timestamp = models.DateTimeField(null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.timestamp:
+            self.timestamp = pytz.utc.localize(datetime.utcnow())
+        super(VerificationContactAction, self).save(*args, **kwargs)
 
 
 class CSSCasePriority(models.Model):
