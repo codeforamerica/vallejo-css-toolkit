@@ -10,7 +10,6 @@ class RestrictedFileField(forms.FileField):
     def clean(self, *args, **kwargs):
         data = super(RestrictedFileField, self).clean(*args, **kwargs)
         try:
-            print data.size
             if data.size > MAX_UPLOAD_SIZE:
                 raise forms.ValidationError(('File size must be under %s. Current file size is %s.') % (filesizeformat(MAX_UPLOAD_SIZE), filesizeformat(data.size)))
         except AttributeError:

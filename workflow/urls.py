@@ -19,6 +19,7 @@ urlpatterns = patterns(
     url(r'^workflow/reports_data/$', 'workflow.views.report_views.reports_data', name='reports_data'),
     url(r'^workflow/add_report/$', 'workflow.views.report_views.add_report', name='add_report'),
     url(r'^workflow/resolve_report/(?P<report_id>\d*)/$', 'workflow.views.report_views.resolve_report', name='resolve_report'),
+    url(r'^workflow/verify_report/(?P<verification_id>\d*)/$', 'workflow.views.report_views.verify_report', name='verify_report'),
 
     # property related views
     # TODO: eventually expose by id

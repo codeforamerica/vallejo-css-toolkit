@@ -19,343 +19,296 @@
 
 <!-- need to wrap most of the page in the form -->
 <div class="workflow-pg-wrapper">
-  <form class="form-contact" id="css-report-form" method="POST">
-      {% csrf_token %}
+    <form class="form-contact" id="css-report-form" method="POST">
+        {% csrf_token %}
 
-      <div class="container">
+        <div class="container">
 
-          <!-- Address, reporter and reported datetime and nav tabs -->
-          <div class="row subnav">
-              <div class="col-md-8 col-sm-7 col-xs-12">
-                  {% if form.address.value %}
-                      <h1>{{ form.address.value }}</h1>
-                  {% endif %}
-                  {% if form.reported_date.value and form.name.value %}
-                      <p class="reporter-subheader"> reported on {{ form.reported_date.value|date }} by {{ form.name.value }}</p>
-                  {% endif %}
-              </div>
+            <!-- Address, reporter and reported datetime and nav tabs -->
+            <div class="row subnav">
+                <div class="col-md-8 col-sm-7 col-xs-12">
+                    {% if form.address_number.value and form.street_name.value %}
+                        <h1>{{ form.address_number.value }} {{ form.street_name.value }}</h1>
+                    {% elif form.address.value %}
+                        <h1>{{ form.address.value }}</h1>
+                    {% endif %}
+                    {% if form.reported_date.value and form.name.value %}
+                        <p class="reporter-subheader"> reported on {{ form.reported_date.value|date }} by {{ form.name.value }}</p>
+                    {% endif %}
+                </div>
 
-              <div class="col-md-4 col-sm-5 col-xs-12">
-                  <ul class="nav nav-pills pull-right">
-                      <li role="presentation" class="active"><a href="#">Report</a></li>
-                      {% if verification_id %}
-                          <li role="presentation"><a href="/workflow/verification/{{ verification_id }}">Verification</a></li>
-                          {% if case_id %}
-                              <li role="presentation"><a href="/workflow/case/{{ case_id }}">Case</a></li>
-                          {% endif %}
-                      {% endif %}
-                  </ul>
-              </div>
-          </div>
+                <div class="col-md-4 col-sm-5 col-xs-12">
+                    <ul class="nav nav-pills pull-right">
+                        <li role="presentation" class="active"><a href="#">Report</a></li>
+                        {% if verification_id %}
+                            <li role="presentation"><a href="/workflow/verification/{{ verification_id }}">Verification</a></li>
+                            {% if case_id %}
+                                <li role="presentation"><a href="/workflow/case/{{ case_id }}">Case</a></li>
+                            {% endif %}
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
 
-          <!-- pane selectors and panes -->
-          <div class="row">
-              <div class="col-sm-4 pane-selectors">
-                  <div class="list-group">
-                      <h5 class="list-group-item list-group-item-title">Report</h5>
-                      <a href="#report-details" class="list-group-item active">Report Details<span class="fa fa-list-item fa-angle-right"></span></a>
-                      <a href="#report-attachments" class="list-group-item">Attachments {% if external_assets_count > 0 %}({{ external_assets_count }}){% endif %}<span class="fa fa-list-item fa-angle-right"></span></a>
-                      <a href="#report-history" class="list-group-item">History<span class="fa fa-list-item fa-angle-right"></span></a>
-                  </div>
-              </div>
-
-              <!-- Report Details pane -->
-              <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="report-details">
-                  <div class="row">
-                      <div class="col-sm-12"><h4>Report Details</h4></div>
-                  </div>
-
-                  {{ form.non_field_errors }}
-
-                  <input type="hidden" name="address" value="{{ form.address.value }}">
-
-                  <div class="row">
-                      <div class="col-sm-6">
-                          <div class="form-group">
-                              <label for="{{ form.reported_date.id_for_label }}">Date:</label>
-                              {{ form.reported_date|add_class:"form-control" }}
-                              {{ form.reported_date.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-6">
-                          <div class="form-group">
-                              <label for="{{ form.reported_time.id_for_label }}">Time:</label>
-                              {{ form.reported_time|add_class:"form-control" }}
-                              {{ form.reported_time.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <div class="form-group">
-                              <label for="{{ form.name.id_for_label }}">Reporter name:</label>
-                              {{ form.name|add_class:"form-control" }}
-                              {{ form.name.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-6">
-                          <div class="form-group reporter_primary_contact">
-                              <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
-                              {{ form.phone|add_class:"form-control" }}
-                              {{ form.phone.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-6">
-                          <div class="form-group reporter_additional_contact">
-                              <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
-                              {{ form.reporter_alternate_contact|add_class:"form-control" }}
-                              {{ form.reporter_alternate_contact.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <h5>Reporter address information</h5>
-                      </div>
-
-                      <div class="col-sm-4">
-                          <div class="form-group">
-                              <label for="{{ form.reporter_address_number.id_for_label }}">House number:</label>
-                              {{ form.reporter_address_number|add_class:"form-control typeahead" }}
-                              {{ form.reporter_address_number.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-8">
-                          <div class="form-group street-name-selector">
-                              <label for="{{ form.reporter_street_name.id_for_label }}">Street name:</label>
-                              {{ form.reporter_street_name|add_class:"form-control typeahead" }}
-                              {{ form.reporter_street_name.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <h5>Issue address information</h5>
-                      </div>
-
-                      <div class="col-sm-4">
-                          <div class="form-group">
-                              <label for="{{ form.address_number.id_for_label }}">House number:</label>
-                              {{ form.address_number|add_class:"form-control typeahead" }}
-                              {{ form.address_number.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-8">
-                          <div class="form-group street-name-selector">
-                              <label for="{{ form.street_name.id_for_label }}">Street name:</label>
-                              {{ form.street_name|add_class:"form-control typeahead" }}
-                              {{ form.street_name.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <div class="form-group">
-                              <label for="{{ form.problem.id_for_label }}">Description:</label>
-                              <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
-                              {{ form.problem.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <div class="form-group">
-                              <label for="{{ form.when_last_reported.id_for_label }}">When last reported:</label>
-                              {{ form.when_last_reported|add_class:"form-control" }}
-                              {{ form.when_last_reported.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <div class="form-group">
-                              <label for="{{ form.time_of_day_occurs.id_for_label }}">Time of day issues occurs:</label>
-                              {{ form.time_of_day_occurs|add_class:"form-control" }}
-                              {{ form.time_of_day_occurs.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <div class="form-group">
-                              <label for="{{ form.num_people_involved.id_for_label }}">Number of individuals involved:</label>
-                              {{ form.num_people_involved|add_class:"form-control" }}
-                              {{ form.num_people_involved.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <div class="form-group">
-                              <label for="{{ form.safety_concerns.id_for_label }}">Safety concerns:</label>
-                              {{ form.safety_concerns|add_class:"form-control" }}
-                              {{ form.safety_concerns.errors }}
-                          </div>
-                      </div>
-
-                      <div class="col-sm-12">
-                          <div class="form-group">
-                              <label for="{{ form.resolution.id_for_label }}">Notes:</label>
-                              {{ form.resolution|add_class:"form-control" }}
-                              {{ form.resolution.errors }}
-                          </div>
-                      </div>
-                  </div>
-              </div>  <!-- end Report Details pane -->
-
-              <!-- Report Attachments pane -->
-              <div class="tab-pane" id="report-attachments">
-                  <div class="col-sm-7 col-sm-offset-1 report">
-                      <h4>Report Attachments</h4>
-
-                      {% for external_asset in external_assets %}
-                          <div class="row uploaded-doc">
-                              <div class="col-sm-4">
-                                  <a href="https://s3.amazonaws.com/vallejo-css-toolkit/{{ external_asset.fpath }}" target="_blank"><img class="external-asset" src="https://s3.amazonaws.com/vallejo-css-toolkit/{{ external_asset.fpath }}"></a>
-                              </div>
-
-                              <div class="col-sm-8">
-                                  <ul class="doc-attrs">
-                                      <li class="doc-name"><h5 class="doc-name-text">Submitted via web form</h5></li>
-                                      <li class="doc-date"><p class="doc-date-text">Added: {{ external_asset.css_report.reported_datetime|date }}</p></li>
-                                  </ul>
-                              </div>
-                          </div>
-
-                      {% endfor %}
-
-                  </div>
-              </div>  <!-- end Report Attachments pane -->
-
-              <!-- Report History pane -->
-              <div class="tab-pane" id="report-history">
-                  <div class="col-md-7 col-md-offset-1 report">
-                      <h4>Report History</h4>
-                      <div class="row">
-                          <div class="col-sm-12">
-                              <div class="table-wrapper">
-                                  <table class="table table-hover small-table" id="call-log">
-                                      <thead>
-                                          <tr>
-                                              <th>Date</th>
-                                              <th>Source</th>
-                                              <th>Case No.</th>
-                                              <th>Case Type</th>
-                                              <th>Description</th>
-                                          </tr>
-                                      </thead>
-                                      <tbody>
-                                          {% for location_event in location_history %}
-                                              <tr>
-                                                  <td>{{ location_event.0 }}</td>
-                                                  <td>{{ location_event.1 }}</td>
-                                                  <td>{{ location_event.2 }}</td>
-                                                  <td>{{ location_event.3 }}</td>
-                                                  <td>{{ location_event.4 }}</td>
-                                              </tr>
-                                          {% endfor %}
-                                      </tbody>
-                                  </table>
-                                  {% if not location_history %}
-                                      <div class="text-center"><h5>No history for this location</h5></div>
-                                  {% endif %}
-                              </div> <!--table wrapper-->
-                          </div>
-                      </div>
-                  </div><!--contact log table-->
-              </div>  <!-- end Report History pane -->
-          </div>  <!-- main content row -->
-      </div> <!-- container -->
-
-      <!-- footer -->
-      <div class="footer container-fluid">
-          <div class="container next-actions">
-              <div class="row">
-                  <div class="col-sm-6 col-sm-offset-6">
-                    <div class="row">
-                      <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
-                        <div class="form-group">
-                            <select class="form-control" name="next-action">
-                                <option>Save Report</option>
-                                {% if not verification_id %}
-                                    <option>Move to Verification</option>
-                                {% endif %}
-                                <option>Forward</option>
-                                <option>Resolve</option>
-                            </select>
-                        </div>
-                      </div>
-                      <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
-                          <button type="submit" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true" data-toggle="modal" data-target="#myModal">Confirm</button>
-                      </div>
+            <!-- pane selectors and panes -->
+            <div class="row">
+                <div class="col-sm-4 pane-selectors">
+                    <div class="list-group">
+                        <h5 class="list-group-item list-group-item-title">Report</h5>
+                        <a href="#report-details" class="list-group-item active">Report Details<span class="fa fa-list-item fa-angle-right"></span></a>
+                        <a href="#report-attachments" class="list-group-item">Attachments {% if external_assets_count > 0 %}({{ external_assets_count }}){% endif %}<span class="fa fa-list-item fa-angle-right"></span></a>
+                        <a href="#report-history" class="list-group-item">History<span class="fa fa-list-item fa-angle-right"></span></a>
                     </div>
-                  </div>
-              </div>
-          </div>
-      </div>
+                </div>
 
-  </form>
+                <!-- Report Details pane -->
+                <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="report-details">
+                    <div class="row">
+                        <div class="col-sm-12"><h4>Report Details</h4></div>
+                    </div>
+
+                    {{ form.non_field_errors }}
+
+                    <input type="hidden" name="address" value="{{ form.address.value }}">
+
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ form.reported_date.id_for_label }}">Date:</label>
+                                {{ form.reported_date|add_class:"form-control" }}
+                                {{ form.reported_date.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="{{ form.reported_time.id_for_label }}">Time:</label>
+                                {{ form.reported_time|add_class:"form-control" }}
+                                {{ form.reported_time.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.name.id_for_label }}">Reporter name:</label>
+                                {{ form.name|add_class:"form-control" }}
+                                {{ form.name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group reporter_primary_contact">
+                                <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
+                                {{ form.phone|add_class:"form-control" }}
+                                {{ form.phone.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <div class="form-group reporter_additional_contact">
+                                <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
+                                {{ form.reporter_alternate_contact|add_class:"form-control" }}
+                                {{ form.reporter_alternate_contact.errors }}
+                            </div>
+                        </div>
+
+  <!--                       <div class="col-sm-12">
+                            <h5>Reporter address information</h5>
+                        </div>
+   -->
+  <!--                       <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="{{ form.reporter_address_number.id_for_label }}">House number:</label>
+                                {{ form.reporter_address_number|add_class:"form-control typeahead" }}
+                                {{ form.reporter_address_number.errors }}
+                            </div>
+                        </div>
+   -->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.reporter_street_name.id_for_label }}">Reporter Address:</label>
+                                {{ form.reporter_street_name|add_class:"form-control" }}
+                                {{ form.reporter_street_name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <h5>Issue address information</h5>
+                        </div>
+
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="{{ form.address_number.id_for_label }}">House number:</label>
+                                {{ form.address_number|add_class:"form-control typeahead" }}
+                                {{ form.address_number.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-8">
+                            <div class="form-group street-name-selector">
+                                <label for="{{ form.street_name.id_for_label }}">Street name:</label>
+                                {{ form.street_name|add_class:"form-control typeahead" }}
+                                {{ form.street_name.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.address.id_for_label }}">Location Description:</label>
+                                {{ form.address|add_class:"form-control typeahead" }}
+                                {{ form.address.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.problem.id_for_label }}">Description:</label>
+                                <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                                {{ form.problem.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.source.id_for_label }}">Source:</label>
+                                {{ form.source|add_class:"form-control" }}
+                                {{ form.source.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.when_last_reported.id_for_label }}">When last reported:</label>
+                                {{ form.when_last_reported|add_class:"form-control" }}
+                                {{ form.when_last_reported.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.time_of_day_occurs.id_for_label }}">Time of day issues occurs:</label>
+                                {{ form.time_of_day_occurs|add_class:"form-control" }}
+                                {{ form.time_of_day_occurs.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.num_people_involved.id_for_label }}">Number of individuals involved:</label>
+                                {{ form.num_people_involved|add_class:"form-control" }}
+                                {{ form.num_people_involved.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.safety_concerns.id_for_label }}">Safety concerns:</label>
+                                {{ form.safety_concerns|add_class:"form-control" }}
+                                {{ form.safety_concerns.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.resolution.id_for_label }}">Notes:</label>
+                                {{ form.resolution|add_class:"form-control" }}
+                                {{ form.resolution.errors }}
+                            </div>
+                        </div>
+                    </div>
+                </div>  <!-- end Report Details pane -->
+
+                <!-- Report Attachments pane -->
+                <div class="tab-pane" id="report-attachments">
+                    <div class="col-sm-7 col-sm-offset-1 report">
+                        <h4>Report Attachments</h4>
+
+                        {% for external_asset in external_assets %}
+                            <div class="row uploaded-doc">
+                                <div class="col-sm-4">
+                                    <a href="https://s3.amazonaws.com/vallejo-css-toolkit/{{ external_asset.fpath }}" target="_blank"><img class="external-asset" src="https://s3.amazonaws.com/vallejo-css-toolkit/{{ external_asset.fpath }}"></a>
+                                </div>
+
+                                <div class="col-sm-8">
+                                    <ul class="doc-attrs">
+                                        <li class="doc-name"><h5 class="doc-name-text">Submitted via web form</h5></li>
+                                        <li class="doc-date"><p class="doc-date-text">Added: {{ external_asset.css_report.reported_datetime|date }}</p></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+                </div>  <!-- end Report Attachments pane -->
+
+                <!-- Report History pane -->
+                <div class="tab-pane" id="report-history">
+                    <div class="col-md-7 col-md-offset-1 report">
+                        <h4>Report History</h4>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="table-wrapper">
+                                    <table class="table table-hover small-table" id="call-log">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Source</th>
+                                                <th>Case No.</th>
+                                                <th>Case Type</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for location_event in location_history %}
+                                                <tr>
+                                                    <td>{{ location_event.0 }}</td>
+                                                    <td>{{ location_event.1 }}</td>
+                                                    <td>{{ location_event.2 }}</td>
+                                                    <td>{{ location_event.3 }}</td>
+                                                    <td>{{ location_event.4 }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                    {% if not location_history %}
+                                        <div class="text-center"><h5>No history for this location</h5></div>
+                                    {% endif %}
+                                </div> <!--table wrapper-->
+                            </div>
+                        </div>
+                    </div><!--contact log table-->
+                </div>  <!-- end Report History pane -->
+            </div>  <!-- main content row -->
+        </div> <!-- container -->
+
+        <!-- footer -->
+        <div class="footer container-fluid">
+            <div class="container next-actions">
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-6">
+                        <div class="row">
+                            <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
+                                <div class="form-group">
+                                    <select class="form-control" name="next-action">
+                                        <option>Save Report</option>
+                                        {% if not verification_id %}
+                                            <option>Move to Verification</option>
+                                        {% endif %}
+<!--                                         <option>Forward</option> -->
+                                        <option>Resolve</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
+                                <button type="submit" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
 </div>
-
-<!-- <button type="submit" class="btn btn-success btn-lg pull-right" aria-haspopup="true" aria-expanded="true" data-toggle="modal" data-target="#resolve">Confirm</button>
- -->
-
-<!--Resolve Modal-->
-
-<!--Forward Modal-->
-<div class="modal fade" id="forward" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Forward</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-10 col-sm-offset-1">
-              <div class="form-group">
-                  <label for="">Send to:</label>
-                  <input type="" class="form-control" id="" placeholder="Email">
-              </div>
-          </div>
-          <div class="col-sm-10 col-sm-offset-1">
-              <div class="form-group">
-                  <label for="">Message:</label>
-                  <textarea id="" maxlength="256" name="" class="form-control" rows="5"></textarea>
-              </div>
-          </div>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Confirm</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<!--Move-to Modal-->
-<div class="modal fade" id="move-to" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Move to Verification</h4>
-      </div>
-      <div class="modal-body">
-        <div class="row">
-          <div class="col-sm-10 col-sm-offset-1">
-              <div class="form-group">
-                  <label for="">Message to Reporter:</label>
-                  <textarea id="" maxlength="256" name="" class="form-control" rows="5"></textarea>
-              </div>
-          </div>
-        </div>
-      </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Confirm</button>
-      </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
 
 {% endblock %}

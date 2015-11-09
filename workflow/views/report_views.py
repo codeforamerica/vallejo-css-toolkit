@@ -21,6 +21,7 @@ LOG_AUDIT_HISTORY = False
 @login_required(login_url='/login/')
 def add_report(request):
     form = ReportForm(request.POST or None)
+    log.info(request.POST)
 
     if form.errors:
         messages.add_message(request, messages.ERROR, form.errors)
@@ -68,7 +69,7 @@ def report(request, report_id):
                 verification = Verification.objects.filter(report=call)[0]
                 # add message warning that it exists
 
-            return HttpResponseRedirect('/workflow/verification/{}'.format(verification.id))
+            return HttpResponseRedirect('/workflow/verify_report/{}'.format(verification.id))
 
         elif request.POST.get('next-action') == 'Resolve':
             return HttpResponseRedirect('/workflow/resolve_report/{}'.format(call.id))
@@ -106,6 +107,29 @@ def report(request, report_id):
             'case_id': case_id
         }
     )
+
+
+@login_required(login_url='/login/')
+def verify_report(request, verification_id):
+    if request.method == 'POST':
+        verification = get_object_or_404(Verification, id=verification_id)
+        message = request.POST.get('message')
+        if message:
+            ReportNotification.objects.create(report=verification.report, message=message)
+            messages.add_message(request, messages.SUCCESS, "Successfully scheduled outgoing message to reporter.")
+
+        return HttpResponseRedirect('/workflow/verification/{}'.format(verification.id))
+
+    else:
+        return render(
+            request,
+            'workflow/message_reporter.html',
+            {
+                'default_verify_message': '',
+                'title': "Verify Report",
+                'cancel_url': '/workflow/verification/{}'.format(verification_id)
+            }
+        )
 
 
 @login_required(login_url='/login/')

@@ -35,16 +35,17 @@ class ReportForm(forms.ModelForm):
             'reporter_alternate_contact',
             'address_number',
             'street_name',
+            'source'
         )
 
     def __init__(self, *args, **kwargs):
         super(ReportForm, self).__init__(*args, **kwargs)
 
-        self.fields['reporter_address_number'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: 555'})
-        self.fields['address_number'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: 2'})
+        # self.fields['reporter_address_number'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: 555'})
+        self.fields['address_number'].widget = forms.TextInput(attrs={'placeholder': 'ex: 2'})
 
-        self.fields['reporter_street_name'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: Santa Clara St'})
-        self.fields['street_name'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: Florida St'})
+        self.fields['reporter_street_name'].widget = forms.TextInput(attrs={'placeholder': 'ex: 555 Santa Clara St'})
+        self.fields['street_name'].widget = forms.TextInput(attrs={'placeholder': 'ex: Florida St'})
 
         self.fields['reported_date'].widget.format = '%m/%d/%Y'
         self.fields['reported_time'].widget.format = '%H:%M'

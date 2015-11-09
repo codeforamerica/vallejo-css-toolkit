@@ -51,7 +51,8 @@ def report_issue(request):
                 reported_datetime=now_utc,
                 time_of_day_occurs=form.cleaned_data.get('time_of_day'),
                 problem_duration=form.cleaned_data.get('how_long'),
-                when_last_reported=form.cleaned_data.get('reported_before_details')
+                when_last_reported=form.cleaned_data.get('reported_before_details'),
+                source=CSSCall.WEB_SOURCE
             )
 
             try:

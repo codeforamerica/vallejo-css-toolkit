@@ -79,7 +79,7 @@
                       </div>
                   </div>
 
-                      <div class="col-sm-12">
+<!--                       <div class="col-sm-12">
                           <h5>Reporter address information</h5>
                       </div>
 
@@ -90,11 +90,11 @@
                               {{ form.reporter_address_number.errors }}
                           </div>
                       </div>
-
-                      <div class="col-sm-8">
-                          <div class="form-group street-name-selector">
+ -->
+                      <div class="col-sm-12">
+                          <div class="form-group">
                               <label for="{{ form.reporter_street_name.id_for_label }}">Street name:</label>
-                              {{ form.reporter_street_name|add_class:"form-control typeahead" }}
+                              {{ form.reporter_street_name|add_class:"form-control" }}
                               {{ form.reporter_street_name.errors }}
                           </div>
                       </div>
@@ -124,6 +124,14 @@
                           <label for="{{ form.problem.id_for_label }}">Description:</label>
                           <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
                           {{ form.problem.errors }}
+                      </div>
+                  </div>
+
+                  <div class="col-sm-12">
+                      <div class="form-group">
+                          <label for="{{ form.source.id_for_label }}">Source:</label>
+                          {{ form.source|add_class:"form-control" }}
+                          {{ form.source.errors }}
                       </div>
                   </div>
 

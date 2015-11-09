@@ -39,6 +39,22 @@ class CSSCall(models.Model):
         (EMAIL_CONTACT_PREFERENCE, 'Email'),
     )
 
+    PHONE_SOURCE = 1
+    EMAIL_SOURCE = 2
+    WEB_SOURCE = 3
+    CE_REFERRAL_SOURCE = 4
+    OFFICER_REFERRAL_SOURCE = 5
+    CITY_REFERRAL_SOURCE = 6
+
+    SOURCE_CHOICES = (
+        (PHONE_SOURCE, 'Phone'),
+        (EMAIL_SOURCE, 'Email'),
+        (WEB_SOURCE, 'Web'),
+        (CE_REFERRAL_SOURCE, 'Code Enf. Referral'),
+        (OFFICER_REFERRAL_SOURCE, 'Officer Referral'),
+        (CITY_REFERRAL_SOURCE, 'Other City Referral')
+    )
+
     name = models.CharField(max_length=256, null=True, blank=True)
     address = models.CharField(max_length=256, null=True, blank=True)
     phone = models.CharField(max_length=256, null=True, blank=True)
@@ -70,6 +86,7 @@ class CSSCall(models.Model):
     active = models.BooleanField(default=True)
     caller_preferred_contact = models.IntegerField(null=True, blank=True, choices=CONTACT_PREFERENCES_CHOICES)
     status = models.ForeignKey(ReportStatus, null=True, blank=True)
+    source = models.IntegerField(null=True, blank=True, choices=SOURCE_CHOICES)
 
     def get_address(self):
         return (self.address_number and self.street_name) and "{} {}".format(self.address_number, self.street_name) or self.address

@@ -13,12 +13,10 @@ log = logging.getLogger('consolelogger')
 
 @login_required(login_url='/login/')
 def verification(request, verification_id):
-    print request.POST, request.FILES
     instance = get_object_or_404(Verification, id=verification_id)
 
     property_details_form = PropertyDetailsForm(request.POST or None, instance=instance)
     uploaded_asset_form = UploadAssetForm(request.POST, request.FILES)
-    print uploaded_asset_form
 
     if property_details_form.errors:
         messages.add_message(request, messages.ERROR, property_details_form.errors)
@@ -69,8 +67,6 @@ def verification(request, verification_id):
 
 @login_required(login_url='/login/')
 def add_contact_action(request):
-    print request.POST
-
     verification_id = request.POST.get('verification_id')
     contacter_name = request.POST.get('contacter_name')
     contact_type = request.POST.get('contact_type')

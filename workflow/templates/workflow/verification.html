@@ -58,14 +58,14 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="map-placeholder"><p>TODO: Mabox map</p></div>
+                            <div class="map-placeholder"><p>(map coming soon)</p></div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="pull-right">
-                                <a target="_blank" href="https://maps.google.com/">View on Google Maps</a>
+                                <a target="_blank" href="https://www.google.com/maps/search/{{ property_address }} Vallejo, CA">View on Google Maps</a>
                             </div>
                         </div>
                     </div>
@@ -74,7 +74,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Property Description:</label>
-                                <textarea maxlength="256" name="{{ property_details_form.property_description.html_name }}" class="form-control" rows="5">{{ property_details_form.property_description.value }}</textarea>
+                                <textarea maxlength="256" name="{{ property_details_form.property_description.html_name }}" class="form-control" rows="5">{% if property_details_form.property_description.value %}{{ property_details_form.property_description.value }}{% endif %}</textarea>
                                 {{ property_details_form.property_description.errors }}
                             </div>
                         </div>
@@ -296,7 +296,7 @@
                         <div class="text-center"><h5>No documents have been uploaded</h5></div>
                     {% endif %}
 
-                    <div class="col-sm-12">
+<!--                     <div class="col-sm-12">
                         <form id="file-upload-form" class="form-group">
                             {% csrf_token %}
                             <h5>Upload a new file</h5>
@@ -305,7 +305,7 @@
                         </form>
                         <button type="button" onclick="uploadAsset()" class="disabled btn btn-primary" aria-haspopup="true" aria-expanded="true">Upload</button>
                     </div>
-
+ -->
                 </div>
             </div> <!-- end Documents pane -->
 
@@ -324,9 +324,10 @@
                                     {% if not case_id %}
                                         <option>Move to Case</option>
                                     {% endif %}
-                                    <option>Forward</option>
+<!--                                     <option>Forward</option>
                                     <option>Resolve</option>
                                     <option>Revert to Report</option>
+ -->
                                 </select>
                             </div>
                         </div>
