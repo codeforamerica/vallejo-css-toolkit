@@ -196,6 +196,8 @@ def step_three(request):
         timeout=30
     )
 
+    resp.say("I did not hear anything.")
+
     return resp
 
 
