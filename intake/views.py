@@ -145,7 +145,7 @@ def step_one(request):
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-two/", numDigits=1, method="POST") as g:
-        g.say("Hello, you've reached the CSS-tool. Here you can report issues in your neighborhood or leave a question or message for the Community Services Section. If you are experiencing an emergency, please call 9 1 1. Press 1 if you're calling to report an issue, press 2 if you're calling to ask a question or leave a message.")
+        g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/intro.mp3")
 
     return resp
 
