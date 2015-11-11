@@ -171,14 +171,18 @@ class CSSReportView(models.Model):
         super(CSSReportView, self).save(*args, **kwargs)
 
 
-class RecordingType(models.Model):
-    name = models.CharField(max_length=256, null=True, blank=True)
-
-
 class Recording(models.Model):
-    recording_type = models.ForeignKey(RecordingType)
+    LOCATION = 1
+    DESCRIPTION = 2
+    DURATION = 3
+    REPORTED_BEFORE = 4
+    NAME = 5
+    EMAIL = 6
+    ADDRESS = 7
+
     call = models.ForeignKey(CSSCall)
     url = models.CharField(max_length=256, null=True, blank=True)
+    type = models.IntegerField(null=True)
 
 
 class CSSCaseAssignee(models.Model):

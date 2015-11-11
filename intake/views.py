@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission, TypeformAsset, PublicUploadedAsset
-from workflow.models import CSSCall
+from workflow.models import CSSCall, Recording
 from intake.forms import IntakeIssueForm, IntakeContactForm
 
 # from intake.utils import create_call, update_call
@@ -158,7 +158,7 @@ def step_two(request):
 
     if digit_pressed and digit_pressed.isdigit():
         if int(digit_pressed) == 2:
-            resp.say("What is your message or question? When you are finished, press pound.")
+            resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_message.mp3")
             resp.record(
                 action="/intake/step-nine/",
                 finishOnKey="#",
@@ -167,7 +167,7 @@ def step_two(request):
             )
 
         else:
-            resp.say("Where is the issue occurring? Please say the address or cross streets.")
+            resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/where.mp3")
             resp.record(
                 action="/intake/step-three/",
                 finishOnKey="#",
@@ -180,9 +180,14 @@ def step_two(request):
 
 @twilio_view
 def step_three(request):
-    resp = twilio.twiml.Response()
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("Describe the issue you're calling about. When you are finished, press pound.")
+    location_url = request.POST.get("RecordingUrl", None)
+    Recording.objects.create(call=call, url=location_url, type=Recording.LOCATION)
+
+    resp = twilio.twiml.Response()
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/describe.mp3")
 
     resp.record(
         action="/intake/step-four/",
@@ -196,9 +201,14 @@ def step_three(request):
 
 @twilio_view
 def step_four(request):
-    resp = twilio.twiml.Response()
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("How long has this issue been occurring?")
+    description_url = request.POST.get("RecordingUrl", None)
+    Recording.objects.create(call=call, url=description_url, type=Recording.DESCRIPTION)
+
+    resp = twilio.twiml.Response()
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/how_long.mp3")
 
     resp.record(
         action="/intake/step-five/",
@@ -212,9 +222,14 @@ def step_four(request):
 
 @twilio_view
 def step_five(request):
-    resp = twilio.twiml.Response()
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("Around what time of day does this issue occur?")
+    duration_url = request.POST.get("RecordingUrl", None)
+    Recording.objects.create(call=call, url=duration_url, type=Recording.DURATION)
+
+    resp = twilio.twiml.Response()
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_time_of_day.mp3")
 
     resp.record(
         action="/intake/step-six/",
@@ -228,29 +243,48 @@ def step_five(request):
 
 @twilio_view
 def step_six(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
+
+    time_of_day_url = request.POST.get("RecordingUrl", None)
+    Recording.objects.create(call=call, url=time_of_day_url, type=Recording.TIME_OF_DAY)
+
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-seven/", numDigits=1, method="POST") as g:
-        g.say("How many people are involved in this issue? Answer using a number on your keyboard. If you are unsure, press pound.")
+        g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/how_many_use_keypad.mp3")
 
     return resp
 
 
 @twilio_view
 def step_seven(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
+
+    digit_pressed = request.POST.get('Digits', None)
+    call.num_people_involved = digit_pressed
+    call.save()
+
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-eight/", numDigits=1, method="POST") as g:
-        g.say("Are there safety concerns at this location that we should be aware of? If yes, press 1. If no, press 2. If you are unsure, press 3.")
+        g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/are_there_safety_concerns.mp3")
 
     return resp
 
 
 @twilio_view
 def step_eight(request):
-    resp = twilio.twiml.Response()
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("Have you ever reported this issue before? If so, when? If not, press pound.")
+    digit_pressed = request.POST.get('Digits', None)
+    call.safety_concerns = digit_pressed
+    call.save()
+
+    resp = twilio.twiml.Response()
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/have_you_reported_this_before.mp3")
 
     resp.record(
         action="/intake/step-nine/",
@@ -264,10 +298,15 @@ def step_eight(request):
 
 @twilio_view
 def step_nine(request):
-    resp = twilio.twiml.Response()
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("It's helpful if we have your name and contact information in case we need any further details on how to best resolve this issue. We will never share your information with anyone other than authorized city staff.")
-    resp.say("What is your name?")
+    reported_before_url = request.POST.get("RecordingUrl", None)
+    Recording.objects.create(call=call, url=reported_before_url, type=Recording.REPORTED_BEFORE)
+
+    resp = twilio.twiml.Response()
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/helpful_to_have_your_info.mp3")
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_name.mp3")
 
     resp.record(
         action="/intake/step-ten/",
@@ -281,19 +320,32 @@ def step_nine(request):
 
 @twilio_view
 def step_ten(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
+
+    name_url = request.POST.get("RecordingUrl", None)
+    Recording.objects.create(call=call, url=name_url, type=Recording.NAME)
+
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-eleven/", numDigits=10, method="POST") as g:
-        g.say("What is your phone number, starting with the area code? Answer using the numbers on your keyboard.")
+        g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_phone_number.mp3")
 
     return resp
 
 
 @twilio_view
 def step_eleven(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
+
+    digits_pressed = request.POST.get('Digits', None)
+    call.phone = digits_pressed
+    call.save()
+
     resp = twilio.twiml.Response()
 
-    resp.say("What is your email address?")
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_email_address.mp3")
 
     resp.record(
         action="/intake/step-twelve/",
@@ -307,9 +359,15 @@ def step_eleven(request):
 
 @twilio_view
 def step_twelve(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
+
+    email_url = request.POST.get("RecordingUrl", None)
+    Recording.objects.create(call=call, url=email_url, type=Recording.EMAIL)
+
     resp = twilio.twiml.Response()
 
-    resp.say("What is your home address?")
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_home_address.mp3")
 
     resp.record(
         action="/intake/step-thirteen/",
@@ -323,19 +381,41 @@ def step_twelve(request):
 
 @twilio_view
 def step_thirteen(request):
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
+
+    address_url = request.POST.get("RecordingUrl", None)
+    Recording.objects.create(call=call, url=address_url, type=Recording.ADDRESS)
+
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-fourteen/", numDigits=1, method="POST") as g:
-        g.say("Where should we send you the receipt and progress updates for this report? Press 1 for email updates, press 2 for text message updates, press 3 if you would not like a receipt and progress updates.")
+        g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_type_of_receipt_.mp3")
 
     return resp
 
 
 @twilio_view
 def step_fourteen(request):
-    resp = twilio.twiml.Response()
+    call_sid = request.POST.get('CallSid', None)
+    call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("Thank you, your report has been sent to the Community Services Section. Have a good day.")
+    digit_pressed = request.POST.get('Digits', None)
+
+    if digit_pressed == '1':
+        call.caller_preferred_contact = CSSCall.EMAIL_CONTACT_PREFERENCE
+        call.save()
+
+    elif digit_pressed == '2':
+        call.caller_preferred_contact = CSSCall.TEXT_CONTACT_PREFERENCE
+        call.save()
+
+    elif digit_pressed == '3':
+        call.caller_preferred_contact = CSSCall.NO_CONTACT_PREFERENCE
+        call.save()
+
+    resp = twilio.twiml.Response()
+    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/thank_you.mp3")
 
     return resp
 
