@@ -153,6 +153,8 @@ def step_one(request):
 @twilio_view
 def step_two(request):
     digit_pressed = request.POST.get('Digits', None)
+    call_sid = request.POST.get('CallSid', None)
+    CSSCall.objects.get(call_sid=call_sid)
 
     resp = twilio.twiml.Response()
 
