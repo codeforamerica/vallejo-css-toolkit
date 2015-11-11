@@ -46,6 +46,7 @@ ul {
 li {
   list-style-type: none;
 }
+
 .intake-header h1{
   margin-bottom:10px;
   color:#1F4E81;
@@ -81,7 +82,7 @@ form{
 }
 
 .intake-body{
-  min-height:800px;
+  min-height:600px;
   padding-top:40px;
 }
 
@@ -118,7 +119,7 @@ label{
 
 .footer{
   background-color: #1F4E81;
-  padding:25px 100px;
+  padding:25px 100px 15px;
 }
 
 .footer-items li{
