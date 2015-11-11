@@ -30,7 +30,7 @@ def get_latest_crw_case_no(request):
 def handle_rms_post(request):
     try:
         start = time()
-        added, skipped = 0, 0  # load_rms_cases(request.body)
+        added, skipped = load_rms_cases(request.body)
         end = time()
         log.info('added {} new and skipped {} rms cases in {} seconds'.format(added, skipped, end - start))
 
@@ -45,7 +45,7 @@ def handle_rms_post(request):
 def handle_crw_post(request):
     try:
         start = time()
-        added, skipped = 0, 0  # load_crw_cases(request.body)
+        added, skipped = load_crw_cases(request.body)
         end = time()
         log.info('added {} new and skipped {} crw cases in {} seconds'.format(added, skipped, end - start))
 
