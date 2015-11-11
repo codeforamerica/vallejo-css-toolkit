@@ -115,6 +115,30 @@ label{
   border-color:#22A935;
 }
 
+
+.footer{
+  background-color: #1F4E81;
+  padding:25px 100px;
+}
+
+.footer-items li{
+  display:inline;
+  margin-left: 30px;
+}
+
+.footer-items a{
+  color:#188EF5;
+}
+
+.footer-items a:hover{
+  color:#fff;
+  text-decoration: none;
+}
+
+.footer p{
+  color:#fff;
+}
+
 @media (min-width:992px) {
    .container {
     width:900px
