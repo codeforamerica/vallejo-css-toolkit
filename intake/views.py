@@ -177,9 +177,9 @@ def step_two(request):
                 method="POST",
                 timeout=30
             )
-            resp.redirect("/intake/step-three")
+            resp.redirect("/intake/step-three/")
 
-    resp.redirect("/intake/step-two")
+    resp.redirect("/intake/step-two/")
 
     return resp
 
@@ -202,7 +202,7 @@ def step_three(request):
         method="POST",
         timeout=30
     )
-    resp.redirect("/intake/step-four")
+    resp.redirect("/intake/step-four/")
 
     return resp
 
@@ -225,7 +225,7 @@ def step_four(request):
         method="POST",
         timeout=30
     )
-    resp.redirect("/intake/step-five")
+    resp.redirect("/intake/step-five/")
 
     return resp
 
@@ -248,7 +248,7 @@ def step_five(request):
         method="POST",
         timeout=30
     )
-    resp.redirect("/intake/step-six")
+    resp.redirect("/intake/step-six/")
 
     return resp
 
@@ -266,7 +266,7 @@ def step_six(request):
 
     with resp.gather(action="/intake/step-seven/", numDigits=1, method="POST") as g:
         g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/how_many_use_keypad.mp3")
-    resp.redirect("/intake/step-seven")
+    resp.redirect("/intake/step-seven/")
 
     return resp
 
@@ -284,7 +284,7 @@ def step_seven(request):
 
     with resp.gather(action="/intake/step-eight/", numDigits=1, method="POST") as g:
         g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/are_there_safety_concerns.mp3")
-    resp.redirect("/intake/step-eight")
+    resp.redirect("/intake/step-eight/")
 
     return resp
 
@@ -307,7 +307,7 @@ def step_eight(request):
         method="POST",
         timeout=30
     )
-    resp.redirect("/intake/step-nine")
+    resp.redirect("/intake/step-nine/")
 
     return resp
 
@@ -331,7 +331,7 @@ def step_nine(request):
         method="POST",
         timeout=30
     )
-    resp.redirect("/intake/step-ten")
+    resp.redirect("/intake/step-ten/")
 
     return resp
 
@@ -349,7 +349,7 @@ def step_ten(request):
 
     with resp.gather(action="/intake/step-eleven/", numDigits=10, method="POST") as g:
         g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_phone_number.mp3")
-    resp.redirect("/intake/step-eleven")
+    resp.redirect("/intake/step-eleven/")
 
     return resp
 
@@ -373,7 +373,7 @@ def step_eleven(request):
         method="POST",
         timeout=30
     )
-    resp.redirect("/intake/step-twelve")
+    resp.redirect("/intake/step-twelve/")
 
     return resp
 
@@ -397,7 +397,7 @@ def step_twelve(request):
         method="POST",
         timeout=30
     )
-    resp.redirect("/intake/step-thirteen")
+    resp.redirect("/intake/step-thirteen/")
 
     return resp
 
@@ -415,7 +415,7 @@ def step_thirteen(request):
 
     with resp.gather(action="/intake/step-fourteen/", numDigits=1, method="POST") as g:
         g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_type_of_receipt_.mp3")
-    resp.redirect("/intake/step-fourteen")
+    resp.redirect("/intake/step-fourteen/")
 
     return resp
 
