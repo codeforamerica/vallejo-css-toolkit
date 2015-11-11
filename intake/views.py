@@ -174,7 +174,8 @@ def step_two(request):
                 action="/intake/step-three/",
                 finishOnKey="#",
                 method="POST",
-                timeout=30
+                timeout=30,
+                trim='do-not-trim'
             )
 
     return resp
