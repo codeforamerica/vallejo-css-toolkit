@@ -168,15 +168,18 @@ def step_two(request):
                 timeout=30
             )
 
+            return HttpResponseRedirect("/intake/step-nine")
+
         else:
             resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/where.mp3")
             resp.record(
                 action="/intake/step-three/",
                 finishOnKey="#",
                 method="POST",
-                timeout=30,
-                trim='do-not-trim'
+                timeout=30
             )
+
+            return HttpResponseRedirect("/intake/step-three")
 
     return resp
 
@@ -187,7 +190,8 @@ def step_three(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     location_url = request.POST.get("RecordingUrl", None)
-    Recording.objects.create(call=call, url=location_url, type=Recording.LOCATION)
+    if location_url:
+        Recording.objects.create(call=call, url=location_url, type=Recording.LOCATION)
 
     resp = twilio.twiml.Response()
     resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/describe.mp3")
@@ -199,7 +203,13 @@ def step_three(request):
         timeout=30
     )
 
-    resp.say("I did not hear anything.")
+    resp.say("I did not hear a response. When you're done, press the pound key. If you're not sure, say I'm not sure.")
+    resp.record(
+        action="/intake/step-four/",
+        finishOnKey="#",
+        method="POST",
+        timeout=30
+    )
 
     return resp
 
