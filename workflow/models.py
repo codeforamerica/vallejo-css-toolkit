@@ -180,6 +180,7 @@ class Recording(models.Model):
     NAME = 5
     EMAIL = 6
     ADDRESS = 7
+    TIME_OF_DAY = 8
 
     call = models.ForeignKey(CSSCall)
     url = models.CharField(max_length=256, null=True, blank=True)
