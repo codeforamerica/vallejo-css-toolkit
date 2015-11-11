@@ -167,8 +167,7 @@ def step_two(request):
                 method="POST",
                 timeout=30
             )
-
-            return HttpResponseRedirect("/intake/step-nine")
+            resp.redirect("/intake/step-nine")
 
         else:
             resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/where.mp3")
@@ -178,8 +177,9 @@ def step_two(request):
                 method="POST",
                 timeout=30
             )
+            resp.redirect("/intake/step-three")
 
-            return HttpResponseRedirect("/intake/step-three")
+    resp.redirect("/intake/step-two")
 
     return resp
 
@@ -202,14 +202,7 @@ def step_three(request):
         method="POST",
         timeout=30
     )
-
-    resp.say("I did not hear a response. When you're done, press the pound key. If you're not sure, say I'm not sure.")
-    resp.record(
-        action="/intake/step-four/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+    resp.redirect("/intake/step-four")
 
     return resp
 
@@ -220,7 +213,8 @@ def step_four(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     description_url = request.POST.get("RecordingUrl", None)
-    Recording.objects.create(call=call, url=description_url, type=Recording.DESCRIPTION)
+    if description_url:
+        Recording.objects.create(call=call, url=description_url, type=Recording.DESCRIPTION)
 
     resp = twilio.twiml.Response()
     resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/how_long.mp3")
@@ -231,6 +225,7 @@ def step_four(request):
         method="POST",
         timeout=30
     )
+    resp.redirect("/intake/step-five")
 
     return resp
 
@@ -241,7 +236,8 @@ def step_five(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     duration_url = request.POST.get("RecordingUrl", None)
-    Recording.objects.create(call=call, url=duration_url, type=Recording.DURATION)
+    if duration_url:
+        Recording.objects.create(call=call, url=duration_url, type=Recording.DURATION)
 
     resp = twilio.twiml.Response()
     resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_time_of_day.mp3")
@@ -252,6 +248,7 @@ def step_five(request):
         method="POST",
         timeout=30
     )
+    resp.redirect("/intake/step-six")
 
     return resp
 
@@ -262,12 +259,14 @@ def step_six(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     time_of_day_url = request.POST.get("RecordingUrl", None)
-    Recording.objects.create(call=call, url=time_of_day_url, type=Recording.TIME_OF_DAY)
+    if time_of_day_url:
+        Recording.objects.create(call=call, url=time_of_day_url, type=Recording.TIME_OF_DAY)
 
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-seven/", numDigits=1, method="POST") as g:
         g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/how_many_use_keypad.mp3")
+    resp.redirect("/intake/step-seven")
 
     return resp
 
@@ -285,6 +284,7 @@ def step_seven(request):
 
     with resp.gather(action="/intake/step-eight/", numDigits=1, method="POST") as g:
         g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/are_there_safety_concerns.mp3")
+    resp.redirect("/intake/step-eight")
 
     return resp
 
@@ -307,6 +307,7 @@ def step_eight(request):
         method="POST",
         timeout=30
     )
+    resp.redirect("/intake/step-nine")
 
     return resp
 
@@ -317,7 +318,8 @@ def step_nine(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     reported_before_url = request.POST.get("RecordingUrl", None)
-    Recording.objects.create(call=call, url=reported_before_url, type=Recording.REPORTED_BEFORE)
+    if reported_before_url:
+        Recording.objects.create(call=call, url=reported_before_url, type=Recording.REPORTED_BEFORE)
 
     resp = twilio.twiml.Response()
     resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/helpful_to_have_your_info.mp3")
@@ -329,6 +331,7 @@ def step_nine(request):
         method="POST",
         timeout=30
     )
+    resp.redirect("/intake/step-ten")
 
     return resp
 
@@ -339,12 +342,14 @@ def step_ten(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     name_url = request.POST.get("RecordingUrl", None)
-    Recording.objects.create(call=call, url=name_url, type=Recording.NAME)
+    if name_url:
+        Recording.objects.create(call=call, url=name_url, type=Recording.NAME)
 
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-eleven/", numDigits=10, method="POST") as g:
         g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_phone_number.mp3")
+    resp.redirect("/intake/step-eleven")
 
     return resp
 
@@ -368,6 +373,7 @@ def step_eleven(request):
         method="POST",
         timeout=30
     )
+    resp.redirect("/intake/step-twelve")
 
     return resp
 
@@ -378,7 +384,8 @@ def step_twelve(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     email_url = request.POST.get("RecordingUrl", None)
-    Recording.objects.create(call=call, url=email_url, type=Recording.EMAIL)
+    if email_url:
+        Recording.objects.create(call=call, url=email_url, type=Recording.EMAIL)
 
     resp = twilio.twiml.Response()
 
@@ -390,6 +397,7 @@ def step_twelve(request):
         method="POST",
         timeout=30
     )
+    resp.redirect("/intake/step-thirteen")
 
     return resp
 
@@ -400,12 +408,14 @@ def step_thirteen(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     address_url = request.POST.get("RecordingUrl", None)
-    Recording.objects.create(call=call, url=address_url, type=Recording.ADDRESS)
+    if address_url:
+        Recording.objects.create(call=call, url=address_url, type=Recording.ADDRESS)
 
     resp = twilio.twiml.Response()
 
     with resp.gather(action="/intake/step-fourteen/", numDigits=1, method="POST") as g:
         g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_type_of_receipt_.mp3")
+    resp.redirect("/intake/step-fourteen")
 
     return resp
 
