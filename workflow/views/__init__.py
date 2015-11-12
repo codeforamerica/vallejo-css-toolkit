@@ -73,7 +73,7 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect('/workflow')
             else:
                 messages.add_message(request, messages.WARNING, "This user account is disabled.")
         else:
