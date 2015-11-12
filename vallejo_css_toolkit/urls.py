@@ -9,12 +9,6 @@ urlpatterns = patterns(
     '',
     # admin url
     url(r'^admin/', include(admin.site.urls)),
-
-    # landing page view
-    url(r'^$', 'workflow.views.landing', name='landing'),
-    url(r'^login/$', 'workflow.views.login_view', name='login_view'),
-    url(r'^logout/$', 'workflow.views.logout_view', name='logout_view'),
-
 )
 
 urlpatterns += data_load_urlpatterns

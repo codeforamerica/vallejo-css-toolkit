@@ -24,4 +24,9 @@ urlpatterns = patterns(
     # url(r'^workflow/property/(?P<property_id>\d*)/$', 'workflow.views.property_views.property', name='property'),
     url(r'^workflow/property/$', 'workflow.views.property_views.property', name='property'),
     url(r'^workflow/properties/$', 'workflow.views.property_views.properties', name='properties'),
+
+    # landing + auth page views
+    url(r'^/workflow/$', 'workflow.views.landing', name='landing'),
+    url(r'^login/$', 'workflow.views.login_view', name='login_view'),
+    url(r'^logout/$', 'workflow.views.logout_view', name='logout_view'),
 )
