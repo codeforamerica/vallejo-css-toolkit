@@ -296,18 +296,22 @@ def step_eight(request):
     call = CSSCall.objects.get(call_sid=call_sid)
 
     digit_pressed = request.POST.get('Digits', None)
-    call.safety_concerns = digit_pressed
-    call.save()
+    if digit_pressed == '1':
+        call.safety_concerns = 'Yes'
+        call.save()
+
+    elif digit_pressed == '2':
+        call.safety_concerns = 'No'
+        call.save()
+
+    elif digit_pressed == '3':
+        call.safety_concerns = 'Unsure'
+        call.save()
 
     resp = twilio.twiml.Response()
-    resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/have_you_reported_this_before.mp3")
 
-    resp.record(
-        action="/intake/step-nine/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+    with resp.gather(action="/intake/step-nine/", numDigits=1, method="POST") as g:
+        g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/have_you_reported_this_before.mp3")
     resp.redirect("/intake/step-nine/", method="POST")
 
     return resp
@@ -318,9 +322,18 @@ def step_nine(request):
     call_sid = request.POST.get('CallSid', None)
     call = CSSCall.objects.get(call_sid=call_sid)
 
-    reported_before_url = request.POST.get("RecordingUrl", None)
-    if reported_before_url:
-        Recording.objects.create(call=call, url=reported_before_url, type=Recording.REPORTED_BEFORE)
+    digit_pressed = request.POST.get('Digits', None)
+    if digit_pressed == '1':
+        call.reported_before = 'Yes'
+        call.save()
+
+    elif digit_pressed == '2':
+        call.reported_before = 'No'
+        call.save()
+
+    elif digit_pressed == '3':
+        call.reported_before = 'Unsure'
+        call.save()
 
     resp = twilio.twiml.Response()
     resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/helpful_to_have_your_info.mp3")

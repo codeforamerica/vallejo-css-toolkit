@@ -88,6 +88,7 @@ class CSSCall(models.Model):
     status = models.ForeignKey(ReportStatus, null=True, blank=True)
     source = models.IntegerField(null=True, blank=True, choices=SOURCE_CHOICES)
     call_sid = models.CharField(max_length=256, null=True, blank=True)
+    reported_before = models.CharField(max_length=256, null=True, blank=True)
 
     def get_address(self):
         return (self.address_number and self.street_name) and "{} {}".format(self.address_number, self.street_name) or self.address
