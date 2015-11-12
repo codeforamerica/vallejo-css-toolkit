@@ -391,6 +391,7 @@ def step_ten(request):
 
         with resp.gather(action="/intake/step-eleven/", numDigits=10, method="POST") as g:
             g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_phone_number.mp3")
+            g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/answer_using_numbers.mp3")
         resp.redirect("/intake/step-eleven/", method="POST")
 
         return resp
