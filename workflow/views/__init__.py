@@ -82,6 +82,6 @@ def login_view(request):
         users = User.objects.filter(id=request.user.id)
         user = users and users[0]
         if user and user.is_authenticated:
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/workflow')
 
     return render(request, 'workflow/login.html', {'exclude_navbar': True})
