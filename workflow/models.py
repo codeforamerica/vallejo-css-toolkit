@@ -45,11 +45,13 @@ class CSSCall(models.Model):
     CE_REFERRAL_SOURCE = 4
     OFFICER_REFERRAL_SOURCE = 5
     CITY_REFERRAL_SOURCE = 6
+    WEB_SPANISH_SOURCE = 7
 
     SOURCE_CHOICES = (
         (PHONE_SOURCE, 'Phone'),
         (EMAIL_SOURCE, 'Email'),
         (WEB_SOURCE, 'Web'),
+        (WEB_SPANISH_SOURCE, 'Web (Spanish)'),
         (CE_REFERRAL_SOURCE, 'Code Enforcement Referral'),
         (OFFICER_REFERRAL_SOURCE, 'Officer Referral'),
         (CITY_REFERRAL_SOURCE, 'Other City Referral')

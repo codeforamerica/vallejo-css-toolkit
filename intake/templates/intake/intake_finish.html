@@ -15,10 +15,8 @@
         <div class="row">
             <div class="col-sm-9 col-sm-offset-1">
                 <div class="header-content finish-intro">
-                    {% if lang == 'en' %}
-                        <h1>Thanks, we've got it!</h1>
-                        <p>Your report has been sent to the Community Services Section of the police department. If you've signed up for progress updates, you'll receive one as soon as someone starts working on your request. Take care!</p>
-                    {% endif %}
+                    <h1>{% if lang == 'en' %}Thanks, we've got it!{% elif lang == 'es' %}TODO{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Your report has been sent to the Community Services Section of the police department. If you've signed up for progress updates, you'll receive one as soon as someone starts working on your request. Take care!{% elif lang == 'es' %}TODO{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -30,21 +28,32 @@
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
                 {% if report_id %}
-                    {% if lang == 'en' %}
-                        <h4>Your reference number is {{ report_id }}</h4>
-                    {% endif %}
+                    <h4>{% if lang == 'en' %}Your reference number is {% elif lang == 'es' %}TODO {% endif %}{{ report_id }}</h4>
                 {% endif %}
             </div>
         </div>
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <a class="btn btn-success btn-lg" href="#" role="button">Done</a>
+                <a class="btn btn-success btn-lg" href="/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Done{% elif lang == 'es' %}TODO{% endif %}</a>
             </div>
         </div>
     </div>
+</div>
 
+<div class="container-fluid footer">
+    <div class="row">
+        <div class="col-md-6">
+            <p>This is an official City of Vallejo website made with Code for America.</p>
+        </div>
 
+        <div class="col-md-6">
+            <ul class="footer-items pull-right">
+                <li><a href="/workflow"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Staff Compass</a></li>
+                <li><a target="_blank" href="http://vallejo.hosted.civiclive.com/site_policy"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

@@ -44,7 +44,7 @@ class IntakeIssueForm(forms.Form):
         self.fields['time_of_day'].widget = forms.TextInput(attrs={'placeholder': 'ex: night'})
         self.fields['how_long'].widget = forms.TextInput(attrs={'placeholder': 'ex: 3 days'})
         self.fields['reported_before_details'].widget = forms.TextInput(attrs={'placeholder': 'ex: yesterday, to Code Enforcement'})
-        self.fields['problem_location'].widget = forms.TextInput(attrs={'placeholder': 'Address or cross street'})
+        self.fields['problem_location'].widget = forms.TextInput(attrs={'placeholder': 'address or intersection'})
 
 
 class IntakeContactForm(forms.Form):
@@ -70,3 +70,11 @@ class IntakeContactForm(forms.Form):
 
         if not data.get('reporter_phone') and data.get('reporter_contact_method') == 'text':
             raise forms.ValidationError('You chose to receive email updates but did not provide a phone number.')
+
+
+class IntakeQuestionForm(forms.Form):
+    question = forms.CharField()
+
+
+class IntakeMessageForm(forms.Form):
+    message = forms.CharField()

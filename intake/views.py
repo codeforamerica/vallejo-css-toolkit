@@ -19,18 +19,20 @@ from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission, TypeformAsset, PublicUploadedAsset
 from workflow.models import CSSCall, Recording
-from intake.forms import IntakeIssueForm, IntakeContactForm
+from intake.forms import IntakeIssueForm, IntakeContactForm, IntakeQuestionForm, IntakeMessageForm
 
 # from intake.utils import create_call, update_call
 
 log = logging.getLogger('consolelogger')
 
-SUPPORTED_LANGS = ('en')
+SUPPORTED_LANGS = ('en', 'es')
 DEFAULT_LANG = 'en'
 
 
 def report_intro(request):
-    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+    lang = request.GET.get('lang') or DEFAULT_LANG
+    if lang not in SUPPORTED_LANGS:
+        lang = DEFAULT_LANG
 
     return render(request, 'intake/intake_intro.html', {'lang': lang, 'exclude_navbar': True})
 
@@ -39,9 +41,16 @@ def report_issue(request):
     if request.method == 'POST':
         form = IntakeIssueForm(request.POST, request.FILES)
         lang = form.data.get('lang', DEFAULT_LANG)
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
 
         if form.is_valid():
             now_utc = pytz.UTC.localize(datetime.utcnow())
+
+            if lang == 'en':
+                source = CSSCall.WEB_SOURCE
+            elif lang == 'es':
+                source = CSSCall.WEB_SPANISH_SOURCE
 
             report = CSSCall.objects.create(
                 address=form.cleaned_data.get('problem_location'),
@@ -52,7 +61,7 @@ def report_issue(request):
                 time_of_day_occurs=form.cleaned_data.get('time_of_day'),
                 problem_duration=form.cleaned_data.get('how_long'),
                 when_last_reported=form.cleaned_data.get('reported_before_details'),
-                source=CSSCall.WEB_SOURCE
+                source=source
             )
 
             try:
@@ -90,7 +99,9 @@ def report_issue(request):
             messages.add_message(request, messages.ERROR, form.errors)
 
     else:
-        lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+        lang = request.GET.get('lang') or DEFAULT_LANG
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
         form = IntakeIssueForm()
 
     return render(request, 'intake/intake_issue.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
@@ -100,6 +111,8 @@ def report_contact(request):
     if request.method == 'POST':
         form = IntakeContactForm(request.POST, request.FILES)
         lang = form.data.get('lang', DEFAULT_LANG)
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
         report_id = form.data.get('report_id')
         report = get_object_or_404(CSSCall, id=report_id)
 
@@ -127,7 +140,9 @@ def report_contact(request):
     else:
         report_id = request.GET.get('report_id')
         report = get_object_or_404(CSSCall, id=report_id)
-        lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+        lang = request.GET.get('lang') or DEFAULT_LANG
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
         form = IntakeContactForm()
 
     return render(request, 'intake/intake_contact.html', {'form': form, 'lang': lang, 'report_id': report.id, 'exclude_navbar': True})
@@ -135,9 +150,91 @@ def report_contact(request):
 
 def report_finish(request):
     report_id = request.GET.get('report_id')
-    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+    lang = request.GET.get('lang') or DEFAULT_LANG
+    if lang not in SUPPORTED_LANGS:
+        lang = DEFAULT_LANG
 
     return render(request, 'intake/intake_finish.html', {'report_id': report_id, 'lang': lang, 'exclude_navbar': True})
+
+
+def report_question(request):
+    if request.method == 'POST':
+        form = IntakeQuestionForm(request.POST)
+        lang = form.data.get('lang', DEFAULT_LANG)
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
+
+        if form.errors:
+            messages.add_message(request, messages.ERROR, form.errors)
+
+        if form.is_valid():
+            now_utc = pytz.UTC.localize(datetime.utcnow())
+
+            if lang == 'en':
+                source = CSSCall.WEB_SOURCE
+            elif lang == 'es':
+                source = CSSCall.WEB_SPANISH_SOURCE
+
+            report = CSSCall.objects.create(
+                reported_datetime=now_utc,
+                problem=form.cleaned_data.get('question'),
+                source=source
+            )
+
+            return HttpResponseRedirect(
+                '/report/contact/?report_id={}{}'.format(
+                    report.id,
+                    lang != DEFAULT_LANG and "&lang={}".format(lang) or ""
+                )
+            )
+
+    else:
+        lang = request.GET.get('lang') or DEFAULT_LANG
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
+        form = IntakeQuestionForm()
+
+    return render(request, 'intake/intake_question.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
+
+
+def report_message(request):
+    if request.method == 'POST':
+        form = IntakeMessageForm(request.POST)
+        lang = form.data.get('lang', DEFAULT_LANG)
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
+
+        if form.errors:
+            messages.add_message(request, messages.ERROR, form.errors)
+
+        if form.is_valid():
+            now_utc = pytz.UTC.localize(datetime.utcnow())
+
+            if lang == 'en':
+                source = CSSCall.WEB_SOURCE
+            elif lang == 'es':
+                source = CSSCall.WEB_SPANISH_SOURCE
+
+            report = CSSCall.objects.create(
+                reported_datetime=now_utc,
+                problem=form.cleaned_data.get('message'),
+                source=source
+            )
+
+            return HttpResponseRedirect(
+                '/report/contact/?report_id={}{}'.format(
+                    report.id,
+                    lang != DEFAULT_LANG and "&lang={}".format(lang) or ""
+                )
+            )
+
+    else:
+        lang = request.GET.get('lang') or DEFAULT_LANG
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
+        form = IntakeMessageForm()
+
+    return render(request, 'intake/intake_message.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
 
 
 @twilio_view

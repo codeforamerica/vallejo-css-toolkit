@@ -13,15 +13,17 @@
 <div class="intake-header">
     <div class="container">
         <div class="row">
-          <div class="col-sm-4 col-sm-offset-8">
-            <a href="/report/?lang=es" class="espanol-link pull-right">En Espa&#241;ol</a>
-          </div>
+            <div class="col-sm-4 col-sm-offset-8">
+                {% if lang == 'en' %}
+                    <a href="/report/?lang=es" class="espanol-link pull-right">En Espa&#241;ol</a>
+                {% endif %}
+            </div>
         </div>
         <div class="row">
             <div class="col-sm-9 col-sm-offset-1 col-xs-12">
                 <div class="header-content">
-                    <h1>{% if lang == 'en' %}What's going on in your neighborhood?{% endif %}</h1>
-                    <p>{% if lang == 'en' %}Here you can report non-emergency issues, ask a question, or leave a message for the Community Services Section of the police department. Your submissions will go directly to the department and they'll work on investigating the problem or answering your questions as soon as possible. <b>If you have an emergency in progress, call 911.</b>{% endif %}</p>
+                    <h1>{% if lang == 'en' %}What's going on in your neighborhood?{% elif lang == 'es' %}TODO{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Here you can report non-emergency issues, ask a question, or leave a message for the Community Services Section of the police department. Your submissions will go directly to the department and they'll work on investigating the problem or answering your questions as soon as possible. <b>If you have an emergency in progress, call 911.</b>{% elif lang == 'es' %}Hola, has llegado a la herramienta de CSS. Aqu&iacute; se puede informar de los problemas en su vecindario o dejar una pregunta o mensaje para la Secci&oacute;n de Servicios a la Comunidad. Si est&aacute; experimentando una emergencia, llame al 911.{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -31,27 +33,27 @@
 <div class="container intake-body">
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1 col-xs-12">
-            <h4>{% if lang == 'en' %}What are you here to do?{% endif %}</h4>
-            <a class="btn btn-primary btn-lg" href="/report/issue" role="button">{% if lang == 'en' %}Report an issue{% endif %}</a>
-            <a class="btn btn-default btn-lg disabled" href="/report/msg" role="button">{% if lang == 'en' %}Leave a message{% endif %}</a>
-            <a class="btn btn-default btn-lg disabled" href="/report/question" role="button">{% if lang == 'en' %}Ask a question{% endif %}</a>
+            <h4>{% if lang == 'en' %}What are you here to do?{% elif lang == 'es' %}TODO{% endif %}</h4>
+            <a class="btn btn-primary btn-lg" href="/report/issue/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Report an issue{% elif lang == 'es' %}TODO{% endif %}</a>
+            <a class="btn btn-default btn-lg" href="/report/message/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Leave a message{% elif lang == 'es' %}TODO{% endif %}</a>
+            <a class="btn btn-default btn-lg" href="/report/question/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Ask a question{% elif lang == 'es' %}TODO{% endif %}</a>
         </div>
     </div>
 </div>
 
 <div class="container-fluid footer">
-  <div class="row">
-    <div class="col-md-6">
-      <p>This is an official City of Vallejo website made with Code for America.</p>
-    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p>This is an official City of Vallejo website made with Code for America.</p>
+        </div>
 
-    <div class="col-md-6">
-      <ul class="footer-items pull-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Staff Compass</a></li>
-        <li><a href="#"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Terms of Service</a></li>
-      </ul>
+        <div class="col-md-6">
+            <ul class="footer-items pull-right">
+                <li><a href="/workflow"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Staff Compass</a></li>
+                <li><a target="_blank" href="http://vallejo.hosted.civiclive.com/site_policy"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Terms of Service</a></li>
+            </ul>
+        </div>
     </div>
-  </div>
 </div>
 
 {% endblock %}
