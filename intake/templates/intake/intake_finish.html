@@ -15,8 +15,8 @@
         <div class="row">
             <div class="col-sm-9 col-sm-offset-1">
                 <div class="header-content finish-intro">
-                    <h1>{% if lang == 'en' %}Thanks, we've got it!{% elif lang == 'es' %}TODO{% endif %}</h1>
-                    <p>{% if lang == 'en' %}Your report has been sent to the Community Services Section of the police department. If you've signed up for progress updates, you'll receive one as soon as someone starts working on your request. Take care!{% elif lang == 'es' %}TODO{% endif %}</p>
+                    <h1>{% if lang == 'en' %}Thanks, we've got it!{% elif lang == 'es' %}Gracias, &iexcl;lo recibimos!{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Your report has been sent to the Community Services Section of the police department. If you've signed up for progress updates, you'll receive one as soon as someone starts working on your request. Take care!{% elif lang == 'es' %}Su informe fue mandado al Community Services Section (sector de servicios para la communidad) de la polic&iacute;a. Si pidio actualizaciones, los recibir&aacute; lo m&aacute;s pronto que un agente empieze su investigaci&oacute;n.{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -28,14 +28,14 @@
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
                 {% if report_id %}
-                    <h4>{% if lang == 'en' %}Your reference number is {% elif lang == 'es' %}TODO {% endif %}{{ report_id }}</h4>
+                    <h4>{% if lang == 'en' %}Your reference number is {% elif lang == 'es' %}Su n&uacute;mero de referencia es {% endif %}{{ report_id }}</h4>
                 {% endif %}
             </div>
         </div>
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <a class="btn btn-success btn-lg" href="/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Done{% elif lang == 'es' %}TODO{% endif %}</a>
+                <a class="btn btn-success btn-lg" href="/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Done{% elif lang == 'es' %}Listo{% endif %}</a>
             </div>
         </div>
     </div>

@@ -18,7 +18,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission, TypeformAsset, PublicUploadedAsset
-from workflow.models import CSSCall, Recording
+from workflow.models import CSSCall, Recording, ReportNotification
 from intake.forms import IntakeIssueForm, IntakeContactForm, IntakeQuestionForm, IntakeMessageForm
 
 # from intake.utils import create_call, update_call
@@ -153,6 +153,9 @@ def report_finish(request):
     lang = request.GET.get('lang') or DEFAULT_LANG
     if lang not in SUPPORTED_LANGS:
         lang = DEFAULT_LANG
+
+    report = CSSCall.objects.get(id=report_id)
+    ReportNotification.objects.create(report=report, message="Thank you for contacting the CSS department. Your reference number is {}.".format(report.id))
 
     return render(request, 'intake/intake_finish.html', {'report_id': report_id, 'lang': lang, 'exclude_navbar': True})
 
@@ -582,6 +585,7 @@ def step_fourteen(request):
     try:
         call_sid = request.POST.get('CallSid', None)
         call = CSSCall.objects.get(call_sid=call_sid)
+        ReportNotification.objects.create(report=call, message="Thank you for contacting the CSS department. Your reference number is {}.".format(call.id))
 
         digit_pressed = request.POST.get('Digits', None)
 

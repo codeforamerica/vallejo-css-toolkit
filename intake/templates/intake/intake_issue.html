@@ -17,8 +17,8 @@
         <div class="row">
             <div class="col-sm-9 col-sm-offset-1">
                 <div class="header-content  issue-intro">
-                    <h1>{% if lang == 'en' %}Tell us what's going on.{% elif lang == 'es' %}TODO{% endif %}</h1>
-                    <p>{% if lang == 'en' %}Try to be as detailed as possible and include as much information as you can. The more specific you can be, the easier we can understand and investigate the problem.{% elif lang == 'es' %}TODO{% endif %}</p>
+                    <h1>{% if lang == 'en' %}Tell us what's going on.{% elif lang == 'es' %}Di nos qu&eacute; pasa.{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Try to be as detailed as possible and include as much information as you can. The more specific you can be, the easier we can understand and investigate the problem.{% elif lang == 'es' %}Del tanto detalle posible e incluye toda la informaci&oacute;n que pueda. Ser&aacute; m&aacute;s f&aacute;cil entender e investigar el problema con el major numero de datos.{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -37,16 +37,16 @@
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <h4>{% if lang == 'en' %}Problem Description{% elif lang == 'es' %}TODO{% endif %}</h4>
+                <h4>{% if lang == 'en' %}Problem Description{% elif lang == 'es' %}Descripci&oacute;n del problema{% endif %}</h4>
 
                 <div class="form-group">
-                    <label for="{{ form.problem_location.id_for_label }}">{% if lang == 'en' %}Where is the problem occuring? (required){% elif lang == 'es' %}&iquest;D&oacute;nde se produce el problema? Por favor, diga la direcci&oacute;n o cruce de calles. (TODO - required){% endif %}</label>
+                    <label for="{{ form.problem_location.id_for_label }}">{% if lang == 'en' %}Where is the problem occuring? (required){% elif lang == 'es' %}&iquest;D&oacute;nde est&aacute; el problema? Por favor, diga la direcci&oacute;n o cruce de calles. (requerido){% endif %}</label>
                     {{ form.problem_location|add_class:"form-control" }}
                     {{ form.problem_location.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.description.id_for_label }}">{% if lang == 'en' %}Describe what is happening. (required){% elif lang == 'es' %}Describa el problema que est&aacute; llamando acerca. (TODO - required){% endif %}</label>
+                    <label for="{{ form.description.id_for_label }}">{% if lang == 'en' %}Describe what is happening. (required){% elif lang == 'es' %}Describa el problema. (requerido){% endif %}</label>
                     <textarea name="{{ form.description.html_name }}" class="form-control" rows="3"></textarea>
                     {{ form.description.errors }}
                 </div>
@@ -58,7 +58,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.time_of_day.id_for_label }}">{% if lang == 'en' %}What time of day does the problem occur?{% elif lang == 'es' %}&iquest;En torno a qu&eacute; hora del d&iacute;a se produce este problema?{% endif %}</label>
+                    <label for="{{ form.time_of_day.id_for_label }}">{% if lang == 'en' %}What time of day does the problem occur?{% elif lang == 'es' %}&iquest;A qu&eacute; horas del d&iacute;a se produce este problema?{% endif %}</label>
                     {{ form.time_of_day|add_class:"form-control" }}
                     {{ form.time_of_day.errors }}
                 </div>
@@ -71,25 +71,25 @@
 
 
                 <div class="form-group">
-                    <label for="{{ form.how_many_people.id_for_label }}">{% if lang == 'en' %}How many people are involved?{% elif lang == 'es' %}&iquest;Cu&aacute;ntas personas est&aacute;n involucradas en este tema?{% endif %}</label>
+                    <label for="{{ form.how_many_people.id_for_label }}">{% if lang == 'en' %}How many people are involved?{% elif lang == 'es' %}&iquest;Cu&aacute;ntas personas est&aacute;n involucradas?{% endif %}</label>
                     {{ form.how_many_people|add_class:"form-control" }}
                     {{ form.how_many_people.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.uploaded_photo.id_for_label }}">{% if lang == 'en' %}Do you have photos of the problem?{% elif lang == 'es' %}TODO{% endif %}</label>
+                    <label for="{{ form.uploaded_photo.id_for_label }}">{% if lang == 'en' %}Do you have photos of the problem?{% elif lang == 'es' %}&iquest;Tiene fotos del problema?{% endif %}</label>
                     {{ form.uploaded_photo }}
                     {{ form.uploaded_photo.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.reported_before.id_for_label }}">{% if lang == 'en' %}Have you reported this problem before?{% elif lang == 'es' %}&iquest;Alguna vez ha reportado este problema antes?{% endif %}</label>
+                    <label for="{{ form.reported_before.id_for_label }}">{% if lang == 'en' %}Have you reported this problem before?{% elif lang == 'es' %}&iquest;Alguna vez ha reportado este problema previamente?{% endif %}</label>
                     {{ form.reported_before }}
                     {{ form.reported_before.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ reported_before_details.id_for_label }}">{% if lang == 'en' %}If yes, when and where did you last report this problem?{% elif lang == 'es' %}&iquest;Cu&aacute;ndo fue la &uacute;ltima memoria de este tema?{% endif %}</label>
+                    <label for="{{ reported_before_details.id_for_label }}">{% if lang == 'en' %}If yes, when and where did you last report this problem?{% elif lang == 'es' %}Si lo ha reportado antes, &iquest;a quien lo reportad&oacute; y a donde?{% endif %}</label>
                     {{ form.reported_before_details|add_class:"form-control" }}
                     {{ form.reported_before_details.errors }}
                 </div>
@@ -99,7 +99,7 @@
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% elif lang == 'es' %}TODO{% endif %}">
+                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% elif lang == 'es' %}Pr&oacute;ximo{% endif %}">
             </div>
         </div>
 

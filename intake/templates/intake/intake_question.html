@@ -15,8 +15,7 @@
         <div class="row">
             <div class="col-sm-9 col-sm-offset-1">
                 <div class="header-content">
-                    <h1>{% if lang == 'en' %}Ask a question.{% elif lang == 'es' %}TODO{% endif %}</h1>
-                    <p>{% if lang == 'en' %}Although it is not required, it’s most helpful to our staff if we have your name and contact information in case we need any further details on how to best resolve this issue. <b>We will never share your information with anyone other than authorized city staff.{% elif lang == 'es' %}TODO{% endif %}</b></p>
+                    <h1>{% if lang == 'en' %}Ask a question.{% elif lang == 'es' %}Haz una pregunta.{% endif %}</h1>
                 </div>
             </div>
         </div>
@@ -32,7 +31,7 @@
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <h4>{% if lang == 'en' %}What is your question?{% elif lang == 'es' %}TODO{% endif %}</h4>
+                <h4>{% if lang == 'en' %}What is your question?{% elif lang == 'es' %}&iquest;Qu&eacute; es su pregunta?{% endif %}</h4>
             </div>
             <div class="col-sm-6 col-sm-offset-1">
                 <textarea class="form-control" name="{{ form.question.html_name }}" rows="3" value="{{ form.question.value }}"></textarea>
@@ -41,7 +40,7 @@
         </div>
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% elif lang == 'es' %}TODO{% endif %}">
+                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% elif lang == 'es' %}Pr&oacute;ximo{% endif %}">
             </div>
         </div>
     </form>
