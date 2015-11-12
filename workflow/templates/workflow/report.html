@@ -93,6 +93,11 @@
                                 <label for="{{ form.name.id_for_label }}">Reporter name:</label>
                                 {{ form.name|add_class:"form-control" }}
                                 {{ form.name.errors }}
+                                {% if name_recording and name_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ name_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -109,6 +114,12 @@
                                 <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
                                 {{ form.reporter_alternate_contact|add_class:"form-control" }}
                                 {{ form.reporter_alternate_contact.errors }}
+                                {% if email_recording and email_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ email.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
+
                             </div>
                         </div>
 
@@ -129,6 +140,12 @@
                                 <label for="{{ form.reporter_street_name.id_for_label }}">Reporter Address:</label>
                                 {{ form.reporter_street_name|add_class:"form-control" }}
                                 {{ form.reporter_street_name.errors }}
+                                {% if address_recording and address_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ address.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
+
                             </div>
                         </div>
 
@@ -157,6 +174,11 @@
                                 <label for="{{ form.address.id_for_label }}">Location Description:</label>
                                 {{ form.address|add_class:"form-control typeahead" }}
                                 {{ form.address.errors }}
+                                {% if location_recording and location_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ location_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -165,6 +187,11 @@
                                 <label for="{{ form.problem.id_for_label }}">Description:</label>
                                 <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
                                 {{ form.problem.errors }}
+                                {% if description_recording and description_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ description_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -189,6 +216,11 @@
                                 <label for="{{ form.time_of_day_occurs.id_for_label }}">Time of day issues occurs:</label>
                                 {{ form.time_of_day_occurs|add_class:"form-control" }}
                                 {{ form.time_of_day_occurs.errors }}
+                                {% if time_of_day_recording and time_of_day_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ time_of_day_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
                             </div>
                         </div>
 

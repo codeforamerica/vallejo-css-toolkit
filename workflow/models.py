@@ -93,6 +93,11 @@ class CSSCall(models.Model):
     def get_address(self):
         return (self.address_number and self.street_name) and "{} {}".format(self.address_number, self.street_name) or self.address
 
+    def save(self, *args, **kwargs):
+        if not self.reported_datetime:
+            self.reported_datetime = pytz.utc.localize(datetime.utcnow())
+        super(CSSCall, self).save(*args, **kwargs)
+
 
 class Verification(models.Model):
     report = models.ForeignKey(CSSCall)

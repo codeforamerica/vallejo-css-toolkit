@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from intake.models import CallAuditItem, PublicUploadedAsset
 
 from workflow.forms.report_forms import ReportForm
-from workflow.models import CSSCall, CSSCase, Verification, CSSReportView, ReportNotification
+from workflow.models import CSSCall, CSSCase, Verification, CSSReportView, ReportNotification, Recording
 from workflow.utils import get_location_history, get_reports
 
 log = logging.getLogger('consolelogger')
@@ -83,6 +83,14 @@ def report(request, report_id):
     external_assets = PublicUploadedAsset.objects.filter(css_report=instance.id).order_by('-id')
     external_assets_count = len(external_assets)
 
+    name_recording = Recording.objects.filter(call=instance, type=Recording.NAME)
+    location_recording = Recording.objects.filter(call=instance, type=Recording.LOCATION)
+    description_recording = Recording.objects.filter(call=instance, type=Recording.DESCRIPTION)
+    email_recording = Recording.objects.filter(call=instance, type=Recording.EMAIL)
+    duration_recording = Recording.objects.filter(call=instance, type=Recording.DURATION)
+    address_recording = Recording.objects.filter(call=instance, type=Recording.ADDRESS)
+    time_of_day_recording = Recording.objects.filter(call=instance, type=Recording.TIME_OF_DAY)
+
     verification_id = None
     case_id = None
 
@@ -104,7 +112,14 @@ def report(request, report_id):
             'external_assets': external_assets,
             'external_assets_count': external_assets_count,
             'verification_id': verification_id,
-            'case_id': case_id
+            'case_id': case_id,
+            'name_recording': name_recording,
+            'location_recording': location_recording,
+            'description_recording': description_recording,
+            'email_recording': email_recording,
+            'duration_recording': duration_recording,
+            'address_recording': address_recording,
+            'time_of_day_recording': time_of_day_recording
         }
     )
 
