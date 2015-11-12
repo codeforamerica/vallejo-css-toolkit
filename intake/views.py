@@ -159,7 +159,7 @@ def step_two(request):
     try:
         digit_pressed = request.POST.get('Digits', None)
         call_sid = request.POST.get('CallSid', None)
-        CSSCall.objects.create(call_sid=call_sid)
+        CSSCall.objects.create(call_sid=call_sid, source=CSSCall.PHONE_SOURCE)
 
         resp = twilio.twiml.Response()
 
@@ -317,6 +317,7 @@ def step_eight(request):
         call_sid = request.POST.get('CallSid', None)
         call = CSSCall.objects.get(call_sid=call_sid)
 
+        # might be their response to safety concerns question
         digit_pressed = request.POST.get('Digits', None)
         if digit_pressed == '1':
             call.safety_concerns = 'Yes'
@@ -329,6 +330,11 @@ def step_eight(request):
         elif digit_pressed == '3':
             call.safety_concerns = 'Unsure'
             call.save()
+
+        # or might be jumping in here if they opted to leave a message
+        description_url = request.POST.get("RecordingUrl", None)
+        if description_url:
+            Recording.objects.create(call=call, url=description_url, type=Recording.DESCRIPTION)
 
         resp = twilio.twiml.Response()
 
