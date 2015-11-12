@@ -116,7 +116,7 @@
                                 {{ form.reporter_alternate_contact.errors }}
                                 {% if email_recording and email_recording.0.url %}
                                     <audio controls>
-                                        <source src="{{ email.0.url }}.mp3" type="audio/mpeg">
+                                        <source src="{{ email_recording.0.url }}.mp3" type="audio/mpeg">
                                     </audio>
                                 {% endif %}
 
@@ -142,7 +142,7 @@
                                 {{ form.reporter_street_name.errors }}
                                 {% if address_recording and address_recording.0.url %}
                                     <audio controls>
-                                        <source src="{{ address.0.url }}.mp3" type="audio/mpeg">
+                                        <source src="{{ address_recording.0.url }}.mp3" type="audio/mpeg">
                                     </audio>
                                 {% endif %}
 
