@@ -1,9 +1,6 @@
-body{
-  font-family: 'PT Sans', sans-serif;
-}
-
 body {
     padding-bottom: 100px;
+    font-family: 'PT Sans', sans-serif;
 }
 
 /**Navbar**/
