@@ -248,6 +248,14 @@ ul.doc-attrs {
   margin-bottom:15px;
 }
 
+audio{
+  margin-top:15px;
+}
+
+.sub-label label{
+  font-size:11px;
+}
+
 /**Small tables**/
 .small-table{
   margin-bottom:0;
