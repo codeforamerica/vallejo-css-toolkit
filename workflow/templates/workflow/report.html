@@ -150,20 +150,20 @@
                         </div>
 
                         <div class="col-sm-12">
-                            <h5>Issue address information</h5>
+                            <h5>Problem Address:</h5>
                         </div>
 
                         <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="{{ form.address_number.id_for_label }}">House number:</label>
+                            <div class="form-group sub-label">
+                                <label for="{{ form.address_number.id_for_label }}">house number</label>
                                 {{ form.address_number|add_class:"form-control typeahead" }}
                                 {{ form.address_number.errors }}
                             </div>
                         </div>
 
                         <div class="col-sm-8">
-                            <div class="form-group street-name-selector">
-                                <label for="{{ form.street_name.id_for_label }}">Street name:</label>
+                            <div class="form-group street-name-selector sub-label">
+                                <label for="{{ form.street_name.id_for_label }}">street name</label>
                                 {{ form.street_name|add_class:"form-control typeahead" }}
                                 {{ form.street_name.errors }}
                             </div>
@@ -184,7 +184,7 @@
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="{{ form.problem.id_for_label }}">Description:</label>
+                                <label for="{{ form.problem.id_for_label }}">Problem Description:</label>
                                 <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
                                 {{ form.problem.errors }}
                                 {% if description_recording and description_recording.0.url %}
@@ -192,14 +192,6 @@
                                         <source src="{{ description_recording.0.url }}.mp3" type="audio/mpeg">
                                     </audio>
                                 {% endif %}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="{{ form.source.id_for_label }}">Source:</label>
-                                {{ form.source|add_class:"form-control" }}
-                                {{ form.source.errors }}
                             </div>
                         </div>
 
@@ -245,6 +237,22 @@
                                 <label for="{{ form.resolution.id_for_label }}">Notes:</label>
                                 {{ form.resolution|add_class:"form-control" }}
                                 {{ form.resolution.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.source.id_for_label }}">Source:</label>
+                                {{ form.source|add_class:"form-control" }}
+                                {{ form.source.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.source.id_for_label }}">Type:</label>
+                                {{ form.source|add_class:"form-control" }}
+                                {{ form.source.errors }}
                             </div>
                         </div>
                     </div>
