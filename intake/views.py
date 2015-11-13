@@ -240,6 +240,7 @@ def report_message(request):
     return render(request, 'intake/intake_message.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
 
 
+@csrf_exempt
 @twilio_view
 def step_one(request):
     try:
