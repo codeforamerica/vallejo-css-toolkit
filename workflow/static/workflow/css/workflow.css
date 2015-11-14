@@ -256,6 +256,10 @@ audio{
   font-size:11px;
 }
 
+.reporter_contact{
+  margin-bottom:0;
+}
+
 /**Small tables**/
 .small-table{
   margin-bottom:0;

@@ -102,7 +102,7 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <div class="form-group reporter_primary_contact">
+                            <div class="form-group reporter_primary_contact reporter_contact">
                                 <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
                                 {{ form.phone|add_class:"form-control" }}
                                 {{ form.phone.errors }}
@@ -110,17 +110,21 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <div class="form-group reporter_additional_contact">
+                            <div class="form-group reporter_additional_contact reporter_contact">
                                 <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
                                 {{ form.reporter_alternate_contact|add_class:"form-control" }}
                                 {{ form.reporter_alternate_contact.errors }}
-                                {% if email_recording and email_recording.0.url %}
-                                    <audio controls>
-                                        <source src="{{ email_recording.0.url }}.mp3" type="audio/mpeg">
-                                    </audio>
-                                {% endif %}
-
                             </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            {% if email_recording and email_recording.0.url %}
+                                <audio controls>
+                                    <source src="{{ email_recording.0.url }}.mp3" type="audio/mpeg">
+                                </audio>
+                            {% endif %}
+                          </div>
                         </div>
 
   <!--                       <div class="col-sm-12">
