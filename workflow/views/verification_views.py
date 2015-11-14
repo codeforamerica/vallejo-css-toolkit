@@ -1,3 +1,5 @@
+import requests
+import urllib
 import logging
 from django.contrib import messages
 
@@ -49,6 +51,29 @@ def verification(request, verification_id):
     contact_log = VerificationContactAction.objects.filter(verification=instance).order_by('timestamp').values_list('timestamp', 'contacter_name', 'contact_type', 'contact_description')
     contact_log = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in contact_log]
 
+    params = urllib.urlencode({
+        'street': instance.report.get_address(),
+        'city': 'Vallejo',
+        'state': 'CA',
+        'benchmark': '4',
+        'format': 'json'
+    })
+    url = "http://geocoding.geo.census.gov/geocoder/locations/address?{}".format(params)
+    lat, lon = None, None
+
+    try:
+        r = requests.get(url, timeout=10)
+        if r.status_code == 200:
+            results = r.json()
+            if "result" in results:
+                if "addressMatches" in results["result"]:
+                    if "coordinates" in results["result"]["addressMatches"][0]:
+                        lat = results["result"]["addressMatches"][0]["coordinates"].get("y")
+                        lon = results["result"]["addressMatches"][0]["coordinates"].get("x")
+
+    except requests.exceptions.Timeout:
+        log.warning("Geocode timeout")
+
     return render(
         request,
         'workflow/verification.html',
@@ -60,7 +85,9 @@ def verification(request, verification_id):
             'report_id': instance.report.id,
             'case_id': case_id,
             'contact_log': contact_log,
-            'uploaded_asset_form': uploaded_asset_form
+            'uploaded_asset_form': uploaded_asset_form,
+            'lat': lat,
+            'lon': lon
         }
     )
 

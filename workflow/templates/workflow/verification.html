@@ -4,8 +4,12 @@
 
 {% block assets %}
 
+<script src='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.js'></script>
+<link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
+
 <link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/>
 <link rel="stylesheet" href="{% static "workflow/css/verification.css" %}"/>
+
 <script type='text/javascript' src="{% static "workflow/js/verification.js" %}"></script>
 
 {% endblock %}
@@ -20,6 +24,8 @@
         <div class="row subnav">
             <div class="col-md-8 col-sm-7 col-xs-12">
                 <h1>{{ property_address }}</h1>
+                <input type="hidden" id="lat" value="{{ lat }}">
+                <input type="hidden" id="lon" value="{{ lon }}">
                 <p class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</p>
             </div>
 
@@ -58,7 +64,7 @@
 
                     <div class="row">
                         <div class="col-sm-12">
-                            <div class="map-placeholder"><p>(map coming soon)</p></div>
+                            <div id="map" style="height: 240px;" class="map-placeholder"></div>
                         </div>
                     </div>
 

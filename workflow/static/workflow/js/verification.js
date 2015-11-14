@@ -15,7 +15,7 @@ function addContact() {
             "contact_description": document.forms['add_contact_form']['contact_description'].value,
         },
     }).done( function(data) {
-        console.log(data);
+        // console.log(data);
         $('#call-log tr:last').after('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
     });
 }
@@ -32,6 +32,20 @@ $(document).ready(function(){
         $(".tab-pane").hide();
         $(paneId).show();
     });
+
+    L.mapbox.accessToken = 'pk.eyJ1IjoiYWRzY2huZWlkZXIiLCJhIjoiSlcxbGd0NCJ9.9iU2iiEVRUSxpiQXkV_zFg';
+    var m = L.mapbox.map('map', 'mapbox.streets')
+        .setView([38.113056, -122.235833], 12);
+
+    var lat = $("#lat").val(),
+        lon = $("#lon").val();
+
+    console.log(lat, lon);
+
+    if (lat && lon) {
+        var marker = L.marker([lat, lon]);
+        marker.addTo(m);
+    }
 
     function getCookie(name) {
         var cookieValue = null;

@@ -251,7 +251,7 @@ def get_cases(request_params):
                         c.created_at AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
                     )
                 , '') AS started_str,
-                COALESCE(c.address_number::text || ' ' || c.street_name, '') AS address,
+                COALESCE(r.address_number::text || ' ' || r.street_name, '') AS address,
                 COALESCE(p.name, '') AS priority,
                 COALESCE(p.name, '') AS priority_str,
                 COALESCE(r.problem, '') AS description,
