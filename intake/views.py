@@ -240,9 +240,10 @@ def report_message(request):
     return render(request, 'intake/intake_message.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
 
 
-@csrf_exempt
 @twilio_view
 def step_one(request):
+    log.info(request.META['HTTP_X_TWILIO_SIGNATURE'])
+
     try:
         resp = twilio.twiml.Response()
 
