@@ -50,13 +50,21 @@ h2{
   padding-bottom:10px;
 }
 
-.landing-btns .btn{
+.landing-header .btn{
   height:50px;
+  margin-top:15px;
 }
 
-.landing-btns .search{
-  margin-bottom:30px;
+.landing-header{
+  margin-bottom:50px;
 }
+
+.landing-header h2{
+  margin-bottom:0;
+  line-height: 1.5
+}
+
+
 
 .table>thead>tr>th, .table>tbody>tr>td{
   padding-left:15px;

@@ -16,108 +16,22 @@
 
 <div class="container">
     <div class="row landing-header">
-      <div class="col-sm-12 welcome">
-        <h2>Hey {{ user.first_name }}, here's what's happened since you left.</h2>
+      <div class="col-md-10 welcome">
+        <h2>Hey {{ user.first_name }}, here's what's happened since you left:</h2>
       </div>
-    </div>
 
-    <div class="row landing-btns">
-      <div class="col-md-8 col-sm-12 search">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="">
-          <span class="input-group-addon">Search</span>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <a href="/workflow/add_report"><button type="button" class="btn btn-success">+&nbsp;New Report</button></a>
+      <div class="col-md-2 col-sm-4 col-xs-6">
+        <a href="/workflow/add_report"><button type="button" class="btn btn-success btn-block btn-lg">+&nbsp;New Report</button></a>
       </div>
     </div>
 
     <div class="row">
-      <div class="col-md-4">
-        <div class="panel panel-default monthly-overview">
-          <div class="panel-heading">
-            <h3 class="panel-title">Monthly Overview</h3>
-          </div>
-          <div class="panel-body">
-            <p>Current month (to date):</p>
-            <ul>
-              <li>{{ current_month_new_reports }} new reports</li>
-              <li>{{ current_month_new_cases }} opened cases</li>
-              <li>33 resolved cases</li>
-            </ul>
-            <p>Last month:</p>
-            <ul>
-              <li>{{ last_month_new_reports }} new reports</li>
-              <li>{{ last_month_new_cases }} opened cases</li>
-              <li>33 resolved cases</li>
-            </ul>
-          </div>
-        </div>
-      </div>
 
-      <div class="col-md-4 ">
-        <div class="panel panel-default new-reports">
-          <div class="panel-heading">
-            <h3 class="panel-title">12 New Reports</h3>
-          </div>
-
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Received</th>
-                <th>Problem Address</th>
-                <th>Reporter</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>Today</td>
-                <td>1017 Louisiana</td>
-                <td>Rose Beck</td>
-              </tr>
-
-              <tr>
-                <td>Yesterday</td>
-                <td>GVRD</td>
-                <td>Sandy</td>
-              </tr>
-
-              <tr>
-                <td>10/25/15</td>
-                <td>---</td>
-                <td>Jerry Hill</td>
-              </tr>
-
-              <tr>
-                <td>10/25/15</td>
-                <td>325 Florida</td>
-                <td>Hilary Clinton</td>
-              </tr>
-
-              <tr>
-                <td>10/25/15</td>
-                <td>Solano and Georgia</td>
-                <td>---</td>
-              </tr>
-
-              <tr>
-                <td>10/24/15</td>
-                <td>117 B St</td>
-                <td>Andrew S</td>
-              </tr>
-            </tbody>
-
-          </table>
-
-        </div>
-      </div>
 
       <div class="col-md-4 ">
         <div class="panel panel-default">
           <div class="panel-heading">
-            <h3 class="panel-title">Recent Activity</h3>
+            <h3 class="panel-title">Recent Activity since your last login</h3>
           </div>
 
           <table class="table table-hover">
@@ -160,15 +74,245 @@
         </div>
       </div>
 
+      <div class="col-md-8 ">
+        <div class="panel panel-default new-reports">
+          <div class="panel-heading">
+            <h3 class="panel-title">New Reports since your last login</h3>
+          </div>
+
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Received</th>
+                <th>Problem Address</th>
+                <th>Reporter</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Today</td>
+                <td>1017 Louisiana</td>
+                <td>Rose Beck</td>
+                <td>There are people in the house that aren't supposed to be there</td>
+              </tr>
+
+              <tr>
+                <td>Yesterday</td>
+                <td>GVRD</td>
+                <td>Sandy</td>
+                <td>Something is happening that you should know</td>
+              </tr>
+
+              <tr>
+                <td>10/25/15</td>
+                <td>---</td>
+                <td>Jerry Hill</td>
+                <td>Please fix something ASAP!</td>
+              </tr>
+
+              <tr>
+                <td>10/25/15</td>
+                <td>325 Florida</td>
+                <td>Hilary Clinton</td>
+                <td>I saw someone take a car</td>
+              </tr>
+
+              <tr>
+                <td>10/25/15</td>
+                <td>Solano and Georgia</td>
+                <td>---</td>
+                <td>Another thing that happened yesterday</td>
+              </tr>
+
+              <tr>
+                <td>10/24/15</td>
+                <td>117 B St</td>
+                <td>Andrew S</td>
+                <td>Something is happening that you should know</td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+      </div>
+
+      <div class="col-md-4 ">
+        <div class="panel panel-default issue-type">
+          <div class="panel-heading">
+            <h3 class="panel-title">What is our workload?</h3>
+          </div>
+
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Last Month</th>
+                <th>This Month</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Incoming Reports</td>
+                <td>{{ last_month_new_reports }}</td>
+                <td><b>{{ current_month_new_reports }}</b></td>
+              </tr>
+
+              <tr>
+                <td>Opened Cases</td>
+                <td>{{ last_month_new_cases }}</td>
+                <td><b>{{ current_month_new_cases }}</b></td>
+              </tr>
+
+              <tr>
+                <td>Resolved Cases</td>
+                <td>43</td>
+                <td><b>71</b></td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+      <div class="col-md-4 ">
+        <div class="panel panel-default issue-type">
+          <div class="panel-heading">
+            <h3 class="panel-title">What are the most reported issues?</h3>
+          </div>
+
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Last Month</th>
+                <th>This Month</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Stolen Vehicle</td>
+                <td>110</td>
+                <td><b>112</b></td>
+              </tr>
+
+              <tr>
+                <td>Squatter</td>
+                <td>56</td>
+                <td><b>107</b></td>
+              </tr>
+
+              <tr>
+                <td>Abandoned Vehicle</td>
+                <td>99</td>
+                <td><b>98</b></td>
+              </tr>
+
+              <tr>
+                <td>Drugs</td>
+                <td>44</td>
+                <td><b>78</b></td>
+              </tr>
+
+              <tr>
+                <td>Homeless Camp</td>
+                <td>72</td>
+                <td><b>23</b></td>
+              </tr>
+
+              <tr>
+                <td>Auto Repair</td>
+                <td>31</td>
+                <td><b>10</b></td>
+              </tr>
+
+              <tr>
+                <td>Prostitution</td>
+                <td>10</td>
+                <td><b>9</b></td>
+              </tr>
+
+              <tr>
+                <td>Noise</td>
+                <td>2</td>
+                <td><b>0</b></td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
+      <div class="col-md-4 ">
+        <div class="panel panel-default issue-type">
+          <div class="panel-heading">
+            <h3 class="panel-title">Where are incoming reports coming from?</h3>
+          </div>
+
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Source</th>
+                <th>Last Month</th>
+                <th>This Month</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Web Form</td>
+                <td>231</td>
+                <td><b>245</b></td>
+              </tr>
+
+              <tr>
+                <td>Phone Line</td>
+                <td>56</td>
+                <td><b>107</b></td>
+              </tr>
+
+              <tr>
+                <td>Manual Entry</td>
+                <td>77</td>
+                <td><b>91</b></td>
+              </tr>
+
+              <tr>
+                <td>Referral - PD</td>
+                <td>78</td>
+                <td><b>65</b></td>
+              </tr>
+
+              <tr>
+                <td>Referral - CE</td>
+                <td>72</td>
+                <td><b>23</b></td>
+              </tr>
+
+              <tr>
+                <td>Referral - City</td>
+                <td>2</td>
+                <td><b>7</b></td>
+              </tr>
+            </tbody>
+          </table>
+
+        </div>
+      </div>
+
 
 
       <div class="col-sm-12">
         <div class="panel panel-default map-panel">
           <div class="panel-heading">
-            <h3 class="panel-title">Where reports are coming from this month</h3>
+            <h3 class="panel-title">Where in Vallejo are problems persisting?</h3>
           </div>
           <div class="panel-body">
-            Panel content
+            It's a heatmap of stuff!
           </div>
         </div>
       </div>
