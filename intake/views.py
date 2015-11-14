@@ -243,6 +243,8 @@ def report_message(request):
 @twilio_view
 def step_one(request):
     log.info(request.META['HTTP_X_TWILIO_SIGNATURE'])
+    log.info(request.POST)
+    log.info(request.build_absolute_uri())
 
     try:
         resp = twilio.twiml.Response()
