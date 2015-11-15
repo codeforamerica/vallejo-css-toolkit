@@ -1,11 +1,16 @@
+import os
 import requests
 import urllib
 import logging
-from django.contrib import messages
+import tempfile
+import traceback
 
+import boto
+from boto.s3.key import Key
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 from workflow.models import Verification, CSSCase, VerificationContactAction, UploadedAsset
 from workflow.forms.verification_forms import PropertyDetailsForm, UploadAssetForm
@@ -17,14 +22,47 @@ log = logging.getLogger('consolelogger')
 def verification(request, verification_id):
     instance = get_object_or_404(Verification, id=verification_id)
 
-    property_details_form = PropertyDetailsForm(request.POST or None, instance=instance)
+    property_details_form = PropertyDetailsForm(request.POST or None, request.FILES or None, instance=instance)
     uploaded_asset_form = UploadAssetForm(request.POST, request.FILES)
+
+    print property_details_form.files
+
+    # print uploaded_asset_form.files
+    # print uploaded_asset_form.files.get('uploaded_asset')
+    # if request.FILES:
+    #     for chunk in uploaded_asset_form.files['uploaded_asset'].chunks():
+    #         print chunk
 
     if property_details_form.errors:
         messages.add_message(request, messages.ERROR, property_details_form.errors)
 
     if property_details_form.is_valid():
         verification = property_details_form.save()
+        try:
+            conn = boto.connect_s3()
+            b = conn.get_bucket('vallejo-css-toolkit')
+
+            if property_details_form.files.get('uploaded_asset'):
+                fname = property_details_form.files.get('uploaded_asset').name
+                tmpfile = tempfile.NamedTemporaryFile(delete=False)
+                for chunk in property_details_form.files['uploaded_asset'].chunks():
+                    tmpfile.write(chunk)
+                tmpfile.close()
+
+                env = os.environ.get('DJANGO_SETTINGS_MODULE', 'not_set')
+
+                k = Key(b)
+                k.key = 'uploaded-assets/{}/{}/{}'.format(
+                    env.split('.')[-1],
+                    verification.id,
+                    tmpfile.name.split('/')[-1]
+                )
+                k.set_contents_from_filename(tmpfile.name)
+                UploadedAsset.objects.create(verification=verification, fname=fname, fpath=k.key)
+
+        except:
+            log.error("Encountered exception attempting to upload submitted file: {}".format(traceback.format_exc()))
+
         messages.add_message(request, messages.SUCCESS, 'Verification successfully updated.')
 
         if request.POST.get('next-action') == 'Move to Case':
@@ -32,7 +70,6 @@ def verification(request, verification_id):
                 case = CSSCase.objects.create(verification=verification)
             else:
                 case = CSSCase.objects.create(verification=verification)[0]
-                # add message warning that it exists
             return HttpResponseRedirect('/workflow/case/{}'.format(case.id))
 
         # TODO: handle other conditions
@@ -45,8 +82,8 @@ def verification(request, verification_id):
     if cases:
         case_id = cases[0].id
 
-    uploaded_docs = UploadedAsset.objects.filter(verification=instance).order_by('timestamp').values_list('timestamp', 'fname', 'fpath')
-    uploaded_docs = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in uploaded_docs]
+    uploaded_docs = UploadedAsset.objects.filter(verification=instance).order_by('timestamp')  # .values_list('timestamp', 'fname', 'fpath')
+    # uploaded_docs = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in uploaded_docs]
 
     contact_log = VerificationContactAction.objects.filter(verification=instance).order_by('timestamp').values_list('timestamp', 'contacter_name', 'contact_type', 'contact_description')
     contact_log = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in contact_log]

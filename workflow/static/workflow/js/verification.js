@@ -15,7 +15,6 @@ function addContact() {
             "contact_description": document.forms['add_contact_form']['contact_description'].value,
         },
     }).done( function(data) {
-        // console.log(data);
         $('#call-log tr:last').after('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
     });
 }
@@ -40,12 +39,21 @@ $(document).ready(function(){
     var lat = $("#lat").val(),
         lon = $("#lon").val();
 
-    console.log(lat, lon);
-
     if (lat && lon) {
         var marker = L.marker([lat, lon]);
         marker.addTo(m);
     }
+
+    // var options = {
+    //     url: 'upload/',
+    //     type: 'POST',
+    //     success: function(response) {
+    //         console.log('response');
+    //         // everything the same in here
+    //     }
+    // };
+
+    // $('#myform').ajaxSubmit(options);
 
     function getCookie(name) {
         var cookieValue = null;

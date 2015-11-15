@@ -42,6 +42,10 @@ def load_rms_cases(cases_json):
         date = case[1]
         date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
 
+        if date_converted < tz.localize(datetime(2014, 1, 1, 0, 0)):
+            skipped += 1
+            continue
+
         try:
             RMSCase.objects.get_or_create(
                 case_no=case[0],
@@ -70,6 +74,10 @@ def load_crw_cases(cases_json):
     for case in cases:
         date = case[5]
         date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
+
+        if date_converted < tz.localize(datetime(2014, 1, 1, 0, 0)):
+            skipped += 1
+            continue
 
         try:
             CRWCase.objects.create(
