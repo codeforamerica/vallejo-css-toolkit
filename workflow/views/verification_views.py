@@ -103,7 +103,7 @@ def verification(request, verification_id):
         if r.status_code == 200:
             results = r.json()
             if "result" in results:
-                if "addressMatches" in results["result"]:
+                if "addressMatches" in results["result"] and len(results["result"]["addressMatches"]) > 0:
                     if "coordinates" in results["result"]["addressMatches"][0]:
                         lat = results["result"]["addressMatches"][0]["coordinates"].get("y")
                         lon = results["result"]["addressMatches"][0]["coordinates"].get("x")
