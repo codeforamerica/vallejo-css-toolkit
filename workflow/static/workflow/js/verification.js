@@ -13,8 +13,13 @@ function addContact() {
             "contact_description": document.forms['add_contact_form']['contact_description'].value,
         },
     }).done( function(data) {
+        if ($('#call-log tr').length > 1) {
+            $('#call-log tr:last').after('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
+        } else {
+            $('#no-contacts-msg').hide();
+            $('#call-log').find('tbody').append('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
+        }
         $('#addcontact').modal('hide');
-        $('#call-log tr:last').after('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
     });
 }
 
