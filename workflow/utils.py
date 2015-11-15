@@ -386,8 +386,9 @@ def get_properties(request_params):
 
     query = """
         WITH data AS (
+
             SELECT
-                subselect.address,
+                COALESCE(subselect.address, '') AS address,
                 count(*) AS num_incidents,
                 now() AS latest_activity,
                 COALESCE(
@@ -396,22 +397,18 @@ def get_properties(request_params):
                     )
                 , '') AS latest_activity_str,
                 '' AS status
-            FROM
-                (
-                    SELECT
-                        COALESCE(c.address_number::text || ' ' || c.street_name, '') AS address2,
-                        c.address AS address
-                    FROM workflow_csscall c
-                    WHERE (
-                        c.address_number is null
-                        OR c.street_name is null
-                    )
-                    AND c.active = True
-                ) as subselect
+
+            FROM (
+                SELECT
+                    COALESCE(c.address_number::text || ' ' || c.street_name, c.address, '') AS address
+                FROM workflow_csscall c
+                WHERE COALESCE(c.address_number::text || ' ' || c.street_name, c.address) IS NOT NULL
+                AND COALESCE(c.address_number::text || ' ' || c.street_name, c.address) != ''
+                AND c.active = True
+            ) as subselect
+
             GROUP BY address
-        ), total_count AS (
-            SELECT COUNT(*) AS tcount FROM workflow_csscall
-            WHERE active = True
+
         )
         SELECT
             data.address,
@@ -419,9 +416,8 @@ def get_properties(request_params):
             data.latest_activity,
             data.latest_activity_str,
             data.status,
-            COUNT(*) OVER(),
-            total_count.tcount
-        FROM data, total_count
+            COUNT(*) OVER()
+        FROM data
         %(search_clause)s
         ORDER BY %(sort_key)s %(sort_order)s
         OFFSET %(offset)s
@@ -444,7 +440,7 @@ def get_properties(request_params):
         pagination_keys = None
         page_idx = None
         if results:
-            num_results = results[0][-2]
+            num_results = results[0][-1]
             num_pages = int(math.ceil(float(num_results) / limit))
             page_idx = offset // limit
 
