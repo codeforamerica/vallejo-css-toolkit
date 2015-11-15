@@ -390,21 +390,41 @@ def get_properties(request_params):
             SELECT
                 COALESCE(subselect.address, '') AS address,
                 count(*) AS num_incidents,
-                now() AS latest_activity,
+                max(subselect.max_timestamp) AS latest_activity,
                 COALESCE(
                     TO_CHAR(
-                        now() AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
+                        max(subselect.max_timestamp) AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
                     )
                 , '') AS latest_activity_str,
                 '' AS status
 
             FROM (
                 SELECT
-                    COALESCE(c.address_number::text || ' ' || c.street_name, c.address, '') AS address
-                FROM workflow_csscall c
-                WHERE COALESCE(c.address_number::text || ' ' || c.street_name, c.address) IS NOT NULL
-                AND COALESCE(c.address_number::text || ' ' || c.street_name, c.address) != ''
-                AND c.active = True
+                    COALESCE(r.address_number::text || ' ' || r.street_name, r.address, '') AS address,
+                    latest_activities.max_timestamp as max_timestamp
+
+                    FROM workflow_csscall r
+                    LEFT JOIN
+                    (
+                        SELECT r.id as report_id, max(ca.timestamp) as max_timestamp
+
+                        FROM workflow_csscall r
+
+                        LEFT JOIN workflow_verification v
+                            ON v.report_id = r.id
+                        LEFT JOIN workflow_csscase c
+                            ON c.verification_id = v.id
+                        LEFT JOIN workflow_caseaction ca
+                            ON c.id = ca.id
+
+                        GROUP BY r.id
+
+                    ) AS latest_activities
+                    ON r.id = latest_activities.report_id
+
+                WHERE COALESCE(r.address_number::text || ' ' || r.street_name, r.address) IS NOT NULL
+                AND COALESCE(r.address_number::text || ' ' || r.street_name, r.address) != ''
+                AND r.active = True
             ) as subselect
 
             GROUP BY address

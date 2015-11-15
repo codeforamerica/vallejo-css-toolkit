@@ -3,8 +3,6 @@ function uploadAsset() {
 }
 
 function addContact() {
-    $('#addcontact').modal('hide');
-
     $.ajax({
         "url": "/workflow/add_contact_action/",
         "type": "POST",
@@ -15,6 +13,7 @@ function addContact() {
             "contact_description": document.forms['add_contact_form']['contact_description'].value,
         },
     }).done( function(data) {
+        $('#addcontact').modal('hide');
         $('#call-log tr:last').after('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
     });
 }

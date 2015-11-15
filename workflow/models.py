@@ -222,3 +222,15 @@ class UploadedAsset(models.Model):
         if not self.timestamp:
             self.timestamp = pytz.utc.localize(datetime.utcnow())
         super(UploadedAsset, self).save(*args, **kwargs)
+
+
+class CaseAction(models.Model):
+    case = models.ForeignKey(CSSCase)
+    description = models.CharField(max_length=256, null=True, blank=True)
+    user = models.ForeignKey(User)
+    timestamp = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.timestamp:
+            self.timestamp = pytz.utc.localize(datetime.utcnow())
+        super(CaseAction, self).save(*args, **kwargs)
