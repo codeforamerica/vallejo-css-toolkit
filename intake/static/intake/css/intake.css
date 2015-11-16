@@ -86,8 +86,7 @@ li {
 }
 
 .header-content{
-  padding-right: 25px;
-  padding-left: 25px;
+
   padding-bottom:25px;
 }
 
@@ -168,6 +167,8 @@ label{
   .footer{
     padding:25px 100px 15px;
   }
+
+
 
 }
 
