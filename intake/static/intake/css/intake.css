@@ -39,6 +39,23 @@ h4{
   margin-bottom:30px;
 }
 
+.header-content h4{
+  margin-bottom:10px;
+  margin-top:30px;
+  font-size:18px;
+  line-height: 1.5;
+}
+
+.common-issues li{
+  padding-right: 20px;
+}
+
+.common-issues{
+  padding-bottom: 0;
+  color:#1F4E81;
+  font-size: 14px;
+}
+
 ul {
   padding-left: 0;
 }
@@ -63,7 +80,7 @@ li {
 }
 
 .intake-header .container{
-  padding:0;
+  padding:25px;
   background-color: #56CDFF;
 
 }
