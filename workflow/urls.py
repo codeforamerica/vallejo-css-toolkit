@@ -7,6 +7,7 @@ urlpatterns = patterns(
     url(r'^workflow/cases/$', 'workflow.views.case_views.cases', name='cases'),
     url(r'^workflow/add_case_assignee/$', 'workflow.views.case_views.add_case_assignee', name='add_case_assignee'),
     url(r'^workflow/remove_case_assignee/$', 'workflow.views.case_views.remove_case_assignee', name='remove_case_assignee'),
+    url(r'^workflow/get_case_assignees/$', 'workflow.views.case_views.get_case_assignees', name='get_case_assignees'),
 
     # verification related views
     url(r'^workflow/verification/(?P<verification_id>\d*)/$', 'workflow.views.verification_views.verification', name='verfication'),

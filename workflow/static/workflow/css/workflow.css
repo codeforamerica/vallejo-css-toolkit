@@ -201,6 +201,16 @@ label{
   margin: 0;
 }
 
+.assignee-row-cell {
+    background-color: #e7e7e7;
+}
+
+.assignee-table {
+    border-spacing: 10px 0;
+    border-collapse: separate;
+}
+
+
 /** Form fields **/
 
 .form-control {

@@ -290,6 +290,9 @@
                             </div>
 
                         {% endfor %}
+                        {% if not contact_log %}
+                            <div class="text-center"><h5>No documents have been submitted</h5></div>
+                        {% endif %}
 
                     </div>
                 </div>  <!-- end Report Attachments pane -->

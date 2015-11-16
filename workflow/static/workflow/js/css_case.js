@@ -3,7 +3,7 @@ function removeAssignee (e, tableCell, assignee) {
     $.ajax({
         "url": "/workflow/remove_case_assignee/",
         "type": "POST",
-        "data": {"assignee": assignee, "case_id": $("#case_id").val()},
+        "data": {"assignee": assignee, "case_id": document.forms['case-details-form']['case_id'].value},
     }).done( function() {
         tableCell.remove();
     });
@@ -49,12 +49,15 @@ $(document).ready(function(){
 
     $("#add-assignee-submit").click(function (e) {
         e.preventDefault();
-        var assignee = $("#case-details-form")[0][7].value;
+        var assignee = document.forms['case-details-form']['assignee'].value;
         if (assignee !== "") {
             $.ajax({
                 "url": "/workflow/add_case_assignee/",
                 "type": "POST",
-                "data": {"assignee": assignee, "case_id": $("#case_id").val()},
+                "data": {
+                    "assignee": assignee,
+                    "case_id": document.forms['case-details-form']['case_id'].value
+                },
             }).done( function() {
                 // var onclickString = "removeAssignee(event, this.parentElement, '" + assignee + "')";
                 var tableCellString = "<td class='assignee-row-cell'>" + assignee + '&nbsp&nbsp&nbsp<a class="unassign" onclick="' +
@@ -62,7 +65,7 @@ $(document).ready(function(){
                                         '" href="#"><i class="fa fa-close"></i></a></td>';
                 var newCell = $(tableCellString);
                 newCell.appendTo("#case-assignees");
-                $("#case-details-form")[0][6].value = "";
+                document.forms['case-details-form']['assignee'].value = "";
             });
         }
     });
@@ -90,17 +93,21 @@ $(document).ready(function(){
         };
     };
 
-    // TODO: get these names and departments from the db:
-    var userList = ['Ofc. Hans Williams (CSS)', 'Cpl. John Garcia (CSS)', 'Eli Flushman (CAO)'];
+    $.ajax({
+        'url': '/workflow/get_case_assignees'
+    }).done(function (data) {
+        var userList = data.users;
 
-    $('#assignee-selector .typeahead').typeahead({
-        hint: true,
-        highlight: true,
-        minLength: 1
-    },
-    {
-        name: 'users',
-        source: substringMatcher(userList)
+        $('#assignee-selector .typeahead').typeahead({
+            hint: true,
+            highlight: true,
+            minLength: 1
+        },
+        {
+            name: 'users',
+            source: substringMatcher(userList)
+        });
+
     });
 
 });

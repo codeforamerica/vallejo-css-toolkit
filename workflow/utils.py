@@ -251,9 +251,9 @@ def get_cases(request_params):
                 , '') AS started_str,
                 COALESCE(r.address_number::text || ' ' || r.street_name, '') AS address,
                 c.priority AS priority,
-                c.priority::text AS priority_str,
+                COALESCE(c.priority::text, '') AS priority_str,
                 COALESCE(r.problem, '') AS description,
-                'pending' AS status
+                r.status::text AS status
             FROM workflow_csscase AS c
             LEFT JOIN workflow_verification v
                 ON c.verification_id = v.id

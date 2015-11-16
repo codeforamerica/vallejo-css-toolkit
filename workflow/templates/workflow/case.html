@@ -60,19 +60,32 @@
 
                 <form id="case-details-form" method="POST">
                     {% csrf_token %}
+                    {{ case_details_form.non_field_errors }}
 
-                    {{ contact_owner_form.non_field_errors }}
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="{{ form.owner_name.id_for_label }}">Case Number:</label>
-                                <input class="form-control" readonly value="{{ case_id }}"}>
+                                <label>Case Number:</label>
+                                <input class="form-control" name="case_id" readonly value="{{ case_id }}"}>
                             </div>
                         </div>
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="{{ form.owner_address.id_for_label }}">Assignees:</label>
+                                <label>Assignees:</label>
+                                    <table id="assignee-table" class="assignee-table">
+                                        <tr id="case-assignees">
+                                            {% for case_assignee in case_assignees %}
+                                                <td class='assignee-row-cell'>{{ case_assignee }}&nbsp&nbsp&nbsp<a class='unassign' onclick='removeAssignee(event, this.parentElement, "{{case_assignee}}")' href='#'><i class='fa fa-close'></i></a></td>
+                                            {% endfor %}
+                                        </tr>
+                                    </table>
+                            </div>
+
+                            <div class="form-group" id="assignee-selector">
+                                <label>Add Assignees:</label>
+                                    <input id="assignee-selection" name="assignee" class="typeahead form-control" type="text" placeholder="">
+                                    <button id="add-assignee-submit" style="margin-top: 10px;" class="btn btn-primary">Add</button>
                             </div>
                         </div>
 
