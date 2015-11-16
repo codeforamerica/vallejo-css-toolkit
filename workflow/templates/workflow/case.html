@@ -61,6 +61,7 @@
                 <form id="case-details-form" method="POST">
                     {% csrf_token %}
                     {{ case_details_form.non_field_errors }}
+                    <input name="case_id" type="hidden" value="{{ case_id }}">
 
                     <div class="row">
                         <div class="col-sm-12">
@@ -85,7 +86,7 @@
 
                             <div class="form-group" id="assignee-selector">
                                 <label>Add Assignees:</label>
-                                    <input id="assignee-selection" name="assignee" class="typeahead form-control" type="text" placeholder="">
+                                    <input id="assignee-selection" name="assignee_add" class="typeahead form-control" type="text" placeholder="">
                                     <button id="add-assignee-submit" style="margin-top: 10px;" class="btn btn-primary">Add</button>
                             </div>
                         </div>

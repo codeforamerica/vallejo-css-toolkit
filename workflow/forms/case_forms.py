@@ -23,7 +23,8 @@ class PriorityModelChoiceField(forms.ModelChoiceField):
 
 class CSSCaseDetailsForm(forms.ModelForm):
 
-    assignee = UserModelChoiceField(queryset=User.objects.all(), required=False)
+    # assignee = UserModelChoiceField(queryset=User.objects.all(), required=False)
+    # assignee = forms.CharField(required=False)
 
     class Meta:
         model = CSSCase
@@ -33,6 +34,7 @@ class CSSCaseDetailsForm(forms.ModelForm):
             'description',
             'resolution',
             'priority',
+            # 'assignee'
         )
 
     def __init__(self, *args, **kwargs):

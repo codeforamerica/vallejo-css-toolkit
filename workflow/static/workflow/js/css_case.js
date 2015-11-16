@@ -49,7 +49,7 @@ $(document).ready(function(){
 
     $("#add-assignee-submit").click(function (e) {
         e.preventDefault();
-        var assignee = document.forms['case-details-form']['assignee'].value;
+        var assignee = document.forms['case-details-form']['assignee_add'].value;
         if (assignee !== "") {
             $.ajax({
                 "url": "/workflow/add_case_assignee/",
@@ -65,7 +65,7 @@ $(document).ready(function(){
                                         '" href="#"><i class="fa fa-close"></i></a></td>';
                 var newCell = $(tableCellString);
                 newCell.appendTo("#case-assignees");
-                document.forms['case-details-form']['assignee'].value = "";
+                document.forms['case-details-form']['assignee_add'].value = "";
             });
         }
     });
