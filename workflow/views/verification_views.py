@@ -12,7 +12,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from workflow.models import Verification, CSSCase, VerificationContactAction, UploadedAsset
+from workflow.models import Verification, CSSCase, VerificationContactAction, UploadedAsset, CSSCall
 from workflow.forms.verification_forms import PropertyDetailsForm, UploadAssetForm
 
 log = logging.getLogger('consolelogger')
@@ -79,29 +79,6 @@ def verification(request, verification_id):
     contact_log = VerificationContactAction.objects.filter(verification=instance).order_by('timestamp').values_list('timestamp', 'contacter_name', 'contact_type', 'contact_description')
     contact_log = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in contact_log]
 
-    params = urllib.urlencode({
-        'street': instance.report.get_address(),
-        'city': 'Vallejo',
-        'state': 'CA',
-        'benchmark': '4',
-        'format': 'json'
-    })
-    url = "http://geocoding.geo.census.gov/geocoder/locations/address?{}".format(params)
-    lat, lon = None, None
-
-    try:
-        r = requests.get(url, timeout=10)
-        if r.status_code == 200:
-            results = r.json()
-            if "result" in results:
-                if "addressMatches" in results["result"] and len(results["result"]["addressMatches"]) > 0:
-                    if "coordinates" in results["result"]["addressMatches"][0]:
-                        lat = results["result"]["addressMatches"][0]["coordinates"].get("y")
-                        lon = results["result"]["addressMatches"][0]["coordinates"].get("x")
-
-    except requests.exceptions.Timeout:
-        log.warning("Geocode timeout")
-
     return render(
         request,
         'workflow/verification.html',
@@ -114,8 +91,6 @@ def verification(request, verification_id):
             'case_id': case_id,
             'contact_log': contact_log,
             'uploaded_asset_form': uploaded_asset_form,
-            'lat': lat,
-            'lon': lon,
             'report': instance.report
         }
     )
@@ -143,3 +118,45 @@ def add_contact_action(request):
         'contact_type': vca.contact_type,
         'contact_description': vca.contact_description,
     })
+
+
+@login_required(login_url='/login/')
+def geocode_address(request):
+    report_id = request.GET.get('report_id')
+    lat, lon = None, None
+
+    if report_id:
+        report = get_object_or_404(CSSCall, id=report_id)
+
+        params = urllib.urlencode({
+            'street': report.get_address(),
+            'city': 'Vallejo',
+            'state': 'CA',
+            'benchmark': '4',
+            'format': 'json'
+        })
+        url = "http://geocoding.geo.census.gov/geocoder/locations/address?{}".format(params)
+
+        try:
+            r = requests.get(url, timeout=10)
+            if r.status_code == 200:
+                results = r.json()
+                status = 'unable to geocode address'
+                if "result" in results:
+                    if "addressMatches" in results["result"] and len(results["result"]["addressMatches"]) > 0:
+                        if "coordinates" in results["result"]["addressMatches"][0]:
+                            lat = results["result"]["addressMatches"][0]["coordinates"].get("y")
+                            lon = results["result"]["addressMatches"][0]["coordinates"].get("x")
+                            status = 'successful census geocode lookup'
+
+            else:
+                status = 'Unsuccessful census geocode lookup'
+
+        except requests.exceptions.Timeout:
+            log.warning("Geocode timeout")
+            status = 'geocode timeout'
+
+    else:
+        status = 'No report id provided in request'
+
+    return JsonResponse({'status': status, 'lat': lat, 'lon': lon})

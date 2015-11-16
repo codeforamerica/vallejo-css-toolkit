@@ -36,13 +36,18 @@ $(document).ready(function(){
     var m = L.mapbox.map('map', 'mapbox.streets')
         .setView([38.113056, -122.235833], 12);
 
-    var lat = $("#lat").val(),
-        lon = $("#lon").val();
-
-    if (lat && lon) {
-        var marker = L.marker([lat, lon]);
-        marker.addTo(m);
-    }
+    $.ajax({
+        'url': '/workflow/geocode_address',
+        'type': 'GET',
+        'data': {
+            'report_id': document.forms['property-details-form']['report_id'].value
+        }
+    }).done(function (data) {
+        if (data.lat && data.lon) {
+            var marker = L.marker([data.lat, data.lon]);
+            marker.addTo(m);
+        }
+    });
 
     function getCookie(name) {
         var cookieValue = null;

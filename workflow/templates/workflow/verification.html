@@ -29,8 +29,9 @@
             <div class="row subnav">
                 <div class="col-md-8 col-sm-7 col-xs-12">
                     <h1>{{ property_address }}</h1>
-                    <input type="hidden" id="lat" value="{{ lat }}">
-                    <input type="hidden" id="lon" value="{{ lon }}">
+
+                    <input type="hidden" name="report_id" value="{{ report_id }}">
+
                     {% if report.reported_datetime and report.name %}
                         <p class="reporter-subheader"> reported on {{ report.reported_datetime|date }} by {{ report.name }}</p>
                     {% endif %}
