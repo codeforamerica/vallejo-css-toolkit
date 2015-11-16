@@ -252,19 +252,15 @@ def get_cases(request_params):
                     )
                 , '') AS started_str,
                 COALESCE(r.address_number::text || ' ' || r.street_name, '') AS address,
-                COALESCE(p.name, '') AS priority,
-                COALESCE(p.name, '') AS priority_str,
+                c.priority AS priority,
+                c.priority::text AS priority_str,
                 COALESCE(r.problem, '') AS description,
-                COALESCE(s.name, '') AS status
+                'pending' AS status
             FROM workflow_csscase AS c
-            LEFT JOIN workflow_csscasepriority p
-                ON c.priority_id = p.id
             LEFT JOIN workflow_verification v
                 ON c.verification_id = v.id
             LEFT JOIN workflow_csscall r
                 ON v.report_id = r.id
-            LEFT JOIN workflow_casestatus s
-                ON c.status_id = s.id
             WHERE c.active = True
         ), total_count AS (
             SELECT COUNT(*) AS tcount FROM workflow_csscase

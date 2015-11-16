@@ -43,7 +43,8 @@ def report(request, report_id):
     instance = get_object_or_404(CSSCall, id=report_id)
     CSSReportView.objects.create(css_report=instance, user=request.user)
 
-    form = ReportForm(request.POST or None, instance=instance)
+    readonly = not (request.user.is_staff or request.user.is_superuser)
+    form = ReportForm(request.POST or None, readonly=readonly, instance=instance)
 
     if form.errors:
         messages.add_message(request, messages.ERROR, form.errors)

@@ -3,6 +3,7 @@ from datetime import datetime
 import pytz
 
 from django import forms
+from django.forms.widgets import Select
 
 from workflow.models import CSSCall
 
@@ -39,6 +40,7 @@ class ReportForm(forms.ModelForm):
         )
 
     def __init__(self, *args, **kwargs):
+        readonly = kwargs.pop('readonly')
         super(ReportForm, self).__init__(*args, **kwargs)
 
         # self.fields['reporter_address_number'].widget = forms.TextInput(attrs={'placeholder': 'e.g.: 555'})
@@ -61,6 +63,13 @@ class ReportForm(forms.ModelForm):
             now_tz = pytz.utc.localize(now).astimezone(TZ)
             self.fields['reported_date'].initial = now_tz.date()
             self.fields['reported_time'].initial = now_tz.time()
+
+        if readonly:
+            for field in self.fields:
+                if isinstance(self.fields[field].widget, Select):
+                    self.fields[field].widget.attrs['disabled'] = True
+                else:
+                    self.fields[field].widget.attrs['readonly'] = True
 
     def save(self, commit=True):
         model = super(ReportForm, self).save(commit=False)

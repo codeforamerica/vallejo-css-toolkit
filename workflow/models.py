@@ -138,23 +138,22 @@ class VerificationContactAction(models.Model):
         super(VerificationContactAction, self).save(*args, **kwargs)
 
 
-class CSSCasePriority(models.Model):
-    name = models.CharField(max_length=256)
-
-
 class CSSCase(models.Model):
+    LOW_PRI = 1
+    MED_PRI = 2
+    HIGH_PRI = 3
+
+    PRIORITY_CHOICES = (
+        (LOW_PRI, 'Low'),
+        (MED_PRI, 'Medium'),
+        (HIGH_PRI, 'High'),
+    )
+
     description = models.CharField(max_length=1024, null=True, blank=True)
     resolution = models.CharField(max_length=1024, null=True, blank=True)
-    status = models.ForeignKey(CaseStatus, null=True, blank=True)
-    address_number = models.IntegerField(null=True, blank=True)
-    street_name = models.CharField(max_length=256, null=True, blank=True)
-    owner_name = models.CharField(max_length=256, null=True, blank=True)
-    owner_address = models.CharField(max_length=256, null=True, blank=True)
-    owner_phone = models.CharField(max_length=256, null=True, blank=True)
-    owner_email = models.CharField(max_length=256, null=True, blank=True)
     verification = models.ForeignKey(Verification, null=True)
     created_at = models.DateTimeField(null=True, blank=True)
-    priority = models.ForeignKey(CSSCasePriority, null=True, blank=True)
+    priority = models.IntegerField(null=True, blank=True, choices=PRIORITY_CHOICES)
     resolved_at = models.DateTimeField(null=True, blank=True)
     active = models.BooleanField(default=True)
 

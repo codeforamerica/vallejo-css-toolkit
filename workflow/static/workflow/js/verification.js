@@ -1,7 +1,3 @@
-function uploadAsset() {
-
-}
-
 function addContact() {
     $.ajax({
         "url": "/workflow/add_contact_action/",
@@ -47,17 +43,6 @@ $(document).ready(function(){
         var marker = L.marker([lat, lon]);
         marker.addTo(m);
     }
-
-    // var options = {
-    //     url: 'upload/',
-    //     type: 'POST',
-    //     success: function(response) {
-    //         console.log('response');
-    //         // everything the same in here
-    //     }
-    // };
-
-    // $('#myform').ajaxSubmit(options);
 
     function getCookie(name) {
         var cookieValue = null;

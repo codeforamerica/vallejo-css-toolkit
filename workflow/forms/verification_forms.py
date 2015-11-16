@@ -1,5 +1,6 @@
 from django import forms
 from django.template.defaultfilters import filesizeformat
+from django.forms.widgets import Select, CheckboxInput, ClearableFileInput
 
 from workflow.models import Verification
 from vallejo_css_toolkit.settings import MAX_UPLOAD_SIZE
@@ -42,6 +43,21 @@ class PropertyDetailsForm(forms.ModelForm):
             'bank_contact_phone',
             'uploaded_asset'
         )
+
+    def __init__(self, *args, **kwargs):
+        readonly = kwargs.pop('readonly')
+        super(PropertyDetailsForm, self).__init__(*args, **kwargs)
+
+        if readonly:
+            for field in self.fields:
+                if isinstance(self.fields[field].widget, Select):
+                    self.fields[field].widget.attrs['disabled'] = True
+                elif isinstance(self.fields[field].widget, CheckboxInput):
+                    self.fields[field].widget.attrs['disabled'] = True
+                elif isinstance(self.fields[field].widget, ClearableFileInput):
+                    self.fields[field].widget.attrs['disabled'] = True
+                else:
+                    self.fields[field].widget.attrs['readonly'] = True
 
 
 class UploadAssetForm(forms.Form):

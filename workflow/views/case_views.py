@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from common.datatables import get_datatables_data
 from workflow.models import CSSCase, CSSCaseAssignee
 
-from workflow.forms.case_forms import CSSCaseDetailsForm, CSSCaseOwnerForm
+from workflow.forms.case_forms import CSSCaseDetailsForm  # , CSSCaseOwnerForm
 from workflow.sql import CSS_CASES_DATA_SQL, CSS_CASES_IDX_COLUMN_MAP
 from workflow.utils import get_cases
 
@@ -80,15 +80,17 @@ def cases(request):
 @login_required(login_url='/login/')
 def case(request, case_id):
     instance = get_object_or_404(CSSCase, id=case_id)
-    case_details_form = CSSCaseDetailsForm(request.POST or None, instance=instance)
 
-    contact_owner_form = CSSCaseOwnerForm(request.POST or None, instance=instance)
+    readonly = not (request.user.is_staff or request.user.is_superuser)
+    case_details_form = CSSCaseDetailsForm(request.POST or None, readonly=readonly, instance=instance)
 
-    uploaded_docs = [
-        {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
-        {"name": 'Deed with signature', "filename": 'deed_updated.pdf', "added": "Sep, 16, 2015", "thumbnail_url": "http://placehold.it/120x120"},
-        {"name": 'Notice to evict - copy', "filename": 'eviction_notice_9_1_15.pdf', "added": "Sep. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"}
-    ]
+    # contact_owner_form = CSSCaseOwnerForm(request.POST or None, instance=instance)
+
+    # uploaded_docs = [
+    #     {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
+    #     {"name": 'Deed with signature', "filename": 'deed_updated.pdf', "added": "Sep, 16, 2015", "thumbnail_url": "http://placehold.it/120x120"},
+    #     {"name": 'Notice to evict - copy', "filename": 'eviction_notice_9_1_15.pdf', "added": "Sep. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"}
+    # ]
 
     if case_details_form.is_valid():
         case = case_details_form.save()
@@ -96,11 +98,11 @@ def case(request, case_id):
 
         return HttpResponseRedirect('/workflow/case/%d' % case.id)
 
-    if contact_owner_form.is_valid():
-        case = contact_owner_form.save()
-        messages.add_message(request, messages.SUCCESS, 'Case successfully updated.')
+    # if contact_owner_form.is_valid():
+    #     case = contact_owner_form.save()
+    #     messages.add_message(request, messages.SUCCESS, 'Case successfully updated.')
 
-        return HttpResponseRedirect('/workflow/case/%d' % case.id)
+    #     return HttpResponseRedirect('/workflow/case/%d' % case.id)
 
     return render(
         request,
@@ -108,9 +110,9 @@ def case(request, case_id):
         {
             'case_assignees': CSSCaseAssignee.objects.filter(case=instance).values_list('assignee_name', flat=True),
             'case_details_form': case_details_form,
-            'contact_owner_form': contact_owner_form,
-            'uploaded_docs': uploaded_docs,
-            'property_address': instance.verification.report.address,
+            # # 'contact_owner_form': contact_owner_form,
+            # 'uploaded_docs': uploaded_docs,
+            'property_address': instance.verification.report.get_address(),
             'case_id': instance.pk,
             'verification_id': instance.verification.id,
             'report_id': instance.verification.report.id

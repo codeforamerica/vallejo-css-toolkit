@@ -189,7 +189,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="{{ form.problem.id_for_label }}">Problem Description:</label>
-                                <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                                <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3" {% if not user.is_staff or not user.is_superuser %}readonly{% endif %}>{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
                                 {{ form.problem.errors }}
                                 {% if description_recording and description_recording.0.url %}
                                     <audio controls>

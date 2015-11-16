@@ -22,10 +22,9 @@ log = logging.getLogger('consolelogger')
 def verification(request, verification_id):
     instance = get_object_or_404(Verification, id=verification_id)
 
-    property_details_form = PropertyDetailsForm(request.POST or None, request.FILES or None, instance=instance)
+    readonly = not (request.user.is_staff or request.user.is_superuser)
+    property_details_form = PropertyDetailsForm(request.POST or None, request.FILES or None, readonly=readonly, instance=instance)
     uploaded_asset_form = UploadAssetForm(request.POST, request.FILES)
-
-    print property_details_form.files
 
     # print uploaded_asset_form.files
     # print uploaded_asset_form.files.get('uploaded_asset')

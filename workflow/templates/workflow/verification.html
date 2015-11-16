@@ -81,7 +81,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Property Description:</label>
-                                <textarea maxlength="256" name="{{ property_details_form.property_description.html_name }}" class="form-control" rows="5">{% if property_details_form.property_description.value %}{{ property_details_form.property_description.value }}{% endif %}</textarea>
+                                <textarea maxlength="256" name="{{ property_details_form.property_description.html_name }}" class="form-control" rows="5" {% if not user.is_staff or not user.is_superuser %}readonly{% endif %}>{% if property_details_form.property_description.value %}{{ property_details_form.property_description.value }}{% endif %}</textarea>
                                 {{ property_details_form.property_description.errors }}
                             </div>
                         </div>
@@ -228,7 +228,9 @@
                                         <div id="no-contacts-msg" class="text-center"><h5>No contacts have been logged</h5></div>
                                     {% endif %}
                                     </div> <!--table wrapper-->
-                                    <a class="pull-right" href="#" data-toggle="modal" data-target="#addcontact">Add Contact</a>
+                                    {% if user.is_staff or user.is_superuser %}
+                                        <a class="pull-right" href="#" data-toggle="modal" data-target="#addcontact">Add Contact</a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div><!--contact log table-->
@@ -319,6 +321,7 @@
             <div class="row">
                 <div class="col-sm-6 col-sm-offset-6">
                     <div class="row">
+                        {% if user.is_staff or user.is_superuser %}
                         <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
                             <div class="form-group">
                                 <select class="form-control" name="next-action">
@@ -336,6 +339,7 @@
                         <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
                             <button type="submit" form="property-details-form" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
