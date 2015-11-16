@@ -31,7 +31,9 @@
                     <h1>{{ property_address }}</h1>
                     <input type="hidden" id="lat" value="{{ lat }}">
                     <input type="hidden" id="lon" value="{{ lon }}">
-                    <p class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</p>
+                    {% if report.reported_datetime and report.name %}
+                        <p class="reporter-subheader"> reported on {{ report.reported_datetime|date }} by {{ report.name }}</p>
+                    {% endif %}
                 </div>
 
                 <div class="col-md-4 col-sm-5 col-xs-12">

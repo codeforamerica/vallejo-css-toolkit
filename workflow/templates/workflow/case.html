@@ -25,7 +25,9 @@
         <div class="row subnav">
             <div class="col-md-8 col-sm-7 col-xs-12">
                 <h1>{{ property_address }}</h1>
-                <p class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</p>
+                {% if report.reported_datetime and report.name %}
+                    <p class="reporter-subheader"> reported on {{ report.reported_datetime|date }} by {{ report.name }}</p>
+                {% endif %}
             </div>
 
             <div class="col-md-4 col-sm-5 col-xs-12">
@@ -56,7 +58,7 @@
                     </div>
                 </div>
 
-                <form id="owner-contact-form" method="POST">
+                <form id="case-details-form" method="POST">
                     {% csrf_token %}
 
                     {{ contact_owner_form.non_field_errors }}
@@ -156,38 +158,6 @@
                     </div>
                 </div><!--contact log table-->
             </div><!-- end Activity Log pane -->
-
-            <!-- Documents pane -->
-            <div class="tab-pane" id="docs">
-                <div class="col-sm-7 col-sm-offset-1 report">
-                    <h4>People Contacted</h4>
-
-                    {% for uploaded_doc in uploaded_docs %}
-                        <div class="row uploaded-doc">
-                            <div class="col-sm-4">
-                                <img src="{{ uploaded_doc.thumbnail_url }}">
-                            </div>
-
-                            <div class="col-sm-8">
-                                <ul class="doc-attrs">
-                                    <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.name }}</h5></li>
-                                    <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
-                                    <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.added }}</p></li>
-                                </ul>
-                            </div>
-                        </div>
-                    {% endfor %}
-
-                    <div class="row new-upload">
-                        <div class="col-sm-12">
-                            <form id="file-upload-form">
-                                <h4>Upload a new photo</h4>
-                                <input type="file" name="uploadDoc">
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div> <!-- end Documents pane -->
 
         </div> <!-- end row -->
 
@@ -330,7 +300,7 @@
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
-                        <button type="submit" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
+                        <button type="submit" form="case-details-form" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
                     </div>
                 </div>
             </div>

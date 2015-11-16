@@ -20,7 +20,8 @@ LOG_AUDIT_HISTORY = False
 
 @login_required(login_url='/login/')
 def add_report(request):
-    form = ReportForm(request.POST or None)
+    readonly = not (request.user.is_staff or request.user.is_superuser)
+    form = ReportForm(request.POST or None, readonly=readonly)
     log.info(request.POST)
 
     if form.errors:

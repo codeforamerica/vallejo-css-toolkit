@@ -36,7 +36,9 @@ class ReportForm(forms.ModelForm):
             'reporter_alternate_contact',
             'address_number',
             'street_name',
-            'source'
+            'source',
+            'status',
+            'report_type'
         )
 
     def __init__(self, *args, **kwargs):

@@ -254,9 +254,17 @@
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="{{ form.source.id_for_label }}">Type:</label>
-                                {{ form.source|add_class:"form-control" }}
-                                {{ form.source.errors }}
+                                <label for="{{ form.status.id_for_label }}">Status:</label>
+                                {{ form.status|add_class:"form-control" }}
+                                {{ form.status.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.report_type.id_for_label }}">Type:</label>
+                                {{ form.report_type|add_class:"form-control" }}
+                                {{ form.report_type.errors }}
                             </div>
                         </div>
                     </div>

@@ -10,8 +10,8 @@ class CaseStatus(models.Model):
     name = models.CharField(max_length=256)
 
 
-class ReportStatus(models.Model):
-    name = models.CharField(max_length=256)
+# class ReportStatus(models.Model):
+#     name = models.CharField(max_length=256)
 
 
 # TODO: deprecate
@@ -57,6 +57,42 @@ class CSSCall(models.Model):
         (CITY_REFERRAL_SOURCE, 'Other City Referral')
     )
 
+    UNREAD_PHONE_STATUS = 1
+    UNREAD_WEB_STATUS = 2
+    REPORT_STATUS = 3
+    VERIFICATION_STATUS = 4
+    CASE_STATUS = 5
+    RESOLVED_STATUS = 6
+
+    STATUS_CHOICES = (
+        (UNREAD_PHONE_STATUS, 'Unread - phone'),
+        (UNREAD_PHONE_STATUS, 'Unread - web'),
+        (REPORT_STATUS, 'Report'),
+        (VERIFICATION_STATUS, 'Verification'),
+        (CASE_STATUS, 'Resolved'),
+        (RESOLVED_STATUS, 'Resolved')
+    )
+
+    SQUATTER_TYPE = 1
+    HOMELESS_ENCAMPMENT_TYPE = 2
+    DRUGS_TYPE = 3
+    ILLEGAL_AUTO_REPAIR_TYPE = 4
+    ILLEGAL_DUMPING_TYPE = 5
+    PROSTITUTION_TYPE = 6
+    ABANDONED_VEHICLE_TYPE = 7
+    OTHER_TYPE = 8
+
+    REPORT_TYPE_CHOICES = (
+        (SQUATTER_TYPE, 'Squatters'),
+        (HOMELESS_ENCAMPMENT_TYPE, 'Homeless encampment'),
+        (DRUGS_TYPE, 'Drugs'),
+        (ILLEGAL_AUTO_REPAIR_TYPE, 'Illegal Auto Repair'),
+        (ILLEGAL_DUMPING_TYPE, 'Illegal Dumping'),
+        (PROSTITUTION_TYPE, 'Prostitution'),
+        (ABANDONED_VEHICLE_TYPE, 'Abandoned Vehicle'),
+        (OTHER_TYPE, 'Other'),
+    )
+
     name = models.CharField(max_length=256, null=True, blank=True)
     address = models.CharField(max_length=256, null=True, blank=True)
     phone = models.CharField(max_length=256, null=True, blank=True)
@@ -87,8 +123,10 @@ class CSSCall(models.Model):
     # TODO: we'll eventually need to store geometry objects somewhere
     active = models.BooleanField(default=True)
     caller_preferred_contact = models.IntegerField(null=True, blank=True, choices=CONTACT_PREFERENCES_CHOICES)
-    status = models.ForeignKey(ReportStatus, null=True, blank=True)
+    status = models.IntegerField(null=True, blank=True, choices=STATUS_CHOICES)
     source = models.IntegerField(null=True, blank=True, choices=SOURCE_CHOICES)
+    report_type = models.IntegerField(null=True, blank=True, choices=REPORT_TYPE_CHOICES)
+
     call_sid = models.CharField(max_length=256, null=True, blank=True)
     reported_before = models.CharField(max_length=256, null=True, blank=True)
 

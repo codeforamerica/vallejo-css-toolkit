@@ -115,7 +115,8 @@ def case(request, case_id):
             'property_address': instance.verification.report.get_address(),
             'case_id': instance.pk,
             'verification_id': instance.verification.id,
-            'report_id': instance.verification.report.id
+            'report_id': instance.verification.report.id,
+            'report': instance.verification.report
         }
     )
 

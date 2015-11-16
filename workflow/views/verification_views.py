@@ -26,12 +26,6 @@ def verification(request, verification_id):
     property_details_form = PropertyDetailsForm(request.POST or None, request.FILES or None, readonly=readonly, instance=instance)
     uploaded_asset_form = UploadAssetForm(request.POST, request.FILES)
 
-    # print uploaded_asset_form.files
-    # print uploaded_asset_form.files.get('uploaded_asset')
-    # if request.FILES:
-    #     for chunk in uploaded_asset_form.files['uploaded_asset'].chunks():
-    #         print chunk
-
     if property_details_form.errors:
         messages.add_message(request, messages.ERROR, property_details_form.errors)
 
@@ -81,9 +75,7 @@ def verification(request, verification_id):
     if cases:
         case_id = cases[0].id
 
-    uploaded_docs = UploadedAsset.objects.filter(verification=instance).order_by('timestamp')  # .values_list('timestamp', 'fname', 'fpath')
-    # uploaded_docs = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in uploaded_docs]
-
+    uploaded_docs = UploadedAsset.objects.filter(verification=instance).order_by('timestamp')
     contact_log = VerificationContactAction.objects.filter(verification=instance).order_by('timestamp').values_list('timestamp', 'contacter_name', 'contact_type', 'contact_description')
     contact_log = [[i[0].strftime('%m/%d/%y')] + list(i[1:]) for i in contact_log]
 
@@ -123,7 +115,8 @@ def verification(request, verification_id):
             'contact_log': contact_log,
             'uploaded_asset_form': uploaded_asset_form,
             'lat': lat,
-            'lon': lon
+            'lon': lon,
+            'report': instance.report
         }
     )
 

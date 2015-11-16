@@ -40,7 +40,11 @@ def load_rms_cases(cases_json):
     skipped = 0
     for case in cases:
         date = case[1]
-        date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
+        try:
+            date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
+        except TypeError:
+            skipped += 1
+            continue
 
         if date_converted < tz.localize(datetime(2014, 1, 1, 0, 0)):
             skipped += 1
@@ -73,7 +77,11 @@ def load_crw_cases(cases_json):
     skipped = 0
     for case in cases:
         date = case[5]
-        date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
+        try:
+            date_converted = tz.localize(datetime.strptime(date, '%Y-%m-%d %H:%M:%S'))
+        except TypeError:
+            skipped += 1
+            continue
 
         if date_converted < tz.localize(datetime(2014, 1, 1, 0, 0)):
             skipped += 1

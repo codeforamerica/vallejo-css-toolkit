@@ -118,11 +118,9 @@ def get_reports(request_params):
                 COALESCE(c.name, '') AS reporter_name,
                 COALESCE(c.address, '') AS problem_address,
                 COALESCE(c.problem, '') AS problem,
-                s.id AS status,
-                COALESCE(s.name, '') AS status_str
+                c.status AS status,
+                COALESCE(c.status::text, '') AS status_str
             FROM workflow_csscall AS c
-            LEFT JOIN workflow_reportstatus s
-                ON c.status_id = s.id
             WHERE c.active = True
         ), total_count AS (
             SELECT COUNT(*) AS tcount FROM workflow_csscall
