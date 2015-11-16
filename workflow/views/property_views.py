@@ -2,12 +2,18 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
 from workflow.utils import get_properties
+from workflow.models import CSSCall
 
 
 @login_required(login_url='/login/')
 def property(request):
 
-    return render(request, 'workflow/property.html')
+    address = request.GET.get('address')
+
+    # TODO: fix so that we're also checking address number and street name fields
+    reports = CSSCall.objects.filter(address=address).order_by('-reported_datetime')
+
+    return render(request, 'workflow/property.html', {'reports': reports})
 
 
 @login_required(login_url='/login/')

@@ -4,12 +4,59 @@
 
 {% block assets %}
 
-<link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/>
+<!-- <link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/> -->
+<link rel="stylesheet" href="{% static "workflow/css/table_page_new.css" %}"/>
 
 {% endblock %}
 
 {% block body %}
 
+<div class="container">
+    <div class="row report-pg-header">
+        <div class="col-md-4 col-sm-12">
+            <div class="">
+                <h1>{{ reports.0.address }}</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12 table-responsive">
+            <div class="table-wrapper">
+              <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="active">Date&nbsp;&nbsp;<i class="fa fa-caret-down"></i></th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for report in reports %}
+                            <tr>
+                                <td class="data-cell timestamp-data-cell">{{ report.reported_datetime|date:"m/d/y" }}</td>
+                                <td class="data-cell">{{ report.problem|default_if_none:'' }}</td>
+                                <td class="data-cell">{{ report.get_report_type_display|default_if_none:'' }}</td>
+                                <td class="data-cell">{{ report.get_status_display|default_if_none:'' }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+
+                {% if not reports %}
+                    <div class="text-center">
+                        <h3>No reports found</h3>
+                    </div>
+                {% endif %}
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 {% endblock %}

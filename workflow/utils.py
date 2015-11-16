@@ -408,7 +408,7 @@ def get_properties(request_params):
                         max(subselect.max_timestamp) AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
                     )
                 , '') AS latest_activity_str,
-                '' AS status
+                'Report' AS status
 
             FROM (
                 SELECT
@@ -418,7 +418,7 @@ def get_properties(request_params):
                     FROM workflow_csscall r
                     LEFT JOIN
                     (
-                        SELECT r.id as report_id, max(ca.timestamp) as max_timestamp
+                        SELECT r.id as report_id, r.reported_datetime as max_timestamp
 
                         FROM workflow_csscall r
 
@@ -426,8 +426,6 @@ def get_properties(request_params):
                             ON v.report_id = r.id
                         LEFT JOIN workflow_csscase c
                             ON c.verification_id = v.id
-                        LEFT JOIN workflow_caseaction ca
-                            ON c.id = ca.id
 
                         GROUP BY r.id
 
