@@ -8,6 +8,8 @@
 <link href='https://api.mapbox.com/mapbox.js/v2.2.1/mapbox.css' rel='stylesheet' />
 
 <link rel="stylesheet" href="{% static "workflow/css/landing.css" %}"/>
+<script src='{% static "workflow/js/landing.js" %}'></script>
+
 
 {% endblock %}
 
@@ -26,7 +28,9 @@
     </div>
 
     <div class="row">
-
+      <form id='report-ids'>
+        <input type="hidden" name='report-ids' value="{{ report_ids }}">
+      </form>
 
       <div class="col-md-4 ">
         <div class="panel panel-default">
@@ -317,8 +321,8 @@
           <div class="panel-heading">
             <h3 class="panel-title">Where in Vallejo are problems persisting?</h3>
           </div>
-          <div class="panel-body">
-            It's a heatmap of stuff!
+          <div id="map" class="panel-body">
+
           </div>
         </div>
       </div>

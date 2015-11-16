@@ -119,7 +119,14 @@ def get_reports(request_params):
                 COALESCE(c.address, '') AS problem_address,
                 COALESCE(c.problem, '') AS problem,
                 c.status AS status,
-                COALESCE(c.status::text, '') AS status_str
+                CASE WHEN c.status = 1 THEN 'Unread - phone'
+                     WHEN c.status = 2 THEN 'Unread - web'
+                     WHEN c.status = 3 THEN 'Report'
+                     WHEN c.status = 4 THEN 'Verification'
+                     WHEN c.status = 5 THEN 'Case'
+                     WHEN c.status = 6 THEN 'Resolved'
+                     ELSE ''
+                END AS status_str
             FROM workflow_csscall AS c
             WHERE c.active = True
         ), total_count AS (
@@ -251,9 +258,20 @@ def get_cases(request_params):
                 , '') AS started_str,
                 COALESCE(r.address_number::text || ' ' || r.street_name, '') AS address,
                 c.priority AS priority,
-                COALESCE(c.priority::text, '') AS priority_str,
+                CASE WHEN c.priority = 1 THEN 'Low'
+                     WHEN c.priority = 2 THEN 'Med'
+                     WHEN c.priority = 3 THEN 'High'
+                     ELSE ''
+                END AS priority_str,
                 COALESCE(r.problem, '') AS description,
-                r.status::text AS status
+                CASE WHEN r.status = 1 THEN 'Unread - phone'
+                     WHEN r.status = 2 THEN 'Unread - web'
+                     WHEN r.status = 3 THEN 'Report'
+                     WHEN r.status = 4 THEN 'Verification'
+                     WHEN r.status = 5 THEN 'Case'
+                     WHEN r.status = 6 THEN 'Resolved'
+                     ELSE ''
+                END AS status
             FROM workflow_csscase AS c
             LEFT JOIN workflow_verification v
                 ON c.verification_id = v.id

@@ -3,7 +3,7 @@ from django import forms
 from django.contrib.auth.models import User
 from django.forms.widgets import Select, CheckboxInput, ClearableFileInput
 
-from workflow.models import CSSCase, CaseStatus
+from workflow.models import CSSCase
 
 
 class UserModelChoiceField(forms.ModelChoiceField):
@@ -23,17 +23,16 @@ class PriorityModelChoiceField(forms.ModelChoiceField):
 
 class CSSCaseDetailsForm(forms.ModelForm):
 
-    assignee = UserModelChoiceField(queryset=User.objects.all())
-    # status = StatusModelChoiceField(queryset=CaseStatus.objects.all())
+    assignee = UserModelChoiceField(queryset=User.objects.all(), required=False)
 
     class Meta:
         model = CSSCase
 
         fields = (
+            'case_no',
             'description',
             'resolution',
-            # 'status',
-            'priority'
+            'priority',
         )
 
     def __init__(self, *args, **kwargs):
@@ -50,17 +49,3 @@ class CSSCaseDetailsForm(forms.ModelForm):
                     self.fields[field].widget.attrs['disabled'] = True
                 else:
                     self.fields[field].widget.attrs['readonly'] = True
-
-
-# TODO: deprecate
-# class CSSCaseOwnerForm(forms.ModelForm):
-
-#     class Meta:
-#         model = CSSCase
-
-        # fields = (
-        #     'owner_name',
-        #     'owner_address',
-        #     'owner_phone',
-        #     'owner_email'
-        # )

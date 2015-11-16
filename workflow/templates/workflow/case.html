@@ -66,7 +66,8 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Case Number:</label>
-                                <input class="form-control" name="case_id" readonly value="{{ case_id }}"}>
+                                {{ case_details_form.case_no|add_class:"form-control" }}
+                                {{ case_details_form.case_no.errors }}
                             </div>
                         </div>
 
@@ -92,7 +93,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="{{ case_details_form.description.id_for_label }}">Case Description/Goals:</label>
-                                    <textarea maxlength="256" name="{{ case_details_form.description.html_name }}" class="form-control" rows="3" {% if not user.is_staff or not user.is_superuser %}readonly{% endif %}></textarea>
+                                    <textarea maxlength="256" name="{{ case_details_form.description.html_name }}" class="form-control" rows="3" {% if not user.is_staff and not user.is_superuser %}readonly{% endif %}>{{ case_details_form.description.value }}</textarea>
                             </div>
                         </div>
 

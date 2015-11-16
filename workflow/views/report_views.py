@@ -142,7 +142,7 @@ def verify_report(request, verification_id):
             request,
             'workflow/message_reporter.html',
             {
-                'default_verify_message': '',
+                'default_message': 'The issue you reported has been moved to the next step in the investigation.',
                 'title': "Verify Report",
                 'cancel_url': '/workflow/verification/{}'.format(verification_id)
             }
@@ -165,7 +165,7 @@ def resolve_report(request, report_id):
             request,
             'workflow/message_reporter.html',
             {
-                'default_resolve_message': '',
+                'default_message': 'The issue you reported was resolved. Thank you!',
                 'title': "Resolve Report",
                 'cancel_url': '/workflow/reports/'
             }

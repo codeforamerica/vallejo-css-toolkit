@@ -189,7 +189,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label for="{{ form.problem.id_for_label }}">Problem Description:</label>
-                                <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3" {% if not user.is_staff or not user.is_superuser %}readonly{% endif %}>{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                                <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3" {% if not user.is_staff and not user.is_superuser %}readonly{% endif %}>{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
                                 {{ form.problem.errors }}
                                 {% if description_recording and description_recording.0.url %}
                                     <audio controls>
@@ -290,7 +290,7 @@
                             </div>
 
                         {% endfor %}
-                        {% if not contact_log %}
+                        {% if not external_assets %}
                             <div class="text-center"><h5>No documents have been submitted</h5></div>
                         {% endif %}
 

@@ -1,3 +1,4 @@
+import json
 import calendar
 from datetime import datetime
 
@@ -54,7 +55,7 @@ def landing(request):
 
             'current_month_new_cases': current_month_new_cases,
             'last_month_new_cases': last_month_new_cases,
-
+            'report_ids': json.dumps(list(CSSCall.objects.all().order_by('-reported_datetime').values_list('id', flat=True)[:20]))
         }
     )
 

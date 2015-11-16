@@ -10,10 +10,6 @@ class CaseStatus(models.Model):
     name = models.CharField(max_length=256)
 
 
-# class ReportStatus(models.Model):
-#     name = models.CharField(max_length=256)
-
-
 # TODO: deprecate
 class PDCase(models.Model):
     address_number = models.IntegerField(null=True)
@@ -69,7 +65,7 @@ class CSSCall(models.Model):
         (UNREAD_PHONE_STATUS, 'Unread - web'),
         (REPORT_STATUS, 'Report'),
         (VERIFICATION_STATUS, 'Verification'),
-        (CASE_STATUS, 'Resolved'),
+        (CASE_STATUS, 'Case'),
         (RESOLVED_STATUS, 'Resolved')
     )
 
@@ -81,6 +77,7 @@ class CSSCall(models.Model):
     PROSTITUTION_TYPE = 6
     ABANDONED_VEHICLE_TYPE = 7
     OTHER_TYPE = 8
+    COMMUNICATION_QUES_TYPE = 9
 
     REPORT_TYPE_CHOICES = (
         (SQUATTER_TYPE, 'Squatters'),
@@ -90,6 +87,7 @@ class CSSCall(models.Model):
         (ILLEGAL_DUMPING_TYPE, 'Illegal Dumping'),
         (PROSTITUTION_TYPE, 'Prostitution'),
         (ABANDONED_VEHICLE_TYPE, 'Abandoned Vehicle'),
+        (COMMUNICATION_QUES_TYPE, 'Communication/Question'),
         (OTHER_TYPE, 'Other'),
     )
 
@@ -194,6 +192,7 @@ class CSSCase(models.Model):
     priority = models.IntegerField(null=True, blank=True, choices=PRIORITY_CHOICES)
     resolved_at = models.DateTimeField(null=True, blank=True)
     active = models.BooleanField(default=True)
+    case_no = models.CharField(max_length=256, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.created_at:

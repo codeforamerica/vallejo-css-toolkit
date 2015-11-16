@@ -84,7 +84,7 @@
                         <div class="col-sm-12">
                             <div class="form-group">
                                 <label>Property Description:</label>
-                                <textarea maxlength="256" name="{{ property_details_form.property_description.html_name }}" class="form-control" rows="5" {% if not user.is_staff or not user.is_superuser %}readonly{% endif %}>{% if property_details_form.property_description.value %}{{ property_details_form.property_description.value }}{% endif %}</textarea>
+                                <textarea maxlength="256" name="{{ property_details_form.property_description.html_name }}" class="form-control" rows="5" {% if not user.is_staff and not user.is_superuser %}readonly{% endif %}>{% if property_details_form.property_description.value %}{{ property_details_form.property_description.value }}{% endif %}</textarea>
                                 {{ property_details_form.property_description.errors }}
                             </div>
                         </div>
