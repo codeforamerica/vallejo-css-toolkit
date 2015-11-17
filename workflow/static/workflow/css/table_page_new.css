@@ -93,6 +93,10 @@ th{
   margin: 0;
 }
 
-@media (max-width:584px) {
+
+@media (max-width:461px){
+  button.btn.btn-success{
+    margin-top: 30px;
+  }
 
 }
