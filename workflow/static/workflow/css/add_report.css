@@ -17,7 +17,7 @@
 }
 
 @media (min-width:992px) {
-  .save-buttons .btn-success{
+  .save-buttons .btn-default{
     margin-left:40px;
   }
 
