@@ -1,3 +1,4 @@
+import os
 import logging
 import traceback
 from time import time
@@ -12,18 +13,28 @@ log = logging.getLogger('consolelogger')
 
 @csrf_exempt
 def get_latest_rms_case_no(request):
+    if 'ETL_RECORD_LIMIT' in os.environ:
+        etl_record_limit = int(os.environ['ETL_RECORD_LIMIT'])
+    else:
+        etl_record_limit = 20
+
     log.info('fetching latest rms case num')
     latest_case_no = get_latest_rms_case_no_util()
 
-    return JsonResponse({'latest_case_no': latest_case_no})
+    return JsonResponse({'latest_case_no': latest_case_no, 'etl_record_limit': etl_record_limit})
 
 
 @csrf_exempt
 def get_latest_crw_case_no(request):
+    if 'ETL_RECORD_LIMIT' in os.environ:
+        etl_record_limit = int(os.environ['ETL_RECORD_LIMIT'])
+    else:
+        etl_record_limit = 20
+
     log.info('fetching latest crw case num')
     latest_case_no = get_latest_crw_case_no_util()
 
-    return JsonResponse({'latest_case_no': latest_case_no})
+    return JsonResponse({'latest_case_no': latest_case_no, 'etl_record_limit': etl_record_limit})
 
 
 @csrf_exempt
