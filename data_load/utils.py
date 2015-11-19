@@ -22,12 +22,12 @@ def get_latest_rms_case_no_util():
 
 
 def get_latest_crw_case_no_util():
-    latest_case_no = 'CE14-0000'
+    latest_case_no = 14000000
 
-    result = list(CRWCase.objects.raw("SELECT id, case_no FROM data_load_crwcase ORDER BY case_no DESC LIMIT 1"))
+    result = list(CRWCase.objects.raw("SELECT id, yr_no, seq_no FROM data_load_crwcase ORDER BY yr_no DESC, seq_no DESC LIMIT 1"))
 
     if result:
-        latest_case_no = result[0].case_no
+        latest_case_no = result[0].yr_no * 1000000 + result[0].seq_no
 
     return latest_case_no
 
