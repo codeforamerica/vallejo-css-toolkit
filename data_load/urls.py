@@ -14,6 +14,10 @@ urlpatterns = patterns(
     # endpoint for ETL process to post crw updates
     url(r'^handle_crw_post/$', 'data_load.views.handle_crw_post', name='handle_crw_post'),
 
-    # endpoint for ETL process to post crw updates
+    # endpoint for ETL process to post rms case updates
     url(r'^handle_rms_post/$', 'data_load.views.handle_rms_post', name='handle_rms_post'),
+
+    # endpoint for ETL process to post rms incident updates
+    url(r'^handle_rms_inc_post/$', 'data_load.views.handle_rms_inc_post', name='handle_rms_inc_post'),
+
 )
