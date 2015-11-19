@@ -5,7 +5,7 @@ from datetime import datetime
 
 import pytz
 
-from data_load.models import RMSCase, CRWCase
+from data_load.models import RMSCase, CRWCase, RMSIncident
 
 log = logging.getLogger('consolelogger')
 
@@ -19,6 +19,17 @@ def get_latest_rms_case_no_util():
         latest_case_no = result[0].case_no
 
     return latest_case_no
+
+
+def get_latest_rms_incident_no_util():
+    latest_incident_no = 201401010000
+
+    result = list(RMSIncident.objects.raw("SELECT id, incident_no FROM data_load_rmsincident ORDER BY incident_no DESC LIMIT 1"))
+
+    if result:
+        latest_incident_no = result[0].incident_no
+
+    return latest_incident_no
 
 
 def get_latest_crw_case_no_util():

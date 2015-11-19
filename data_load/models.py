@@ -23,3 +23,7 @@ class CRWCase(models.Model):
     desc = models.CharField(max_length=1024, null=True)
     case_type = models.CharField(max_length=1024, null=True)
     case_subtype = models.CharField(max_length=1024, null=True)
+
+
+class RMSInciden(models.Model):
+    incident_no = models.BigIntegerField()
