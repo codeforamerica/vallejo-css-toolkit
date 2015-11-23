@@ -14,6 +14,10 @@ h2{
   margin-bottom:60px;
 }
 
+a.add-report:hover{
+  text-decoration: none;
+}
+
 
 .panel{
   margin-bottom:30px;
@@ -50,13 +54,21 @@ h2{
   padding-bottom:10px;
 }
 
-.landing-btns .btn{
+.landing-header .btn{
   height:50px;
+  margin-top:15px;
 }
 
-.landing-btns .search{
-  margin-bottom:30px;
+.landing-header{
+  margin-bottom:50px;
 }
+
+.landing-header h2{
+  margin-bottom:0;
+  line-height: 1.5
+}
+
+
 
 .table>thead>tr>th, .table>tbody>tr>td{
   padding-left:15px;
@@ -76,4 +88,4 @@ h2{
 
 .recent-activity {padding: 15px;}
 
-#map { height: 320px; }
+#map { height: 520px; }

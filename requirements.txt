@@ -5,7 +5,7 @@ Django==1.8.3
 django-phonenumber-field==0.7.2
 django-settings-export==1.0.6
 django-toolbelt==0.0.1
-django-twilio==0.8.0
+django-twilio==0.7
 django-widget-tweaks==1.4.1
 future==0.15.0
 gunicorn==19.3.0

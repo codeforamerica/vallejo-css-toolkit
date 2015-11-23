@@ -48,47 +48,49 @@
                     <input type="hidden" name="offset" value="{{ offset }}">
                     <input type="hidden" name="limit" value="{{ limit }}">
 
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th>ID</th>
-                                <th
-                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=started&amp;{% if sort_key == 'started' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                                    class="data-cell clickable-cell {% if sort_key == 'started' %}active {% endif %}"
-                                    >Started{% if sort_key == 'started' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
-                                <th
-                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=address&amp;{% if sort_key == 'address' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
-                                    class="data-cell clickable-cell {% if sort_key == 'address' %}active {% endif %}"
-                                    >Address{% if sort_key == 'address' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
-                                <th
-                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=priority&amp;{% if sort_key == 'priority' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                                    class="data-cell clickable-cell {% if sort_key == 'priority' %}active {% endif %}"
-                                    >Priority{% if sort_key == 'priority' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
-                                <th
-                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=description&amp;{% if sort_key == 'description' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                                    class="data-cell clickable-cell {% if sort_key == 'description' %}active {% endif %}"
-                                    >Description{% if sort_key == 'description' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
-                                <th
-                                    data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=status&amp;{% if sort_key == 'status' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                                    class="data-cell clickable-cell {% if sort_key == 'status' %}active {% endif %}"
-                                    >Status{% if sort_key == 'status' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
-                            </tr>
-                        </thead>
+                    <div class="table-responsive">
+                      <table class="table table-hover">
+                          <thead>
+                              <tr>
+                                  <th></th>
+                                  <th>ID</th>
+                                  <th
+                                      data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=started&amp;{% if sort_key == 'started' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                      class="data-cell clickable-cell {% if sort_key == 'started' %}active {% endif %}"
+                                      >Started{% if sort_key == 'started' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                                  <th
+                                      data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=address&amp;{% if sort_key == 'address' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
+                                      class="data-cell clickable-cell {% if sort_key == 'address' %}active {% endif %}"
+                                      >Address{% if sort_key == 'address' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                                  <th
+                                      data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=priority&amp;{% if sort_key == 'priority' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                      class="data-cell clickable-cell {% if sort_key == 'priority' %}active {% endif %}"
+                                      >Priority{% if sort_key == 'priority' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                                  <th
+                                      data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=description&amp;{% if sort_key == 'description' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                      class="data-cell clickable-cell {% if sort_key == 'description' %}active {% endif %}"
+                                      >Description{% if sort_key == 'description' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                                  <th
+                                      data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=status&amp;{% if sort_key == 'status' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
+                                      class="data-cell clickable-cell {% if sort_key == 'status' %}active {% endif %}"
+                                      >Status{% if sort_key == 'status' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
+                              </tr>
+                          </thead>
 
-                        <tbody>
-                            {% for case in cases_data %}
-                                <tr>
-                                    <td><input class="to-delete-checkbox" type="checkbox" name="to_delete" value="{{ case.0 }}"></td>
-                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.0 }}</td>
-                                    <td class="data-cell timestamp-data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.2 }}</td>
-                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.3 }}</td>
-                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.5 }}</td>
-                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.6 }}</td>
-                                    <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.7 }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
+                          <tbody>
+                              {% for case in cases_data %}
+                                  <tr>
+                                      <td><input class="to-delete-checkbox" type="checkbox" name="to_delete" value="{{ case.0 }}"></td>
+                                      <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.0 }}</td>
+                                      <td class="data-cell timestamp-data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.2 }}</td>
+                                      <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.3 }}</td>
+                                      <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.5 }}</td>
+                                      <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.6 }}</td>
+                                      <td class="data-cell clickable-cell" data-href="/workflow/case/{{ case.0 }}">{{ case.7 }}</td>
+                                  </tr>
+                              {% endfor %}
+                          </tbody>
+                      </table>
                     </table>
                 </form>
 

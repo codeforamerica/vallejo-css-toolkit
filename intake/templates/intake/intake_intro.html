@@ -13,15 +13,24 @@
 <div class="intake-header">
     <div class="container">
         <div class="row">
-          <div class="col-sm-4 col-sm-offset-8">
-            <a href="/report/?lang=es" class="espanol-link pull-right">En Espa&#241;ol</a>
-          </div>
+            <div class="col-sm-4 col-sm-offset-8">
+                {% if lang == 'en' %}
+                    <a href="/?lang=es" class="language-link pull-right">En Espa&#241;ol</a>
+                {% elif lang == 'es' %}
+                    <a href="/" class="language-link pull-right">In English</a>
+                {% endif %}
+            </div>
+
+
+            <div class="">
+                <img class="city-logo" src="{% static 'intake/img/vallejo_city_logo.png' %}">
+            </div>
         </div>
         <div class="row">
-            <div class="col-sm-9 col-sm-offset-1 col-xs-12">
+            <div class="col-sm-10 col-sm-offset-1 col-xs-12">
                 <div class="header-content">
-                    <h1>{% if lang == 'en' %}What's going on in your neighborhood?{% endif %}</h1>
-                    <p>{% if lang == 'en' %}Here you can report non-emergency issues, ask a question, or leave a message for the Community Services Section of the police department. Your submissions will go directly to the department and they'll work on investigating the problem or answering your questions as soon as possible. <b>If you have an emergency in progress, call 911.</b>{% endif %}</p>
+                    <h1>{% if lang == 'en' %}What's going on in your neighborhood?{% elif lang == 'es' %}&iquest;Qu&eacute; pasa en su barrio?{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Here you can report non-emergency issues, ask a question, or leave a message for the Community Services Section of the police department. The Community Services Section handles reports of squatters, homeless encampments, abandoned vehicles, drug activity, illegal auto repair, prostitution, illegal dumping and also fields questions about neighborhood watch groups in Vallejo. Your submissions will go directly to the department and they'll work on investigating the problem or answering your questions as soon as possible. <b>If you are having an emergency, do not use this service and instead call 911.</b>{% elif lang == 'es' %}Aqu&iacute; puede reportar asuntos de importancia para su vecindad, hacer preguntas, o dejar un mensaje para el Community Services Section (sector de servicios para la communidad) de la polic&iacute;a. Sus mensajes ir&aacute;n directamente a la polic&iacute;a y ellos investigar&aacute;n su queja o contestar&aacute; su pregunta lo m&aacute;s pronto posible. <b>Si tiene una emergencia, no use esta p&aacute;gina, llame al 911.</b>{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -31,10 +40,25 @@
 <div class="container intake-body">
     <div class="row">
         <div class="col-sm-10 col-sm-offset-1 col-xs-12">
-            <h4>{% if lang == 'en' %}What are you here to do?{% endif %}</h4>
-            <a class="btn btn-primary btn-lg" href="/report/issue" role="button">{% if lang == 'en' %}Report an issue{% endif %}</a>
-            <a class="btn btn-default btn-lg disabled" href="/report/msg" role="button">{% if lang == 'en' %}Leave a message{% endif %}</a>
-            <a class="btn btn-default btn-lg disabled" href="/report/question" role="button">{% if lang == 'en' %}Ask a question{% endif %}</a>
+            <h4>{% if lang == 'en' %}What are you here to do?{% elif lang == 'es' %}&iquest;Qu&eacute; viene hacer?{% endif %}</h4>
+            <a class="btn btn-primary btn-lg" href="/report/issue/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Report an issue{% elif lang == 'es' %}Reportar una problema{% endif %}</a>
+            <a class="btn btn-default btn-lg" href="/report/message/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Leave a message{% elif lang == 'es' %}Dejar un mensaje{% endif %}</a>
+            <a class="btn btn-default btn-lg" href="/report/question/{% if lang == 'es' %}?lang=es{% endif %}" role="button">{% if lang == 'en' %}Ask a question{% elif lang == 'es' %}Hacer una pregunta{% endif %}</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid footer">
+    <div class="row">
+        <div class="col-sm-6">
+            <p>This is an official City of Vallejo website made with Code for America.</p>
+        </div>
+
+        <div class="col-sm-6">
+            <ul class="footer-items pull-right">
+                <li><a href="/workflow"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Staff Compass</a></li>
+                <li><a target="_blank" href="http://vallejo.hosted.civiclive.com/site_policy"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Terms of Service</a></li>
+            </ul>
         </div>
     </div>
 </div>

@@ -16,9 +16,9 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-9 col-sm-offset-1">
-                <div class="header-content">
-                    <h1>{% if lang == 'en' %}Tell us what's going on.{% endif %}</h1>
-                    <p>{% if lang == 'en' %}Try to be as detailed as possible and include as much information as you can. The more specific you can be, the easier we can understand and investigate the problem.{% endif %}</p>
+                <div class="header-content  issue-intro">
+                    <h1>{% if lang == 'en' %}Tell us what's going on.{% elif lang == 'es' %}Di nos qu&eacute; pasa.{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Try to be as detailed as possible and include as much information as you can. The more specific you can be, the easier we can understand and investigate the problem.{% elif lang == 'es' %}Del tanto detalle posible e incluye toda la informaci&oacute;n que pueda. Ser&aacute; m&aacute;s f&aacute;cil entender e investigar el problema con el major numero de datos.{% endif %}</p>
                 </div>
             </div>
         </div>
@@ -37,59 +37,59 @@
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <h4>{% if lang == 'en' %}Problem Description{% endif %}</h4>
+                <h4>{% if lang == 'en' %}Problem Description{% elif lang == 'es' %}Descripci&oacute;n del problema{% endif %}</h4>
 
                 <div class="form-group">
-                    <label for="{{ form.problem_location.id_for_label }}">{% if lang == 'en' %}Where is the problem occuring?{% endif %}</label>
+                    <label for="{{ form.problem_location.id_for_label }}">{% if lang == 'en' %}Where is the problem occuring? (required){% elif lang == 'es' %}&iquest;D&oacute;nde est&aacute; el problema? Por favor, diga la direcci&oacute;n o cruce de calles. (requerido){% endif %}</label>
                     {{ form.problem_location|add_class:"form-control" }}
                     {{ form.problem_location.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.description.id_for_label }}">{% if lang == 'en' %}Describe what is happening.{% endif %}</label>
+                    <label for="{{ form.description.id_for_label }}">{% if lang == 'en' %}Describe what is happening. (required){% elif lang == 'es' %}Describa el problema. (requerido){% endif %}</label>
                     <textarea name="{{ form.description.html_name }}" class="form-control" rows="3"></textarea>
                     {{ form.description.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.how_long.id_for_label }}">{% if lang == 'en' %}How long has the problem been occuring?{% endif %}</label>
+                    <label for="{{ form.how_long.id_for_label }}">{% if lang == 'en' %}How long has the problem been occuring?{% elif lang == 'es' %}&iquest;Por cu&aacute;nto tiempo ha estado ocurriendo este problema?{% endif %}</label>
                     {{ form.how_long|add_class:"form-control" }}
                     {{ form.how_long.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.time_of_day.id_for_label }}">{% if lang == 'en' %}What time of day does the problem occur?{% endif %}</label>
+                    <label for="{{ form.time_of_day.id_for_label }}">{% if lang == 'en' %}What time of day does the problem occur?{% elif lang == 'es' %}&iquest;A qu&eacute; horas del d&iacute;a se produce este problema?{% endif %}</label>
                     {{ form.time_of_day|add_class:"form-control" }}
                     {{ form.time_of_day.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.safety_concerns.id_for_label }}">Are there safety concerns at the location you're reporting?</label>
+                    <label for="{{ form.safety_concerns.id_for_label }}">{% if lang == 'en' %}Are there safety concerns at the location you're reporting?{% elif lang == 'es' %}&iquest;Hay problemas de seguridad en este lugar que debemos tener en cuenta?{% endif %}</label>
                     {{ form.safety_concerns }}
                     {{ form.safety_concerns.errors }}
                 </div>
 
 
                 <div class="form-group">
-                    <label for="{{ form.how_many_people.id_for_label }}">{% if lang == 'en' %}How many people are involved?{% endif %}</label>
+                    <label for="{{ form.how_many_people.id_for_label }}">{% if lang == 'en' %}How many people are involved?{% elif lang == 'es' %}&iquest;Cu&aacute;ntas personas est&aacute;n involucradas?{% endif %}</label>
                     {{ form.how_many_people|add_class:"form-control" }}
                     {{ form.how_many_people.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.uploaded_photo.id_for_label }}">{% if lang == 'en' %}Do you have photos of the problem?{% endif %}</label>
+                    <label for="{{ form.uploaded_photo.id_for_label }}">{% if lang == 'en' %}Do you have photos of the problem?{% elif lang == 'es' %}&iquest;Tiene fotos del problema?{% endif %}</label>
                     {{ form.uploaded_photo }}
                     {{ form.uploaded_photo.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ form.reported_before.id_for_label }}">{% if lang == 'en' %}Have you reported this problem before?{% endif %}</label>
+                    <label for="{{ form.reported_before.id_for_label }}">{% if lang == 'en' %}Have you reported this problem before?{% elif lang == 'es' %}&iquest;Alguna vez ha reportado este problema previamente?{% endif %}</label>
                     {{ form.reported_before }}
                     {{ form.reported_before.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{ reported_before_details.id_for_label }}">{% if lang == 'en' %}If yes, when and where did you last report this problem?{% endif %}</label>
+                    <label for="{{ reported_before_details.id_for_label }}">{% if lang == 'en' %}If yes, when and where did you last report this problem?{% elif lang == 'es' %}Si lo ha reportado antes, &iquest;a quien lo reportad&oacute; y a donde?{% endif %}</label>
                     {{ form.reported_before_details|add_class:"form-control" }}
                     {{ form.reported_before_details.errors }}
                 </div>
@@ -99,11 +99,26 @@
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% endif %}">
+                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% elif lang == 'es' %}Pr&oacute;ximo{% endif %}">
             </div>
         </div>
 
     </form>
+</div>
+
+<div class="container-fluid footer">
+    <div class="row">
+        <div class="col-sm-6">
+            <p>This is an official City of Vallejo website made with Code for America.</p>
+        </div>
+
+        <div class="col-sm-6">
+            <ul class="footer-items pull-right">
+                <li><a href="/workflow"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Staff Compass</a></li>
+                <li><a target="_blank" href="http://vallejo.hosted.civiclive.com/site_policy"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

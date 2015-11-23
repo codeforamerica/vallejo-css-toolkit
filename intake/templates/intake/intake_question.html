@@ -1,0 +1,64 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<link rel="stylesheet" href="{% static 'intake/css/intake.css' %}">
+
+{% endblock %}
+
+{% block body %}
+
+<div class="intake-header">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-9 col-sm-offset-1">
+                <div class="header-content">
+                    <h1>{% if lang == 'en' %}Ask a question.{% elif lang == 'es' %}Haz una pregunta.{% endif %}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container intake-body">
+    <form method="post">
+        <input type="hidden" name="lang" value="{{ lang }}">
+
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-1">
+                <h4>{% if lang == 'en' %}What is your question?{% elif lang == 'es' %}&iquest;Qu&eacute; es su pregunta?{% endif %}</h4>
+            </div>
+            <div class="col-sm-6 col-sm-offset-1">
+                <textarea class="form-control" name="{{ form.question.html_name }}" rows="3" value="{{ form.question.value }}"></textarea>
+                {{ form.question.errors }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-1">
+                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% elif lang == 'es' %}Pr&oacute;ximo{% endif %}">
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="container-fluid footer">
+    <div class="row">
+        <div class="col-sm-6">
+            <p>This is an official City of Vallejo website made with Code for America.</p>
+        </div>
+
+        <div class="col-sm-6">
+            <ul class="footer-items pull-right">
+                <li><a href="/workflow"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Staff Compass</a></li>
+                <li><a target="_blank" href="http://vallejo.hosted.civiclive.com/site_policy"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -9,7 +9,7 @@ body{
   margin-top:20px;
 }
 
-.espanol-link{
+.language-link{
   font-weight: bold;
   color:#fff;
   text-decoration: underline;
@@ -18,21 +18,66 @@ body{
   padding-right:20px;
 }
 
-.espanol-link:hover{
+.language-link:hover{
   color:#1F4E81;
+}
+
+.issue-intro, .contact-intro, .finish-intro{
+  padding-top:25px;
+}
+
+.city-logo {
+    max-width: 25%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 h1{
   margin-bottom:20px;
   font-weight: 700;
+  text-align: center;
 }
 
+.icon-list li {
+  padding: 0 0 5px 20px;
+  display: block;
+  position: relative;
+}
+.icon-list li:before {
+  font-family: 'Glyphicons Halflings';
+  position: absolute;
+  left: 0px;
+  top:3px;
+  font-size:80%
+}
+
+.arrow-right li:before {
+ content: '\e092';
+}
 
 h4{
   font-weight:700;
   color:#1F4E81;
   font-size:22px;
   margin-bottom:30px;
+}
+
+.header-content h4{
+  margin-bottom:10px;
+  margin-top:30px;
+  font-size:18px;
+  line-height: 1.5;
+}
+
+.common-issues li{
+  padding-right: 20px;
+}
+
+.common-issues{
+  padding-bottom: 0;
+  color:#1F4E81;
+  font-size: 14px;
 }
 
 ul {
@@ -46,27 +91,26 @@ ul {
 li {
   list-style-type: none;
 }
+
 .intake-header h1{
   margin-bottom:10px;
   color:#1F4E81;
 }
 
 .intake-header p{
-
   color:#1F4E81;
   line-height: 1.5;
   font-size:16px;
 }
 
 .intake-header .container{
-  padding:0;
+  padding:25px;
   background-color: #56CDFF;
 
 }
 
 .header-content{
-  padding-right: 25px;
-  padding-left: 25px;
+
   padding-bottom:25px;
 }
 
@@ -81,7 +125,7 @@ form{
 }
 
 .intake-body{
-  min-height:800px;
+  min-height:600px;
   padding-top:40px;
 }
 
@@ -115,10 +159,40 @@ label{
   border-color:#22A935;
 }
 
+
+.footer{
+  background-color: #1F4E81;
+  padding:25px 15px;
+}
+
+.footer-items li{
+  display:inline;
+  margin-left: 30px;
+}
+
+.footer-items a{
+  color:#188EF5;
+}
+
+.footer-items a:hover{
+  color:#fff;
+  text-decoration: none;
+}
+
+.footer p{
+  color:#fff;
+}
+
 @media (min-width:992px) {
    .container {
     width:900px
   }
+
+  .footer{
+    padding:25px 100px 15px;
+  }
+
+
 
 }
 
@@ -137,5 +211,10 @@ label{
   .btn{
     display:block;
     margin-bottom:20px;
+  }
+
+  .intake-header .container{
+    padding-left:15px;
+    padding-right:15px;
   }
 }

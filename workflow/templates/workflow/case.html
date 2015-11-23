@@ -20,344 +20,307 @@
 {% load widget_tweaks %}
 
 <div class="workflow-pg-wrapper">
-  <div class="container">
+    <div class="container">
 
-      <div class="row subnav">
-          <div class="col-md-8 col-sm-7 col-xs-12">
-              <h1>{{ property_address }}</h1>
-              <p class="reporter-subheader"> reported on {{ form.reported_datetime.value|date }} by {{ form.name.value }}</p>
-          </div>
-
-          <div class="col-md-4 col-sm-5 col-xs-12">
-              <ul class="nav nav-pills pull-right">
-                  <li role="presentation"><a href="/workflow/report/{{ report_id }}">Report</a></li>
-                  <li role="presentation"><a href="/workflow/verification/{{ verification_id }}">Verification</a></li>
-                  <li role="presentation" class="active"><a href="#">Case</a></li>
-              </ul>
-          </div>
-      </div>
-
-      <div class="row">
-          <div class="col-sm-4 pane-selectors">
-              <div class="list-group">
-                  <h5 class="list-group-item list-group-item-title">Case</h5>
-                  <a href="#case-details" class="list-group-item active">Case Details<span class="fa fa-list-item fa-angle-right"></span></a>
-                  <a href="#incident-log" class="list-group-item">Activity Log<span class="fa fa-list-item fa-angle-right"></span></a>
-                  <a href="#docs" class="list-group-item">People Contacted<span class="fa fa-list-item fa-angle-right"></span></a>
-              </div>
-          </div>
-
-          <!--Case Details pane-->
-          <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="case-details">
-            <div class="row">
-              <div class="col-sm-12">
-                <h4>Case Details</h4>
-              </div>
+        <div class="row subnav">
+            <div class="col-md-8 col-sm-7 col-xs-12">
+                <h1>{{ property_address }}</h1>
+                {% if report.reported_datetime and report.name %}
+                    <p class="reporter-subheader"> reported on {{ report.reported_datetime|date }} by {{ report.name }}</p>
+                {% endif %}
             </div>
 
-            <form id="owner-contact-form" method="POST">
-                {% csrf_token %}
+            <div class="col-md-4 col-sm-5 col-xs-12">
+                <ul class="nav nav-pills pull-right">
+                    <li role="presentation"><a href="/workflow/report/{{ report_id }}">Report</a></li>
+                    <li role="presentation"><a href="/workflow/verification/{{ verification_id }}">Verification</a></li>
+                    <li role="presentation" class="active"><a href="#">Case</a></li>
+                </ul>
+            </div>
+        </div>
 
-                {{ contact_owner_form.non_field_errors }}
+        <div class="row">
+            <div class="col-sm-4 pane-selectors">
+                <div class="list-group">
+                    <h5 class="list-group-item list-group-item-title">Case</h5>
+                    <a href="#case-details" class="list-group-item active">Case Details<span class="fa fa-list-item fa-angle-right"></span></a>
+                    <a href="#incident-log" class="list-group-item">Activity Log<span class="fa fa-list-item fa-angle-right"></span></a>
+<!--                     <a href="#docs" class="list-group-item">People Contacted<span class="fa fa-list-item fa-angle-right"></span></a>
+ -->
+                </div>
+            </div>
+
+            <!--Case Details pane-->
+            <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="case-details">
                 <div class="row">
-                  <div class="col-sm-12">
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.owner_name.id_for_label }}">Case Number:</label>
-                        {{ contact_owner_form.owner_name|add_class:"form-control" }}
-                        {{ contact_owner_form.owner_name.errors }}
+                    <div class="col-sm-12">
+                        <h4>Case Details</h4>
                     </div>
-                  </div>
-
-                  <div class="col-sm-12">
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.owner_address.id_for_label }}">Assignees:</label>
-                        {{ contact_owner_form.owner_address|add_class:"form-control" }}
-                        {{ contact_owner_form.owner_address.errors }}
-                    </div>
-                  </div>
-
-                  <div class="col-sm-12">
-                    <div class="fieldWrapper form-group owner-phone">
-                        <label for="{{ form.owner_phone.id_for_label }}">Case Description/Goals:</label>
-                        <textarea id="" maxlength="256" name="" class="form-control" rows="3"></textarea>
-                    </div>
-                  </div>
-
-                  <div class="col-sm-12">
-                    <div class="fieldWrapper form-group owner-email">
-                        <label for="{{ form.owner_email.id_for_label }}">Priority:</label>
-                        <select class="form-control">
-                          <option>Medium</option>
-                          <option>Low</option>
-                          <option>High</option>
-                        </select>
-                    </div>
-                  </div>
-
-                  <div class="col-sm-12">
-                    <div class="fieldWrapper form-group">
-                        <label for="{{ form.resolution.id_for_label }}">Resolution:</label>
-                        {{ case_details_form.resolution|add_class:"form-control" }}
-                        {{ case_details_form.resolution.errors }}
-                    </div>
-                  </div>
-
                 </div>
-            </form>
-          </div><!--End Case Details pane-->
 
+                <form id="case-details-form" method="POST">
+                    {% csrf_token %}
+                    {{ case_details_form.non_field_errors }}
+                    <input name="case_id" type="hidden" value="{{ case_id }}">
 
-          <!-- Incident Log pane -->
-          <div class="tab-pane" id="incident-log">
-              <div class="col-md-7 col-md-offset-1 report">
-                  <h4>Activity Log</h4>
-
-                      <div class="row">
+                    <div class="row">
                         <div class="col-sm-12">
-                          <div class="table-wrapper">
-                            <table class="table table-hover small-table" id="call-log">
-                              <thead>
-                                <tr>
-                                  <th>Date</th>
-                                  <th>Officer</th>
-                                  <th>Description</th>
-                                </tr>
-                              </thead>
-
-                              <tbody>
-                                <tr>
-                                  <td>Today</td>
-                                  <td>Garcia</td>
-                                  <td>This is the description of the service call</td>
-                                </tr>
-
-                                <tr>
-                                  <td>10/15/15</td>
-                                  <td>Hans</td>
-                                  <td>This is the description of the service call</td>
-                                </tr>
-
-                                <tr>
-                                  <td>10/10/15</td>
-                                  <td>Hans</td>
-                                  <td>This is the description of the service call</td>
-                                </tr>
-
-                                <tr>
-                                  <td>10/1/15</td>
-                                  <td>Park</td>
-                                  <td>This is the description of the service call</td>
-                                </tr>
-
-                                <tr>
-                                  <td>8/8/15</td>
-                                  <td>Garrick</td>
-                                  <td>This is the description of the service call</td>
-                                </tr>
-
-                                <tr>
-                                  <td>1/23/15</td>
-                                  <td>Hans</td>
-                                  <td>This is the description of the service call</td>
-                                </tr>
-                            </table>
-                          </div> <!--table wrapper-->
-
-                          <a href="#" class="pull-right" data-toggle="modal" data-target="#addincident">Add Activity</a>
-
+                            <div class="form-group">
+                                <label>Case Number:</label>
+                                {{ case_details_form.case_no|add_class:"form-control" }}
+                                {{ case_details_form.case_no.errors }}
+                            </div>
                         </div>
-                      </div>
 
-                    </div><!--contact log table-->
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label>Assignees:</label>
+                                    <table id="assignee-table" class="assignee-table">
+                                        <tr id="case-assignees">
+                                            {% for case_assignee in case_assignees %}
+                                                <td class='assignee-row-cell'>{{ case_assignee }}&nbsp&nbsp&nbsp<a class='unassign' onclick='removeAssignee(event, this.parentElement, "{{case_assignee}}")' href='#'><i class='fa fa-close'></i></a></td>
+                                            {% endfor %}
+                                        </tr>
+                                    </table>
+                            </div>
 
-          </div><!-- end Activity Log pane -->
+                            <div class="form-group" id="assignee-selector">
+                                <label>Add Assignees:</label>
+                                    <input id="assignee-selection" name="assignee_add" class="typeahead form-control" type="text" placeholder="">
+                                    <button id="add-assignee-submit" style="margin-top: 10px;" class="btn btn-primary">Add</button>
+                            </div>
+                        </div>
 
-          <!-- Activity Log Modal-->
-          <div class="modal fade" id="addincident" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ case_details_form.description.id_for_label }}">Case Description/Goals:</label>
+                                    <textarea maxlength="256" name="{{ case_details_form.description.html_name }}" class="form-control" rows="3" {% if not user.is_staff and not user.is_superuser %}readonly{% endif %}>{{ case_details_form.description.value }}</textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ case_details_form.priority.id_for_label }}">Priority:</label>
+                                {{ case_details_form.priority|add_class:"form-control" }}
+                                {{ case_details_form.priority.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.resolution.id_for_label }}">Resolution:</label>
+                                {{ case_details_form.resolution|add_class:"form-control" }}
+                                {{ case_details_form.resolution.errors }}
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div><!--End Case Details pane-->
+
+            <!-- Incident Log pane -->
+            <div class="tab-pane" id="incident-log">
+                <div class="col-md-7 col-md-offset-1 report">
+                    <h4>Activity Log</h4>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="table-wrapper">
+                                <table class="table table-hover small-table" id="call-log">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Officer</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Today</td>
+                                            <td>Garcia</td>
+                                            <td>This is the description of the service call</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10/15/15</td>
+                                            <td>Hans</td>
+                                            <td>This is the description of the service call</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10/10/15</td>
+                                            <td>Hans</td>
+                                            <td>This is the description of the service call</td>
+                                        </tr>
+                                        <tr>
+                                            <td>10/1/15</td>
+                                            <td>Park</td>
+                                            <td>This is the description of the service call</td>
+                                        </tr>
+                                        <tr>
+                                            <td>8/8/15</td>
+                                            <td>Garrick</td>
+                                            <td>This is the description of the service call</td>
+                                        </tr>
+                                        <tr>
+                                            <td>1/23/15</td>
+                                            <td>Hans</td>
+                                            <td>This is the description of the service call</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div> <!--table wrapper-->
+                            {% if user.is_staff or user.is_superuser %}
+                                <a href="#" class="pull-right" data-toggle="modal" data-target="#addincident">Add Activity</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div><!--contact log table-->
+            </div><!-- end Activity Log pane -->
+
+        </div> <!-- end row -->
+
+        <!-- Activity Log Modal-->
+        <div class="modal fade" id="addincident" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog  modal-lg" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="myModalLabel">Add Activity</h4>
-                </div>
-                <div class="modal-body">
-                  <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1">
-                      <h4>Activity Description</h4>
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Add Activity</h4>
                     </div>
-                    <form>
-                      <div class="col-sm-5 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Date:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-10 col-sm-offset-1">
+                                <h4>Activity Description</h4>
+                            </div>
+                            <form>
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Date:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-5">
-                          <div class="form-group">
-                              <label for="">Time:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="">Time:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-10 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Time Spent at Property:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Time Spent at Property:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-10 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Officer:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Officer:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-10 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Description:</label>
-                              <textarea class="form-control" rows="3"></textarea>
-                          </div>
-                      </div>
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Description:</label>
+                                        <textarea class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-10 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Property Secured?</label>
-                              <select class="form-control" name="next-action">
-                                  <option>Secured</option>
-                                  <option>Not Secured</option>
-                              </select>
-                          </div>
-                      </div>
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Property Secured?</label>
+                                        <select class="form-control" name="next-action">
+                                            <option>Secured</option>
+                                            <option>Not Secured</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-10 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Board-up Company:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Board-up Company:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-10 col-sm-offset-1">
-                        <h4>People Contacted</h4>
-                      </div>
+                                <div class="col-sm-10 col-sm-offset-1">
+                                  <h4>People Contacted</h4>
+                                </div>
 
-                      <div class="col-sm-5 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Name:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Name:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-5">
-                          <div class="form-group">
-                              <label for="">DOB:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="">DOB:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-5 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Name:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-5 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Name:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-5">
-                          <div class="form-group">
-                              <label for="">DOB:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-5">
+                                    <div class="form-group">
+                                        <label for="">DOB:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                      <div class="col-sm-10 col-sm-offset-1">
-                        <h4>Arrests</h4>
-                      </div>
+                                <div class="col-sm-10 col-sm-offset-1">
+                                  <h4>Arrests</h4>
+                                </div>
 
-                      <div class="col-sm-10 col-sm-offset-1">
-                          <div class="form-group">
-                              <label for="">Case Number:</label>
-                              <input type="" class="form-control" id="" placeholder="">
-                          </div>
-                      </div>
+                                <div class="col-sm-10 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="">Case Number:</label>
+                                        <input type="" class="form-control" id="" placeholder="">
+                                    </div>
+                                </div>
 
-                    </form>
-                  </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Add</button>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" class="btn btn-primary">Add</button>
-                </div>
-              </div>
             </div>
-          </div>
-
-
-
-
-          <!-- Documents pane -->
-          <div class="tab-pane" id="docs">
-              <div class="col-sm-7 col-sm-offset-1 report">
-                <h4>People Contacted</h4>
-
-                {% for uploaded_doc in uploaded_docs %}
-                    <div class="row uploaded-doc">
-                      <div class="col-sm-4">
-                        <img src="{{ uploaded_doc.thumbnail_url }}">
-                      </div>
-
-                      <div class="col-sm-8">
-                        <ul class="doc-attrs">
-                            <li class="doc-name"><h5 class="doc-name-text">{{ uploaded_doc.name }}</h5></li>
-                            <li class="doc-link"><a href="#">{{ uploaded_doc.filename }}</a></li>
-                            <li class="doc-date"><p class="doc-date-text">Added: {{ uploaded_doc.added }}</p></li>
-                        </ul>
-                      </div>
-                    </div>
-
-                {% endfor %}
-
-
-                    <div class="row new-upload">
-                      <div class="col-sm-12">
-                        <form id="file-upload-form">
-                            <h4>Upload a new photo</h4>
-                            <input type="file" name="uploadDoc">
-                        </form>
-                      </div>
-                    </div>
-
-              </div>
-          </div> <!-- end Documents pane -->
-
+        </div>
 
     </div>
-  </div>
 </div>
 
 <div class="footer container-fluid">
     <div class="container next-actions">
         <div class="row">
             <div class="col-sm-6 col-sm-offset-6">
-              <div class="row">
-                <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
-                  <div class="form-group">
-                      <select class="form-control" name="next-action">
-                        <option>Save Case</option>
-                        <option>Forward</option>
-                        <option>Resolve</option>
-                        <option>Revert to Verification</option>
-                      </select>
-                  </div>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
+                        <div class="form-group">
+                            <select class="form-control" name="next-action">
+                                <option>Save Case</option>
+                                <option>Forward</option>
+                                <option>Resolve</option>
+                                <option>Revert to Verification</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
+                        <button type="submit" form="case-details-form" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
+                    </div>
                 </div>
-                <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
-                    <button type="submit" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
-                </div>
-              </div>
             </div>
         </div>
     </div>
 </div>
-
 
 {% endblock %}

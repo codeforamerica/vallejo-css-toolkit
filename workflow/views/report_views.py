@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from intake.models import CallAuditItem, PublicUploadedAsset
 
 from workflow.forms.report_forms import ReportForm
-from workflow.models import CSSCall, CSSCase, Verification, CSSReportView, ReportNotification
+from workflow.models import CSSCall, CSSCase, Verification, CSSReportView, ReportNotification, Recording
 from workflow.utils import get_location_history, get_reports
 
 log = logging.getLogger('consolelogger')
@@ -20,7 +20,8 @@ LOG_AUDIT_HISTORY = False
 
 @login_required(login_url='/login/')
 def add_report(request):
-    form = ReportForm(request.POST or None)
+    readonly = not (request.user.is_staff or request.user.is_superuser)
+    form = ReportForm(request.POST or None, readonly=readonly)
     log.info(request.POST)
 
     if form.errors:
@@ -43,7 +44,8 @@ def report(request, report_id):
     instance = get_object_or_404(CSSCall, id=report_id)
     CSSReportView.objects.create(css_report=instance, user=request.user)
 
-    form = ReportForm(request.POST or None, instance=instance)
+    readonly = not (request.user.is_staff or request.user.is_superuser)
+    form = ReportForm(request.POST or None, readonly=readonly, instance=instance)
 
     if form.errors:
         messages.add_message(request, messages.ERROR, form.errors)
@@ -83,6 +85,14 @@ def report(request, report_id):
     external_assets = PublicUploadedAsset.objects.filter(css_report=instance.id).order_by('-id')
     external_assets_count = len(external_assets)
 
+    name_recording = Recording.objects.filter(call=instance, type=Recording.NAME)
+    location_recording = Recording.objects.filter(call=instance, type=Recording.LOCATION)
+    description_recording = Recording.objects.filter(call=instance, type=Recording.DESCRIPTION)
+    email_recording = Recording.objects.filter(call=instance, type=Recording.EMAIL)
+    duration_recording = Recording.objects.filter(call=instance, type=Recording.DURATION)
+    address_recording = Recording.objects.filter(call=instance, type=Recording.ADDRESS)
+    time_of_day_recording = Recording.objects.filter(call=instance, type=Recording.TIME_OF_DAY)
+
     verification_id = None
     case_id = None
 
@@ -104,7 +114,14 @@ def report(request, report_id):
             'external_assets': external_assets,
             'external_assets_count': external_assets_count,
             'verification_id': verification_id,
-            'case_id': case_id
+            'case_id': case_id,
+            'name_recording': name_recording,
+            'location_recording': location_recording,
+            'description_recording': description_recording,
+            'email_recording': email_recording,
+            'duration_recording': duration_recording,
+            'address_recording': address_recording,
+            'time_of_day_recording': time_of_day_recording
         }
     )
 
@@ -125,7 +142,7 @@ def verify_report(request, verification_id):
             request,
             'workflow/message_reporter.html',
             {
-                'default_verify_message': '',
+                'default_message': 'The issue you reported has been moved to the next step in the investigation.',
                 'title': "Verify Report",
                 'cancel_url': '/workflow/verification/{}'.format(verification_id)
             }
@@ -148,7 +165,7 @@ def resolve_report(request, report_id):
             request,
             'workflow/message_reporter.html',
             {
-                'default_resolve_message': '',
+                'default_message': 'The issue you reported was resolved. Thank you!',
                 'title': "Resolve Report",
                 'cancel_url': '/workflow/reports/'
             }

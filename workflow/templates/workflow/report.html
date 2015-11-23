@@ -93,11 +93,16 @@
                                 <label for="{{ form.name.id_for_label }}">Reporter name:</label>
                                 {{ form.name|add_class:"form-control" }}
                                 {{ form.name.errors }}
+                                {% if name_recording and name_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ name_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
                             </div>
                         </div>
 
                         <div class="col-sm-6">
-                            <div class="form-group reporter_primary_contact">
+                            <div class="form-group reporter_primary_contact reporter_contact">
                                 <label for="{{ form.phone.id_for_label }}">Reporter phone:</label>
                                 {{ form.phone|add_class:"form-control" }}
                                 {{ form.phone.errors }}
@@ -105,11 +110,21 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <div class="form-group reporter_additional_contact">
+                            <div class="form-group reporter_additional_contact reporter_contact">
                                 <label for="{{ form.reporter_alternate_contact.id_for_label }}">Reporter additional contact:</label>
                                 {{ form.reporter_alternate_contact|add_class:"form-control" }}
                                 {{ form.reporter_alternate_contact.errors }}
                             </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                          <div class="form-group">
+                            {% if email_recording and email_recording.0.url %}
+                                <audio controls>
+                                    <source src="{{ email_recording.0.url }}.mp3" type="audio/mpeg">
+                                </audio>
+                            {% endif %}
+                          </div>
                         </div>
 
   <!--                       <div class="col-sm-12">
@@ -129,24 +144,30 @@
                                 <label for="{{ form.reporter_street_name.id_for_label }}">Reporter Address:</label>
                                 {{ form.reporter_street_name|add_class:"form-control" }}
                                 {{ form.reporter_street_name.errors }}
+                                {% if address_recording and address_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ address_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
+
                             </div>
                         </div>
 
                         <div class="col-sm-12">
-                            <h5>Issue address information</h5>
+                            <h5>Problem Address:</h5>
                         </div>
 
                         <div class="col-sm-4">
-                            <div class="form-group">
-                                <label for="{{ form.address_number.id_for_label }}">House number:</label>
+                            <div class="form-group sub-label">
+                                <label for="{{ form.address_number.id_for_label }}">house number</label>
                                 {{ form.address_number|add_class:"form-control typeahead" }}
                                 {{ form.address_number.errors }}
                             </div>
                         </div>
 
                         <div class="col-sm-8">
-                            <div class="form-group street-name-selector">
-                                <label for="{{ form.street_name.id_for_label }}">Street name:</label>
+                            <div class="form-group street-name-selector sub-label">
+                                <label for="{{ form.street_name.id_for_label }}">street name</label>
                                 {{ form.street_name|add_class:"form-control typeahead" }}
                                 {{ form.street_name.errors }}
                             </div>
@@ -157,22 +178,24 @@
                                 <label for="{{ form.address.id_for_label }}">Location Description:</label>
                                 {{ form.address|add_class:"form-control typeahead" }}
                                 {{ form.address.errors }}
+                                {% if location_recording and location_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ location_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
                             </div>
                         </div>
 
                         <div class="col-sm-12">
                             <div class="form-group">
-                                <label for="{{ form.problem.id_for_label }}">Description:</label>
-                                <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3">{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
+                                <label for="{{ form.problem.id_for_label }}">Problem Description:</label>
+                                <textarea id="{{ form.problem.id_for_label }}" maxlength="256" name="{{ form.problem.html_name }}" class="form-control" rows="3" {% if not user.is_staff and not user.is_superuser %}readonly{% endif %}>{% if form.problem.value %}{{ form.problem.value }}{% endif %}</textarea>
                                 {{ form.problem.errors }}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-12">
-                            <div class="form-group">
-                                <label for="{{ form.source.id_for_label }}">Source:</label>
-                                {{ form.source|add_class:"form-control" }}
-                                {{ form.source.errors }}
+                                {% if description_recording and description_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ description_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -189,6 +212,11 @@
                                 <label for="{{ form.time_of_day_occurs.id_for_label }}">Time of day issues occurs:</label>
                                 {{ form.time_of_day_occurs|add_class:"form-control" }}
                                 {{ form.time_of_day_occurs.errors }}
+                                {% if time_of_day_recording and time_of_day_recording.0.url %}
+                                    <audio controls>
+                                        <source src="{{ time_of_day_recording.0.url }}.mp3" type="audio/mpeg">
+                                    </audio>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -215,6 +243,30 @@
                                 {{ form.resolution.errors }}
                             </div>
                         </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.source.id_for_label }}">Source:</label>
+                                {{ form.source|add_class:"form-control" }}
+                                {{ form.source.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.status.id_for_label }}">Status:</label>
+                                {{ form.status|add_class:"form-control" }}
+                                {{ form.status.errors }}
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="{{ form.report_type.id_for_label }}">Type:</label>
+                                {{ form.report_type|add_class:"form-control" }}
+                                {{ form.report_type.errors }}
+                            </div>
+                        </div>
                     </div>
                 </div>  <!-- end Report Details pane -->
 
@@ -238,6 +290,9 @@
                             </div>
 
                         {% endfor %}
+                        {% if not external_assets %}
+                            <div class="text-center"><h5>No documents have been submitted</h5></div>
+                        {% endif %}
 
                     </div>
                 </div>  <!-- end Report Attachments pane -->
@@ -295,7 +350,7 @@
                                         {% if not verification_id %}
                                             <option>Move to Verification</option>
                                         {% endif %}
-<!--                                         <option>Forward</option> -->
+                                        <option>Forward</option>
                                         <option>Resolve</option>
                                     </select>
                                 </div>

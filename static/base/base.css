@@ -1,13 +1,9 @@
-body{
-  font-family: 'PT Sans', sans-serif;
-}
-
 body {
     padding-bottom: 100px;
+    font-family: 'PT Sans', sans-serif;
 }
 
 /**Navbar**/
-
 .navbar{
   border-radius: 0;
 }
@@ -24,8 +20,8 @@ nav.navbar.navbar-default{
 .navbar-default{
   border-color:#1F4E81;
   background-color:#1F4E81;
-  max-height:80px;
 }
+
 
 /**Logo**/
 .navbar-default .navbar-brand{

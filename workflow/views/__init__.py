@@ -1,3 +1,4 @@
+import json
 import calendar
 from datetime import datetime
 
@@ -54,7 +55,7 @@ def landing(request):
 
             'current_month_new_cases': current_month_new_cases,
             'last_month_new_cases': last_month_new_cases,
-
+            'report_ids': json.dumps(list(CSSCall.objects.all().order_by('-reported_datetime').values_list('id', flat=True)[:20]))
         }
     )
 
@@ -73,7 +74,7 @@ def login_view(request):
         if user is not None:
             if user.is_active:
                 login(request, user)
-                return HttpResponseRedirect('/')
+                return HttpResponseRedirect('/workflow')
             else:
                 messages.add_message(request, messages.WARNING, "This user account is disabled.")
         else:
@@ -82,6 +83,6 @@ def login_view(request):
         users = User.objects.filter(id=request.user.id)
         user = users and users[0]
         if user and user.is_authenticated:
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/workflow')
 
     return render(request, 'workflow/login.html', {'exclude_navbar': True})

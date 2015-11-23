@@ -18,19 +18,21 @@ from django.views.decorators.csrf import csrf_exempt
 from django_twilio.decorators import twilio_view
 
 from intake.models import Call, TypeformSubmission, TypeformAsset, PublicUploadedAsset
-from workflow.models import CSSCall
-from intake.forms import IntakeIssueForm, IntakeContactForm
+from workflow.models import CSSCall, Recording, ReportNotification
+from intake.forms import IntakeIssueForm, IntakeContactForm, IntakeQuestionForm, IntakeMessageForm
 
 # from intake.utils import create_call, update_call
 
 log = logging.getLogger('consolelogger')
 
-SUPPORTED_LANGS = ('en')
+SUPPORTED_LANGS = ('en', 'es')
 DEFAULT_LANG = 'en'
 
 
 def report_intro(request):
-    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+    lang = request.GET.get('lang') or DEFAULT_LANG
+    if lang not in SUPPORTED_LANGS:
+        lang = DEFAULT_LANG
 
     return render(request, 'intake/intake_intro.html', {'lang': lang, 'exclude_navbar': True})
 
@@ -39,9 +41,16 @@ def report_issue(request):
     if request.method == 'POST':
         form = IntakeIssueForm(request.POST, request.FILES)
         lang = form.data.get('lang', DEFAULT_LANG)
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
 
         if form.is_valid():
             now_utc = pytz.UTC.localize(datetime.utcnow())
+
+            if lang == 'en':
+                source = CSSCall.WEB_SOURCE
+            elif lang == 'es':
+                source = CSSCall.WEB_SPANISH_SOURCE
 
             report = CSSCall.objects.create(
                 address=form.cleaned_data.get('problem_location'),
@@ -52,7 +61,7 @@ def report_issue(request):
                 time_of_day_occurs=form.cleaned_data.get('time_of_day'),
                 problem_duration=form.cleaned_data.get('how_long'),
                 when_last_reported=form.cleaned_data.get('reported_before_details'),
-                source=CSSCall.WEB_SOURCE
+                source=source
             )
 
             try:
@@ -90,7 +99,9 @@ def report_issue(request):
             messages.add_message(request, messages.ERROR, form.errors)
 
     else:
-        lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+        lang = request.GET.get('lang') or DEFAULT_LANG
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
         form = IntakeIssueForm()
 
     return render(request, 'intake/intake_issue.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
@@ -100,6 +111,8 @@ def report_contact(request):
     if request.method == 'POST':
         form = IntakeContactForm(request.POST, request.FILES)
         lang = form.data.get('lang', DEFAULT_LANG)
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
         report_id = form.data.get('report_id')
         report = get_object_or_404(CSSCall, id=report_id)
 
@@ -127,7 +140,9 @@ def report_contact(request):
     else:
         report_id = request.GET.get('report_id')
         report = get_object_or_404(CSSCall, id=report_id)
-        lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+        lang = request.GET.get('lang') or DEFAULT_LANG
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
         form = IntakeContactForm()
 
     return render(request, 'intake/intake_contact.html', {'form': form, 'lang': lang, 'report_id': report.id, 'exclude_navbar': True})
@@ -135,209 +150,463 @@ def report_contact(request):
 
 def report_finish(request):
     report_id = request.GET.get('report_id')
-    lang = request.GET.get('lang') and request.GET['lang'] in SUPPORTED_LANGS or DEFAULT_LANG
+    lang = request.GET.get('lang') or DEFAULT_LANG
+    if lang not in SUPPORTED_LANGS:
+        lang = DEFAULT_LANG
+
+    report = CSSCall.objects.get(id=report_id)
+    ReportNotification.objects.create(report=report, message="Thank you for contacting the CSS department. Your reference number is {}.".format(report.id))
 
     return render(request, 'intake/intake_finish.html', {'report_id': report_id, 'lang': lang, 'exclude_navbar': True})
 
 
+def report_question(request):
+    if request.method == 'POST':
+        form = IntakeQuestionForm(request.POST)
+        lang = form.data.get('lang', DEFAULT_LANG)
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
+
+        if form.errors:
+            messages.add_message(request, messages.ERROR, form.errors)
+
+        if form.is_valid():
+            now_utc = pytz.UTC.localize(datetime.utcnow())
+
+            if lang == 'en':
+                source = CSSCall.WEB_SOURCE
+            elif lang == 'es':
+                source = CSSCall.WEB_SPANISH_SOURCE
+
+            report = CSSCall.objects.create(
+                reported_datetime=now_utc,
+                problem=form.cleaned_data.get('question'),
+                source=source
+            )
+
+            return HttpResponseRedirect(
+                '/report/contact/?report_id={}{}'.format(
+                    report.id,
+                    lang != DEFAULT_LANG and "&lang={}".format(lang) or ""
+                )
+            )
+
+    else:
+        lang = request.GET.get('lang') or DEFAULT_LANG
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
+        form = IntakeQuestionForm()
+
+    return render(request, 'intake/intake_question.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
+
+
+def report_message(request):
+    if request.method == 'POST':
+        form = IntakeMessageForm(request.POST)
+        lang = form.data.get('lang', DEFAULT_LANG)
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
+
+        if form.errors:
+            messages.add_message(request, messages.ERROR, form.errors)
+
+        if form.is_valid():
+            now_utc = pytz.UTC.localize(datetime.utcnow())
+
+            if lang == 'en':
+                source = CSSCall.WEB_SOURCE
+            elif lang == 'es':
+                source = CSSCall.WEB_SPANISH_SOURCE
+
+            report = CSSCall.objects.create(
+                reported_datetime=now_utc,
+                problem=form.cleaned_data.get('message'),
+                source=source
+            )
+
+            return HttpResponseRedirect(
+                '/report/contact/?report_id={}{}'.format(
+                    report.id,
+                    lang != DEFAULT_LANG and "&lang={}".format(lang) or ""
+                )
+            )
+
+    else:
+        lang = request.GET.get('lang') or DEFAULT_LANG
+        if lang not in SUPPORTED_LANGS:
+            lang = DEFAULT_LANG
+        form = IntakeMessageForm()
+
+    return render(request, 'intake/intake_message.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
+
+
 @twilio_view
 def step_one(request):
-    resp = twilio.twiml.Response()
+    try:
+        resp = twilio.twiml.Response()
 
-    with resp.gather(action="/intake/step-two/", numDigits=1, method="POST") as g:
-        g.say("Hello, you've reached the CSS-tool. Here you can report issues in your neighborhood or leave a question or message for the Community Services Section. If you are experiencing an emergency, please call 9 1 1. Press 1 if you're calling to report an issue, press 2 if you're calling to ask a question or leave a message.")
+        with resp.gather(action="/intake/step-two/", numDigits=1, method="POST") as g:
+            g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/intro.mp3")
+        resp.redirect("/intake/step-one/", method="POST")
 
-    return resp
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_two(request):
-    digit_pressed = request.POST.get('Digits', None)
+    try:
+        digit_pressed = request.POST.get('Digits', None)
+        call_sid = request.POST.get('CallSid', None)
+        CSSCall.objects.create(call_sid=call_sid, source=CSSCall.PHONE_SOURCE)
 
-    resp = twilio.twiml.Response()
+        resp = twilio.twiml.Response()
 
-    if digit_pressed and digit_pressed.isdigit():
-        if int(digit_pressed) == 2:
-            resp.say("What is your message or question? When you are finished, press pound.")
-            resp.record(
-                action="/intake/step-nine/",
-                finishOnKey="#",
-                method="POST",
-                timeout=30
-            )
+        if digit_pressed and digit_pressed.isdigit():
+            if int(digit_pressed) == 2:
+                resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_message.mp3")
+                resp.record(
+                    action="/intake/step-nine/",
+                    finishOnKey="#",
+                    method="POST",
+                    timeout=30
+                )
+                resp.redirect("/intake/step-nine", method="POST")
 
-        else:
-            resp.say("Where is the issue occurring? Please say the address or cross streets.")
-            resp.record(
-                action="/intake/step-three/",
-                finishOnKey="#",
-                method="POST",
-                timeout=30
-            )
+            else:
+                resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/where.mp3")
+                resp.record(
+                    action="/intake/step-three/",
+                    finishOnKey="#",
+                    method="POST",
+                    timeout=30
+                )
+                resp.redirect("/intake/step-three/", method="POST")
 
-    return resp
+        resp.redirect("/intake/step-two/")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_three(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("Describe the issue you're calling about. When you are finished, press pound.")
+        location_url = request.POST.get("RecordingUrl", None)
+        if location_url:
+            Recording.objects.create(call=call, url=location_url, type=Recording.LOCATION)
 
-    resp.record(
-        action="/intake/step-four/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+        resp = twilio.twiml.Response()
+        resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/describe.mp3")
 
-    return resp
+        resp.record(
+            action="/intake/step-four/",
+            finishOnKey="#",
+            method="POST",
+            timeout=30
+        )
+        resp.redirect("/intake/step-four/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_four(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("How long has this issue been occurring?")
+        description_url = request.POST.get("RecordingUrl", None)
+        if description_url:
+            Recording.objects.create(call=call, url=description_url, type=Recording.DESCRIPTION)
 
-    resp.record(
-        action="/intake/step-five/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+        resp = twilio.twiml.Response()
+        resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/how_long.mp3")
 
-    return resp
+        resp.record(
+            action="/intake/step-five/",
+            finishOnKey="#",
+            method="POST",
+            timeout=30
+        )
+        resp.redirect("/intake/step-five/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_five(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("Around what time of day does this issue occur?")
+        duration_url = request.POST.get("RecordingUrl", None)
+        if duration_url:
+            Recording.objects.create(call=call, url=duration_url, type=Recording.DURATION)
 
-    resp.record(
-        action="/intake/step-six/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+        resp = twilio.twiml.Response()
+        resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_time_of_day.mp3")
 
-    return resp
+        resp.record(
+            action="/intake/step-six/",
+            finishOnKey="#",
+            method="POST",
+            timeout=30
+        )
+        resp.redirect("/intake/step-six/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_six(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    with resp.gather(action="/intake/step-seven/", numDigits=1, method="POST") as g:
-        g.say("How many people are involved in this issue? Answer using a number on your keyboard. If you are unsure, press pound.")
+        time_of_day_url = request.POST.get("RecordingUrl", None)
+        if time_of_day_url:
+            Recording.objects.create(call=call, url=time_of_day_url, type=Recording.TIME_OF_DAY)
 
-    return resp
+        resp = twilio.twiml.Response()
+
+        with resp.gather(action="/intake/step-seven/", numDigits=1, method="POST") as g:
+            g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/how_many_use_keypad.mp3")
+        resp.redirect("/intake/step-seven/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_seven(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    with resp.gather(action="/intake/step-eight/", numDigits=1, method="POST") as g:
-        g.say("Are there safety concerns at this location that we should be aware of? If yes, press 1. If no, press 2. If you are unsure, press 3.")
+        digit_pressed = request.POST.get('Digits', None)
+        call.num_people_involved = digit_pressed
+        call.save()
 
-    return resp
+        resp = twilio.twiml.Response()
+
+        with resp.gather(action="/intake/step-eight/", numDigits=1, method="POST") as g:
+            g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/are_there_safety_concerns.mp3")
+        resp.redirect("/intake/step-eight/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_eight(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("Have you ever reported this issue before? If so, when? If not, press pound.")
+        # might be their response to safety concerns question
+        digit_pressed = request.POST.get('Digits', None)
+        if digit_pressed == '1':
+            call.safety_concerns = 'Yes'
+            call.save()
 
-    resp.record(
-        action="/intake/step-nine/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+        elif digit_pressed == '2':
+            call.safety_concerns = 'No'
+            call.save()
 
-    return resp
+        elif digit_pressed == '3':
+            call.safety_concerns = 'Unsure'
+            call.save()
+
+        # or might be jumping in here if they opted to leave a message
+        description_url = request.POST.get("RecordingUrl", None)
+        if description_url:
+            Recording.objects.create(call=call, url=description_url, type=Recording.DESCRIPTION)
+
+        resp = twilio.twiml.Response()
+
+        with resp.gather(action="/intake/step-nine/", numDigits=1, method="POST") as g:
+            g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/have_you_reported_this_before.mp3")
+        resp.redirect("/intake/step-nine/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_nine(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("It's helpful if we have your name and contact information in case we need any further details on how to best resolve this issue. We will never share your information with anyone other than authorized city staff.")
-    resp.say("What is your name?")
+        digit_pressed = request.POST.get('Digits', None)
+        if digit_pressed == '1':
+            call.reported_before = 'Yes'
+            call.save()
 
-    resp.record(
-        action="/intake/step-ten/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+        elif digit_pressed == '2':
+            call.reported_before = 'No'
+            call.save()
 
-    return resp
+        elif digit_pressed == '3':
+            call.reported_before = 'Unsure'
+            call.save()
+
+        resp = twilio.twiml.Response()
+        resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/helpful_to_have_your_info.mp3")
+        resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_name.mp3")
+
+        resp.record(
+            action="/intake/step-ten/",
+            finishOnKey="#",
+            method="POST",
+            timeout=30
+        )
+        resp.redirect("/intake/step-ten/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_ten(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    with resp.gather(action="/intake/step-eleven/", numDigits=10, method="POST") as g:
-        g.say("What is your phone number, starting with the area code? Answer using the numbers on your keyboard.")
+        name_url = request.POST.get("RecordingUrl", None)
+        if name_url:
+            Recording.objects.create(call=call, url=name_url, type=Recording.NAME)
 
-    return resp
+        resp = twilio.twiml.Response()
+
+        with resp.gather(action="/intake/step-eleven/", numDigits=10, method="POST") as g:
+            g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_phone_number.mp3")
+            g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/answer_using_numbers.mp3")
+        resp.redirect("/intake/step-eleven/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_eleven(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("What is your email address?")
+        digits_pressed = request.POST.get('Digits', None)
+        call.phone = digits_pressed
+        call.save()
 
-    resp.record(
-        action="/intake/step-twelve/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+        resp = twilio.twiml.Response()
 
-    return resp
+        resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_email_address.mp3")
+
+        resp.record(
+            action="/intake/step-twelve/",
+            finishOnKey="#",
+            method="POST",
+            timeout=30
+        )
+        resp.redirect("/intake/step-twelve/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_twelve(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    resp.say("What is your home address?")
+        email_url = request.POST.get("RecordingUrl", None)
+        if email_url:
+            Recording.objects.create(call=call, url=email_url, type=Recording.EMAIL)
 
-    resp.record(
-        action="/intake/step-thirteen/",
-        finishOnKey="#",
-        method="POST",
-        timeout=30
-    )
+        resp = twilio.twiml.Response()
 
-    return resp
+        resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_is_your_home_address.mp3")
+
+        resp.record(
+            action="/intake/step-thirteen/",
+            finishOnKey="#",
+            method="POST",
+            timeout=30
+        )
+        resp.redirect("/intake/step-thirteen/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_thirteen(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
 
-    with resp.gather(action="/intake/step-fourteen/", numDigits=1, method="POST") as g:
-        g.say("Where should we send you the receipt and progress updates for this report? Press 1 for email updates, press 2 for text message updates, press 3 if you would not like a receipt and progress updates.")
+        address_url = request.POST.get("RecordingUrl", None)
+        if address_url:
+            Recording.objects.create(call=call, url=address_url, type=Recording.ADDRESS)
 
-    return resp
+        resp = twilio.twiml.Response()
+
+        with resp.gather(action="/intake/step-fourteen/", numDigits=1, method="POST") as g:
+            g.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/what_type_of_receipt_.mp3")
+        resp.redirect("/intake/step-fourteen/", method="POST")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 @twilio_view
 def step_fourteen(request):
-    resp = twilio.twiml.Response()
+    try:
+        call_sid = request.POST.get('CallSid', None)
+        call = CSSCall.objects.get(call_sid=call_sid)
+        ReportNotification.objects.create(report=call, message="Thank you for contacting the CSS department. Your reference number is {}.".format(call.id))
 
-    resp.say("Thank you, your report has been sent to the Community Services Section. Have a good day.")
+        digit_pressed = request.POST.get('Digits', None)
 
-    return resp
+        if digit_pressed == '1':
+            call.caller_preferred_contact = CSSCall.EMAIL_CONTACT_PREFERENCE
+            call.save()
+
+        elif digit_pressed == '2':
+            call.caller_preferred_contact = CSSCall.TEXT_CONTACT_PREFERENCE
+            call.save()
+
+        elif digit_pressed == '3':
+            call.caller_preferred_contact = CSSCall.NO_CONTACT_PREFERENCE
+            call.save()
+
+        resp = twilio.twiml.Response()
+        resp.play("https://s3.amazonaws.com/vallejo-css-toolkit/intake_files/thank_you.mp3")
+
+        return resp
+    except:
+        log.error(traceback.format_exc())
 
 
 ### Original intake view below ###

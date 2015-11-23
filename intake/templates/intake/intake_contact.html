@@ -16,9 +16,9 @@
     <div class="container">
         <div class="row">
             <div class="col-sm-9 col-sm-offset-1">
-                <div class="header-content">
-                    <h1>{% if lang == 'en' %}Tell us more about you.{% endif %}</h1>
-                    <p>{% if lang == 'en' %}Although it is not required, it’s most helpful to our staff if we have your name and contact information in case we need any further details on how to best resolve this issue. <b>We will never share your information with anyone other than authorized city staff.{% endif %}</b></p>
+                <div class="header-content contact-intro">
+                    <h1>{% if lang == 'en' %}Tell us more about you.{% elif lang == 'es' %}Hablenos de Usted{% endif %}</h1>
+                    <p>{% if lang == 'en' %}Although it is not required, it’s most helpful to our staff if we have your name and contact information in case we need any further details on how to best resolve this issue. <b>We will never share your information with anyone other than authorized city staff.{% elif lang == 'es' %}No es necesario, pero si nos de su nombre e informaci&oacute;n de contacto nuestreos oficiales podr&aacute;n contactarle para m&aacute;s informaci&oacute;n y sobre la major manera de resolver el caso.{% endif %}</b></p>
                 </div>
             </div>
         </div>
@@ -37,34 +37,34 @@
 
                 {{ form.non_field_errors }}
 
-                <h4>{% if lang == 'en' %}Contact Information{% endif %}</h4>
+                <h4>{% if lang == 'en' %}Contact Information{% elif lang == 'es' %}Informaci&oacute;n de Contacto{% endif %}</h4>
 
                 <div class="form-group">
-                    <label for="{{form.reporter_name.id_for_label}}">{% if lang == 'en' %}What is your name?{% endif %}</label>
+                    <label for="{{form.reporter_name.id_for_label}}">{% if lang == 'en' %}What is your name?{% elif lang == 'es' %}&iquest;Cu&aacute;l es su nombre?{% endif %}</label>
                     {{ form.reporter_name|add_class:"form-control" }}
                     {{ form.reporter_name.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{form.reporter_phone.id_for_label}}">{% if lang == 'en' %}What is your phone number (including area code)?{% endif %}</label>
+                    <label for="{{form.reporter_phone.id_for_label}}">{% if lang == 'en' %}What is your phone number (including area code)?{% elif lang == 'es' %}&iquest;Cu&aacute;l es su n&uacute;mero de tel&eacute;fono?{% endif %}</label>
                     {{ form.reporter_phone|add_class:"form-control" }}
                     {{ form.reporter_phone.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{form.reporter_address.id_for_label}}">{% if lang == 'en' %}What is your home address?{% endif %}</label>
+                    <label for="{{form.reporter_address.id_for_label}}">{% if lang == 'en' %}What is your home address?{% elif lang == 'es' %}&iquest;Cual es la direcci&oacute;n de su casa?{% endif %}</label>
                     {{ form.reporter_address|add_class:"form-control" }}
                     {{ form.reporter_address.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{form.reporter_email.id_for_label}}">{% if lang == 'en' %}What is your email address?{% endif %}</label>
+                    <label for="{{form.reporter_email.id_for_label}}">{% if lang == 'en' %}What is your email address?{% elif lang == 'es' %}&iquest;Cual es su direcci&oacute;n de correo electr&oacute;nico?{% endif %}</label>
                     {{ form.reporter_email|add_class:"form-control" }}
                     {{ form.reporter_email.errors }}
                 </div>
 
                 <div class="form-group">
-                    <label for="{{form.reporter_contact_method.id_for_label}}">{% if lang == 'en' %}Where should we send you the receipt for this report and updates on any progress?{% endif %}</label>
+                    <label for="{{form.reporter_contact_method.id_for_label}}">{% if lang == 'en' %}Where should we send you updates on any progress?{% elif lang == 'es' %}&iquest;A donde se debe mandar actualizaciones sobre el caso?{% endif %}</label>
                     {{ form.reporter_contact_method|add_class:"form-control" }}
                     {{ form.reporter_contact_method.errors }}
                 </div>
@@ -73,10 +73,25 @@
 
         <div class="row">
             <div class="col-sm-6 col-sm-offset-1">
-                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% endif %}">
+                <input type="submit" class="btn btn-success btn-lg" value="{% if lang == 'en' %}Next{% elif lang == 'es' %}Pr&oacute;ximo{% endif %}">
             </div>
         </div>
     </form>
+</div>
+
+<div class="container-fluid footer">
+    <div class="row">
+        <div class="col-sm-6">
+            <p>This is an official City of Vallejo website made with Code for America.</p>
+        </div>
+
+        <div class="col-sm-6">
+            <ul class="footer-items pull-right">
+                <li><a href="/workflow"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Staff Compass</a></li>
+                <li><a target="_blank" href="http://vallejo.hosted.civiclive.com/site_policy"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Terms of Service</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 {% endblock %}

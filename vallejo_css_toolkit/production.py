@@ -4,6 +4,7 @@ from .settings import *
 
 DATABASES = {'default': dj_database_url.config()}
 DEBUG = False
+DJANGO_TWILIO_FORGERY_PROTECTION = False
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True

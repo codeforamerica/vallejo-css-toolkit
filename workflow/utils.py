@@ -118,11 +118,16 @@ def get_reports(request_params):
                 COALESCE(c.name, '') AS reporter_name,
                 COALESCE(c.address, '') AS problem_address,
                 COALESCE(c.problem, '') AS problem,
-                s.id AS status,
-                COALESCE(s.name, '') AS status_str
+                c.status AS status,
+                CASE WHEN c.status = 1 THEN 'Unread - phone'
+                     WHEN c.status = 2 THEN 'Unread - web'
+                     WHEN c.status = 3 THEN 'Report'
+                     WHEN c.status = 4 THEN 'Verification'
+                     WHEN c.status = 5 THEN 'Case'
+                     WHEN c.status = 6 THEN 'Resolved'
+                     ELSE ''
+                END AS status_str
             FROM workflow_csscall AS c
-            LEFT JOIN workflow_reportstatus s
-                ON c.status_id = s.id
             WHERE c.active = True
         ), total_count AS (
             SELECT COUNT(*) AS tcount FROM workflow_csscall
@@ -251,20 +256,27 @@ def get_cases(request_params):
                         c.created_at AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
                     )
                 , '') AS started_str,
-                COALESCE(c.address_number::text || ' ' || c.street_name, '') AS address,
-                COALESCE(p.name, '') AS priority,
-                COALESCE(p.name, '') AS priority_str,
+                COALESCE(r.address_number::text || ' ' || r.street_name, '') AS address,
+                c.priority AS priority,
+                CASE WHEN c.priority = 1 THEN 'Low'
+                     WHEN c.priority = 2 THEN 'Med'
+                     WHEN c.priority = 3 THEN 'High'
+                     ELSE ''
+                END AS priority_str,
                 COALESCE(r.problem, '') AS description,
-                COALESCE(s.name, '') AS status
+                CASE WHEN r.status = 1 THEN 'Unread - phone'
+                     WHEN r.status = 2 THEN 'Unread - web'
+                     WHEN r.status = 3 THEN 'Report'
+                     WHEN r.status = 4 THEN 'Verification'
+                     WHEN r.status = 5 THEN 'Case'
+                     WHEN r.status = 6 THEN 'Resolved'
+                     ELSE ''
+                END AS status
             FROM workflow_csscase AS c
-            LEFT JOIN workflow_csscasepriority p
-                ON c.priority_id = p.id
             LEFT JOIN workflow_verification v
                 ON c.verification_id = v.id
             LEFT JOIN workflow_csscall r
                 ON v.report_id = r.id
-            LEFT JOIN workflow_casestatus s
-                ON c.status_id = s.id
             WHERE c.active = True
         ), total_count AS (
             SELECT COUNT(*) AS tcount FROM workflow_csscase
@@ -386,32 +398,47 @@ def get_properties(request_params):
 
     query = """
         WITH data AS (
+
             SELECT
-                subselect.address,
+                COALESCE(subselect.address, '') AS address,
                 count(*) AS num_incidents,
-                now() AS latest_activity,
+                max(subselect.max_timestamp) AS latest_activity,
                 COALESCE(
                     TO_CHAR(
-                        now() AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
+                        max(subselect.max_timestamp) AT TIME ZONE 'America/Los_Angeles', 'MM/DD/YY HH24:MI'
                     )
                 , '') AS latest_activity_str,
-                '' AS status
-            FROM
-                (
-                    SELECT
-                        COALESCE(c.address_number::text || ' ' || c.street_name, '') AS address2,
-                        c.address AS address
-                    FROM workflow_csscall c
-                    WHERE (
-                        c.address_number is null
-                        OR c.street_name is null
-                    )
-                    AND c.active = True
-                ) as subselect
+                'Report' AS status
+
+            FROM (
+                SELECT
+                    COALESCE(r.address_number::text || ' ' || r.street_name, r.address, '') AS address,
+                    latest_activities.max_timestamp as max_timestamp
+
+                    FROM workflow_csscall r
+                    LEFT JOIN
+                    (
+                        SELECT r.id as report_id, r.reported_datetime as max_timestamp
+
+                        FROM workflow_csscall r
+
+                        LEFT JOIN workflow_verification v
+                            ON v.report_id = r.id
+                        LEFT JOIN workflow_csscase c
+                            ON c.verification_id = v.id
+
+                        GROUP BY r.id
+
+                    ) AS latest_activities
+                    ON r.id = latest_activities.report_id
+
+                WHERE COALESCE(r.address_number::text || ' ' || r.street_name, r.address) IS NOT NULL
+                AND COALESCE(r.address_number::text || ' ' || r.street_name, r.address) != ''
+                AND r.active = True
+            ) as subselect
+
             GROUP BY address
-        ), total_count AS (
-            SELECT COUNT(*) AS tcount FROM workflow_csscall
-            WHERE active = True
+
         )
         SELECT
             data.address,
@@ -419,9 +446,8 @@ def get_properties(request_params):
             data.latest_activity,
             data.latest_activity_str,
             data.status,
-            COUNT(*) OVER(),
-            total_count.tcount
-        FROM data, total_count
+            COUNT(*) OVER()
+        FROM data
         %(search_clause)s
         ORDER BY %(sort_key)s %(sort_order)s
         OFFSET %(offset)s
@@ -444,7 +470,7 @@ def get_properties(request_params):
         pagination_keys = None
         page_idx = None
         if results:
-            num_results = results[0][-2]
+            num_results = results[0][-1]
             num_pages = int(math.ceil(float(num_results) / limit))
             page_idx = offset // limit
 

@@ -201,6 +201,16 @@ label{
   margin: 0;
 }
 
+.assignee-row-cell {
+    background-color: #e7e7e7;
+}
+
+.assignee-table {
+    border-spacing: 10px 0;
+    border-collapse: separate;
+}
+
+
 /** Form fields **/
 
 .form-control {
@@ -246,6 +256,18 @@ ul.doc-attrs {
   font-weight:bold;
   margin-top:30px;
   margin-bottom:15px;
+}
+
+audio{
+  margin-top:15px;
+}
+
+.sub-label label{
+  font-size:11px;
+}
+
+.reporter_contact{
+  margin-bottom:0;
 }
 
 /**Small tables**/

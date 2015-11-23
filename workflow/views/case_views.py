@@ -2,14 +2,15 @@ import traceback
 import logging
 from django.contrib import messages
 
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from common.datatables import get_datatables_data
 from workflow.models import CSSCase, CSSCaseAssignee
 
-from workflow.forms.case_forms import CSSCaseDetailsForm, CSSCaseOwnerForm
+from workflow.forms.case_forms import CSSCaseDetailsForm  # , CSSCaseOwnerForm
 from workflow.sql import CSS_CASES_DATA_SQL, CSS_CASES_IDX_COLUMN_MAP
 from workflow.utils import get_cases
 
@@ -80,24 +81,15 @@ def cases(request):
 @login_required(login_url='/login/')
 def case(request, case_id):
     instance = get_object_or_404(CSSCase, id=case_id)
-    case_details_form = CSSCaseDetailsForm(request.POST or None, instance=instance)
 
-    contact_owner_form = CSSCaseOwnerForm(request.POST or None, instance=instance)
+    readonly = not (request.user.is_staff or request.user.is_superuser)
+    case_details_form = CSSCaseDetailsForm(request.POST or None, readonly=readonly, instance=instance)
 
-    uploaded_docs = [
-        {"name": 'Lease Agreement 2015', "filename": 'lease2015.pdf', "added": "Jan. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"},
-        {"name": 'Deed with signature', "filename": 'deed_updated.pdf', "added": "Sep, 16, 2015", "thumbnail_url": "http://placehold.it/120x120"},
-        {"name": 'Notice to evict - copy', "filename": 'eviction_notice_9_1_15.pdf', "added": "Sep. 1, 2015", "thumbnail_url": "http://placehold.it/120x120"}
-    ]
+    if case_details_form.errors:
+        messages.add_message(request, messages.ERROR, case_details_form.errors)
 
     if case_details_form.is_valid():
         case = case_details_form.save()
-        messages.add_message(request, messages.SUCCESS, 'Case successfully updated.')
-
-        return HttpResponseRedirect('/workflow/case/%d' % case.id)
-
-    if contact_owner_form.is_valid():
-        case = contact_owner_form.save()
         messages.add_message(request, messages.SUCCESS, 'Case successfully updated.')
 
         return HttpResponseRedirect('/workflow/case/%d' % case.id)
@@ -108,12 +100,11 @@ def case(request, case_id):
         {
             'case_assignees': CSSCaseAssignee.objects.filter(case=instance).values_list('assignee_name', flat=True),
             'case_details_form': case_details_form,
-            'contact_owner_form': contact_owner_form,
-            'uploaded_docs': uploaded_docs,
-            'property_address': instance.verification.report.address,
+            'property_address': instance.verification.report.get_address(),
             'case_id': instance.pk,
             'verification_id': instance.verification.id,
-            'report_id': instance.verification.report.id
+            'report_id': instance.verification.report.id,
+            'report': instance.verification.report
         }
     )
 
@@ -129,6 +120,8 @@ def add_case_assignee(request):
 
 @login_required(login_url='/login/')
 def remove_case_assignee(request):
+    print request.POST
+
     case_id = request.POST.get('case_id')
     assignee = request.POST.get('assignee')
 
@@ -141,3 +134,17 @@ def remove_case_assignee(request):
     ).delete()
 
     return JsonResponse({'status': 'OK'})
+
+
+@login_required(login_url='/login/')
+def get_case_assignees(request):
+    users = []
+    for user in User.objects.filter(is_active=True):
+        if user.first_name and user.last_name:
+            users.append('{} {}'.format(user.first_name, user.last_name))
+        elif user.first_name:
+            users.append('{}'.format(user.first_name))
+        elif user.last_name:
+            users.append('{}'.format(user.last_name))
+
+    return JsonResponse({'users': users})

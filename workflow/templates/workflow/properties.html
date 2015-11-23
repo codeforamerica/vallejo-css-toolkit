@@ -37,24 +37,25 @@
     <div class="row">
         <div class="col-md-12 table-responsive">
             <div class="table-wrapper">
+              <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
                         <tr>
                             <th
                                 data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=address&amp;{% if sort_key == 'address' and sort_order == 'DESC' %}sort_order=ASC{% else %}sort_order=DESC{% endif %}"
-                                class="data-cell clickable-cell {% if sort_key == 'address' %}active {% endif %}"
+                                class="data-cell {% if sort_key == 'address' %}active {% endif %}"
                                 >Address{% if sort_key == 'address' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
                             <th
                                 data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=num_incidents&amp;{% if sort_key == 'num_incidents' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                                class="data-cell clickable-cell {% if sort_key == 'num_incidents' %}active {% endif %}"
+                                class="data-cell {% if sort_key == 'num_incidents' %}active {% endif %}"
                                 >Number of Incidents{% if sort_key == 'num_incidents' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
                             <th
                                 data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=latest_activity&amp;{% if sort_key == 'latest_activity' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                                class="data-cell clickable-cell {% if sort_key == 'latest_activity' %}active {% endif %}"
+                                class="data-cell {% if sort_key == 'latest_activity' %}active {% endif %}"
                                 >Latest Activity{% if sort_key == 'latest_activity' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
                             <th
                                 data-href="?offset={{ offset }}&amp;limit={{ limit }}&amp;{% if search_get_param %}search={{ search_get_param }}{% endif %}&amp;sort_key=status&amp;{% if sort_key == 'status' and sort_order == 'ASC' %}sort_order=DESC{% else %}sort_order=ASC{% endif %}"
-                                class="data-cell clickable-cell {% if sort_key == 'status' %}active {% endif %}"
+                                class="data-cell {% if sort_key == 'status' %}active {% endif %}"
                                 >Status{% if sort_key == 'status' %}{% if sort_order = 'DESC' %}&nbsp;&nbsp;<i class="fa fa-caret-down"></i>{% else %}&nbsp;&nbsp;<i class="fa fa-caret-up"></i>{% endif %}{% endif %}</th>
                         </tr>
                     </thead>
@@ -62,20 +63,22 @@
                     <tbody>
                         {% for property in properties_data %}
                             <tr>
-                                <td class="data-cell clickable-cell" data-href="/workflow/property/{{ property.0 }}">{{ property.0 }}</td>
-                                <td class="data-cell clickable-cell" data-href="/workflow/property/{{ property.0 }}">{{ property.1 }}</td>
-                                <td class="data-cell timestamp-data-cell clickable-cell" data-href="/workflow/property/{{ property.0 }}">{{ property.3 }}</td>
-                                <td class="data-cell clickable-cell" data-href="/workflow/property/{{ property.0 }}">{{ property.4 }}</td>
+                                <td class="data-cell clickable-cell" data-href="/workflow/property/?address={{ property.0 }}">{{ property.0 }}</td>
+                                <td class="data-cell clickable-cell" data-href="/workflow/property/?address={{ property.0 }}">{{ property.1 }}</td>
+                                <td class="data-cell timestamp-data-cell clickable-cell" data-href="/workflow/property/?address={{ property.0 }}">{{ property.3 }}</td>
+                                <td class="data-cell clickable-cell" data-href="/workflow/property/?address={{ property.0 }}">{{ property.4 }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
+
 
                 {% if not properties_data %}
                     <div class="text-center">
                         <h3>Your properties inbox is empty</h3>
                     </div>
                 {% endif %}
+              </div>
             </div>
         </div>
     </div>

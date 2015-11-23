@@ -1,3 +1,4 @@
+import os
 import logging
 import traceback
 from time import time
@@ -5,25 +6,48 @@ from time import time
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-from data_load.utils import load_rms_cases, load_crw_cases, get_latest_crw_case_nos_util, get_latest_rms_case_no_util
+from data_load.utils import load_rms_cases, load_crw_cases, get_latest_crw_case_no_util, get_latest_rms_case_no_util, get_latest_rms_incident_no_util
 
 log = logging.getLogger('consolelogger')
 
 
 @csrf_exempt
 def get_latest_rms_case_no(request):
+    if 'ETL_RECORD_LIMIT' in os.environ:
+        etl_record_limit = int(os.environ['ETL_RECORD_LIMIT'])
+    else:
+        etl_record_limit = 20
+
     log.info('fetching latest rms case num')
     latest_case_no = get_latest_rms_case_no_util()
 
-    return JsonResponse({'latest_case_no': latest_case_no})
+    return JsonResponse({'latest_case_no': latest_case_no, 'etl_record_limit': etl_record_limit})
 
 
 @csrf_exempt
-def get_latest_crw_case_nos(request):
-    log.info('fetching latest crw case nums')
-    latest_yr_no, latest_seq_no = get_latest_crw_case_nos_util()
+def get_latest_rms_incident_no(request):
+    if 'ETL_RECORD_LIMIT' in os.environ:
+        etl_record_limit = int(os.environ['ETL_RECORD_LIMIT'])
+    else:
+        etl_record_limit = 20
 
-    return JsonResponse({'latest_yr_no': latest_yr_no, 'latest_seq_no': latest_seq_no})
+    log.info('fetching latest rms incident num')
+    latest_incident_no = get_latest_rms_incident_no_util()
+
+    return JsonResponse({'latest_incident_no': latest_incident_no, 'etl_record_limit': etl_record_limit})
+
+
+@csrf_exempt
+def get_latest_crw_case_no(request):
+    if 'ETL_RECORD_LIMIT' in os.environ:
+        etl_record_limit = int(os.environ['ETL_RECORD_LIMIT'])
+    else:
+        etl_record_limit = 20
+
+    log.info('fetching latest crw case num')
+    latest_case_no = get_latest_crw_case_no_util()
+
+    return JsonResponse({'latest_case_no': latest_case_no, 'etl_record_limit': etl_record_limit})
 
 
 @csrf_exempt
@@ -39,6 +63,12 @@ def handle_rms_post(request):
     except:
         log.error('Encountered error while adding new RMS cases: {}'.format(traceback.format_exc()))
         return JsonResponse({'error_traceback': traceback.format_exc()})
+
+
+@csrf_exempt
+def handle_rms_inc_post(request):
+
+    return JsonResponse({'status': 'OK'})
 
 
 @csrf_exempt

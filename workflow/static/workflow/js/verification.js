@@ -1,10 +1,4 @@
-function uploadAsset() {
-
-}
-
 function addContact() {
-    $('#addcontact').modal('hide');
-
     $.ajax({
         "url": "/workflow/add_contact_action/",
         "type": "POST",
@@ -15,8 +9,13 @@ function addContact() {
             "contact_description": document.forms['add_contact_form']['contact_description'].value,
         },
     }).done( function(data) {
-        console.log(data);
-        $('#call-log tr:last').after('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
+        if ($('#call-log tr').length > 1) {
+            $('#call-log tr:last').after('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
+        } else {
+            $('#no-contacts-msg').hide();
+            $('#call-log').find('tbody').append('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
+        }
+        $('#addcontact').modal('hide');
     });
 }
 
@@ -31,6 +30,23 @@ $(document).ready(function(){
         var paneId =  $(this).attr('href');
         $(".tab-pane").hide();
         $(paneId).show();
+    });
+
+    L.mapbox.accessToken = 'pk.eyJ1IjoiYWRzY2huZWlkZXIiLCJhIjoiSlcxbGd0NCJ9.9iU2iiEVRUSxpiQXkV_zFg';
+    var m = L.mapbox.map('map', 'mapbox.streets')
+        .setView([38.113056, -122.235833], 12);
+
+    $.ajax({
+        'url': '/workflow/geocode_address',
+        'type': 'GET',
+        'data': {
+            'report_id': document.forms['property-details-form']['report_id'].value
+        }
+    }).done(function (data) {
+        if (data.lat && data.lon) {
+            var marker = L.marker([data.lat, data.lon]);
+            marker.addTo(m);
+        }
     });
 
     function getCookie(name) {
