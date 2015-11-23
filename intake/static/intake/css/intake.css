@@ -31,6 +31,22 @@ h1{
   font-weight: 700;
 }
 
+.icon-list li {
+  padding: 0 0 5px 20px;
+  display: block;
+  position: relative;
+}
+.icon-list li:before {
+  font-family: 'Glyphicons Halflings';
+  position: absolute;
+  left: 0px;
+  top:3px;
+  font-size:80%
+}
+
+.arrow-right li:before {
+ content: '\e092';
+}
 
 h4{
   font-weight:700;
