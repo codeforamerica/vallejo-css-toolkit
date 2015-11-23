@@ -9,7 +9,7 @@ body{
   margin-top:20px;
 }
 
-.espanol-link{
+.language-link{
   font-weight: bold;
   color:#fff;
   text-decoration: underline;
@@ -18,7 +18,7 @@ body{
   padding-right:20px;
 }
 
-.espanol-link:hover{
+.language-link:hover{
   color:#1F4E81;
 }
 
@@ -26,9 +26,17 @@ body{
   padding-top:25px;
 }
 
+.city-logo {
+    max-width: 30%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
 h1{
   margin-bottom:20px;
   font-weight: 700;
+  text-align: center;
 }
 
 .icon-list li {

@@ -15,12 +15,19 @@
         <div class="row">
             <div class="col-sm-4 col-sm-offset-8">
                 {% if lang == 'en' %}
-                    <a href="/?lang=es" class="espanol-link pull-right">En Espa&#241;ol</a>
+                    <a href="/?lang=es" class="language-link pull-right">En Espa&#241;ol</a>
+                {% elif lang == 'es' %}
+                    <a href="/" class="language-link pull-right">In English</a>
                 {% endif %}
+            </div>
+
+
+            <div class="">
+                <img class="city-logo" src="{% static 'intake/img/vallejo_city_logo.png' %}">
             </div>
         </div>
         <div class="row">
-            <div class="col-sm-9 col-sm-offset-1 col-xs-12">
+            <div class="col-sm-10 col-sm-offset-1 col-xs-12">
                 <div class="header-content">
                     <h1>{% if lang == 'en' %}What's going on in your neighborhood?{% elif lang == 'es' %}&iquest;Qu&eacute; pasa en su barrio?{% endif %}</h1>
                     <p>{% if lang == 'en' %}Here you can report non-emergency issues, ask a question, or leave a message for the Community Services Section of the police department. Your submissions will go directly to the department and they'll work on investigating the problem or answering your questions as soon as possible. <b>If you are having an emergency, do not use this service and instead call 911.</b>{% elif lang == 'es' %}Aqu&iacute; puede reportar asuntos de importancia para su vecindad, hacer preguntas, o dejar un mensaje para el Community Services Section (sector de servicios para la communidad) de la polic&iacute;a. Sus mensajes ir&aacute;n directamente a la polic&iacute;a y ellos investigar&aacute;n su queja o contestar&aacute; su pregunta lo m&aacute;s pronto posible. <b>Si tiene una emergencia, no use esta p&aacute;gina, llame al 911.</b>{% endif %}</p>
