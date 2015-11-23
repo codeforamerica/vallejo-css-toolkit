@@ -102,7 +102,7 @@ def report_issue(request):
         lang = request.GET.get('lang') or DEFAULT_LANG
         if lang not in SUPPORTED_LANGS:
             lang = DEFAULT_LANG
-        form = IntakeIssueForm()
+        form = IntakeIssueForm(lang=lang)
 
     return render(request, 'intake/intake_issue.html', {'form': form, 'lang': lang, 'exclude_navbar': True})
 
@@ -143,7 +143,7 @@ def report_contact(request):
         lang = request.GET.get('lang') or DEFAULT_LANG
         if lang not in SUPPORTED_LANGS:
             lang = DEFAULT_LANG
-        form = IntakeContactForm()
+        form = IntakeContactForm(lang=lang)
 
     return render(request, 'intake/intake_contact.html', {'form': form, 'lang': lang, 'report_id': report.id, 'exclude_navbar': True})
 
