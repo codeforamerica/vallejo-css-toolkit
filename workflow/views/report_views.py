@@ -10,7 +10,7 @@ from django.http import HttpResponseRedirect
 from intake.models import CallAuditItem, PublicUploadedAsset
 
 from workflow.forms.report_forms import ReportForm
-from workflow.models import CSSCall, CSSCase, Verification, CSSReportView, ReportNotification, Recording
+from workflow.models import CSSCall, CSSCase, Verification, CSSReportView, ReportNotification, Recording, StaffReportNotification
 from workflow.utils import get_location_history, get_reports
 
 log = logging.getLogger('consolelogger')
@@ -73,15 +73,17 @@ def report(request, report_id):
 
             return HttpResponseRedirect('/workflow/verify_report/{}'.format(verification.id))
 
+        elif request.POST.get('next-action') == 'Forward':
+            return HttpResponseRedirect('/workflow/forward_report/{}'.format(call.id))
+
         elif request.POST.get('next-action') == 'Resolve':
             return HttpResponseRedirect('/workflow/resolve_report/{}'.format(call.id))
 
-        # TODO: handle other conditions
-        else:
+        else:  # we're just saving the report
             return HttpResponseRedirect('/workflow/reports')
 
     # either the form was not valid, or we're just loading the page
-    location_history = get_location_history(instance.address_number, instance.street_name)
+    location_history = get_location_history(instance.address_number, instance.street_name, instance.id)
     external_assets = PublicUploadedAsset.objects.filter(css_report=instance.id).order_by('-id')
     external_assets_count = len(external_assets)
 
@@ -172,27 +174,30 @@ def resolve_report(request, report_id):
         )
 
 
-# @login_required(login_url='/login/')
-# def forward_report(request, report_id):
-#     if request.method == 'POST':
-#         report = get_object_or_404(CSSCall, id=report_id)
-#         message = request.POST.get('message')
-#         if message:
-#             ReportNotification.objects.create(report=report, message=message)
-#             messages.add_message(request, messages.SUCCESS, "Successfully scheduled outgoing message to reporter.")
+@login_required(login_url='/login/')
+def forward_report(request, report_id):
+    if request.method == 'POST':
+        report = get_object_or_404(CSSCall, id=report_id)
+        message = request.POST.get('message')
+        to_user_id = request.POST.get('to_user_id')
+        if message:
+            StaffReportNotification.objects.create(report=report, message=message, from_user=request.user, to_user=User.objects.get(id=to_user_id))
+            messages.add_message(request, messages.SUCCESS, "Successfully forwarded report to recipient.")
 
-#         return HttpResponseRedirect('/workflow/reports/')
+        return HttpResponseRedirect('/workflow/reports/')
 
-#     else:
-#         return render(
-#             request,
-#             'workflow/message_reporter.html',
-#             {
-#                 'default_resolve_message': '',
-#                 'title': "Forward Report",
-#                 'cancel_url': '/workflow/reports/'
-#             }
-#         )
+    else:
+        return render(
+            request,
+            'workflow/message_reporter.html',
+            {
+                'users': User.objects.filter(is_active=True).exclude(id=request.user.id),
+                'forward': True,
+                'default_message': 'Please take a look at this report. Thank you.',
+                'title': "Resolve Report",
+                'cancel_url': '/workflow/reports/'
+            }
+        )
 
 
 @login_required(login_url='/login/')

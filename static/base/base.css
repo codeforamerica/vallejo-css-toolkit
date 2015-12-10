@@ -280,3 +280,17 @@ label{
       border:none;
   }
 }
+
+/*Notification counter*/
+.new_notification_count {
+    padding-left: 5px;
+}
+
+.new_notification_count.seen {
+    font-weight: normal;
+    color:#188EF5;
+}
+
+.new_notification_bell.seen {
+    color:#188EF5;
+}

@@ -22,7 +22,19 @@
         <div class="row">
             <div class="col-sm-10 col-sm-offset-1">
                 <div class="form-group">
-                    <label>Message to Reporter:</label>
+                    <label>Forward to:</label>
+                    <select name="to_user_id">
+                        {% for user in users %}
+                            <option value="{{ user.id }}">{{user.first_name}} {{user.last_name}}</option>
+                        {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-1">
+                <div class="form-group">
+                    <label>Message to {% if forward %}Staff member{% else %}Reporter{% endif %}:</label>
                     <textarea maxlength="256" name="message" class="form-control" rows="5">{{ default_message }}</textarea>
                 </div>
             </div>

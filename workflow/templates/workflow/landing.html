@@ -15,321 +15,173 @@
 
 {% block body %}
 
-
 <div class="container">
     <div class="row landing-header">
-      <div class="col-md-10 welcome">
-        <h2>Hey {{ user.first_name }}, here's what's happened since you left:</h2>
-      </div>
+        <div class="col-md-10 welcome">
+            <h2>Hey {{ user.first_name }}, here's what's happening:</h2>
+        </div>
 
-      <div class="col-md-2 col-sm-4 col-xs-6">
-        <a href="/workflow/add_report" class="add-report"><button type="button" class="btn btn-success btn-block btn-lg">+&nbsp;New Report</button></a>
-      </div>
-    </div>
+        <div class="col-md-2 col-sm-4 col-xs-6">
+            <a href="/workflow/add_report" class="add-report"><button type="button" class="btn btn-success btn-block btn-lg">+&nbsp;New Report</button></a>
+        </div>
+
+        <form id='report-ids'>
+            <input type="hidden" name='report-ids' value="{{ report_ids }}">
+        </form>
+    </div>  <!-- end header row -->
 
     <div class="row">
-      <form id='report-ids'>
-        <input type="hidden" name='report-ids' value="{{ report_ids }}">
-      </form>
+        <div class="col-md-4 ">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Recent case activity in the last 48 hours</h3>
+                </div>
 
-      <div class="col-md-4 ">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <h3 class="panel-title">Recent Activity since your last login</h3>
-          </div>
-
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Time</th>
-                <th>Activity</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>12:01pm</td>
-                <td>Hans visited 553 Maine St</td>
-              </tr>
-
-              <tr>
-                <td>10:11am</td>
-                <td>Lt. Park closed a case at 172 Santa Clara</td>
-              </tr>
-
-              <tr>
-                <td>9:00am</td>
-                <td>Garcia made 883 Florida into a case</td>
-              </tr>
-
-              <tr>
-                <td>Yesterday</td>
-                <td>You contacted the owner of 313 B St</td>
-              </tr>
-
-              <tr>
-                <td>Yesterday</td>
-                <td>Karen forwarded you 4676 Georgia St</td>
-              </tr>
-            </tbody>
-
-          </table>
-
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Who</th>
+                            <th>Activity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for case_action in case_actions %}
+                            <tr>
+                                <td>{{ case_action.timestamp|date:"d/m/y" }} {{ case_action.timestamp|time:"H:i" }}</td>
+                                <td>{{ case_action.user.get_full_name|default_if_none:"" }}</td>
+                                <td>{{ case_action.description|slice:":32" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
 
-      <div class="col-md-8 ">
-        <div class="panel panel-default new-reports">
-          <div class="panel-heading">
-            <h3 class="panel-title">New Reports since your last login</h3>
-          </div>
-
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Received</th>
-                <th>Problem Address</th>
-                <th>Reporter</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>Today</td>
-                <td>1017 Louisiana</td>
-                <td>Rose Beck</td>
-                <td>There are people in the house that aren't supposed to be there</td>
-              </tr>
-
-              <tr>
-                <td>Yesterday</td>
-                <td>GVRD</td>
-                <td>Sandy</td>
-                <td>Something is happening that you should know</td>
-              </tr>
-
-              <tr>
-                <td>10/25/15</td>
-                <td>---</td>
-                <td>Jerry Hill</td>
-                <td>Please fix something ASAP!</td>
-              </tr>
-
-              <tr>
-                <td>10/25/15</td>
-                <td>325 Florida</td>
-                <td>Hilary Clinton</td>
-                <td>I saw someone take a car</td>
-              </tr>
-
-              <tr>
-                <td>10/25/15</td>
-                <td>Solano and Georgia</td>
-                <td>---</td>
-                <td>Another thing that happened yesterday</td>
-              </tr>
-
-              <tr>
-                <td>10/24/15</td>
-                <td>117 B St</td>
-                <td>Andrew S</td>
-                <td>Something is happening that you should know</td>
-              </tr>
-            </tbody>
-
-          </table>
-
+        <div class="col-md-8 ">
+            <div class="panel panel-default new-reports">
+                <div class="panel-heading">
+                    <h3 class="panel-title">New reports in the last 48 hours</h3>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Received</th>
+                            <th>Problem Address</th>
+                            <th>Reporter</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recent_report in recent_reports %}
+                            <tr>
+                                <td>{{ recent_report.reported_datetime|date:"d/m/y" }} {{ recent_report.reported_datetime|time:"H:i" }}</td>
+                                <td>{{ recent_report.get_address|default_if_none:"" }}</td>
+                                <td>{{ recent_report.name|default_if_none:"" }}</td>
+                                <td>{{ recent_report.problem|default_if_none:""|slice:":32" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
+    </div> <!-- end upper row -->
 
-      <div class="col-md-4 ">
-        <div class="panel panel-default workload">
-          <div class="panel-heading">
-            <h3 class="panel-title">What is our workload?</h3>
-          </div>
-
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Metric</th>
-                <th>Last Month</th>
-                <th>This Month</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>Incoming Reports</td>
-                <td>{{ last_month_new_reports }}</td>
-                <td><b>{{ current_month_new_reports }}</b></td>
-              </tr>
-
-              <tr>
-                <td>Verifications IP</td>
-                <td>43</td>
-                <td><b>71</b></td>
-              </tr>
-
-              <tr>
-                <td>Opened Cases</td>
-                <td>{{ last_month_new_cases }}</td>
-                <td><b>{{ current_month_new_cases }}</b></td>
-              </tr>
-
-              <tr>
-                <td>Resolved Cases</td>
-                <td>43</td>
-                <td><b>71</b></td>
-              </tr>
-            </tbody>
-          </table>
-
+    <div class="row">
+        <div class="col-md-4 ">
+            <div class="panel panel-default workload">
+                <div class="panel-heading">
+                    <h3 class="panel-title">What is our workload?</h3>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>This Month</th>
+                            <th>Last Month</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Incoming Reports</td>
+                            <td><b>{{ current_month_new_reports }}</b></td>
+                            <td>{{ last_month_new_reports }}</td>
+                        </tr>
+                        <tr>
+                            <td>Active Verifications</td>
+                            <td><b>{{ verifications_in_progress_this_month }}</b></td>
+                            <td>{{ verifications_in_progress_last_month }}</td>
+                        </tr>
+                        <tr>
+                            <td>Opened Cases</td>
+                            <td><b>{{ current_month_new_cases }}</b></td>
+                            <td>{{ last_month_new_cases }}</td>
+                        </tr>
+                        <tr>
+                            <td>Resolved Cases</td>
+                            <td><b>{{resolved_cases_this_month}}</b></td>
+                            <td>{{resolved_cases_last_month}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
 
-      <div class="col-md-4 ">
-        <div class="panel panel-default issue-type">
-          <div class="panel-heading">
-            <h3 class="panel-title">What are the most reported issues?</h3>
-          </div>
-
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Last Month</th>
-                <th>This Month</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>Stolen Vehicle</td>
-                <td>110</td>
-                <td><b>112</b></td>
-              </tr>
-
-              <tr>
-                <td>Squatter</td>
-                <td>56</td>
-                <td><b>107</b></td>
-              </tr>
-
-              <tr>
-                <td>Abandoned Vehicle</td>
-                <td>99</td>
-                <td><b>98</b></td>
-              </tr>
-
-              <tr>
-                <td>Drugs</td>
-                <td>44</td>
-                <td><b>78</b></td>
-              </tr>
-
-              <tr>
-                <td>Homeless Camp</td>
-                <td>72</td>
-                <td><b>23</b></td>
-              </tr>
-
-              <tr>
-                <td>Auto Repair</td>
-                <td>31</td>
-                <td><b>10</b></td>
-              </tr>
-
-              <tr>
-                <td>Prostitution</td>
-                <td>10</td>
-                <td><b>9</b></td>
-              </tr>
-
-              <tr>
-                <td>Noise</td>
-                <td>2</td>
-                <td><b>0</b></td>
-              </tr>
-            </tbody>
-          </table>
-
+        <div class="col-md-4 ">
+            <div class="panel panel-default issue-type">
+                <div class="panel-heading">
+                    <h3 class="panel-title">What are the most reported issues?</h3>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Type</th>
+                            <th>This Month</th>
+                            <th>Last Month</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in reports_by_report_type %}
+                            <tr><td>{{row.1}}</td><td><b>{{row.2}}</b></td><td>{{row.3}}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
 
-      <div class="col-md-4 ">
-        <div class="panel panel-default issue-type">
-          <div class="panel-heading">
-            <h3 class="panel-title">Where are incoming reports coming from?</h3>
-          </div>
-
-          <table class="table table-hover">
-            <thead>
-              <tr>
-                <th>Source</th>
-                <th>Last Month</th>
-                <th>This Month</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>Web Form</td>
-                <td>231</td>
-                <td><b>245</b></td>
-              </tr>
-
-              <tr>
-                <td>Phone Line</td>
-                <td>56</td>
-                <td><b>107</b></td>
-              </tr>
-
-              <tr>
-                <td>Manual Entry</td>
-                <td>77</td>
-                <td><b>91</b></td>
-              </tr>
-
-              <tr>
-                <td>Referral - PD</td>
-                <td>78</td>
-                <td><b>65</b></td>
-              </tr>
-
-              <tr>
-                <td>Referral - CE</td>
-                <td>72</td>
-                <td><b>23</b></td>
-              </tr>
-
-              <tr>
-                <td>Referral - City</td>
-                <td>2</td>
-                <td><b>7</b></td>
-              </tr>
-            </tbody>
-          </table>
-
+        <div class="col-md-4 ">
+            <div class="panel panel-default issue-type">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Where are incoming reports coming from?</h3>
+                </div>
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Source</th>
+                            <th>This Month</th>
+                            <th>Last Month</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in reports_by_source %}
+                            <tr><td>{{row.1}}</td><td><b>{{row.2}}</b></td><td>{{row.3}}</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
+    </div> <!-- end lower row -->
 
-
-
-      <div class="col-sm-12">
-        <div class="panel panel-default map-panel">
-          <div class="panel-heading">
-            <h3 class="panel-title">Where in Vallejo are problems persisting?</h3>
-          </div>
-          <div id="map" class="panel-body">
-
-          </div>
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="panel panel-default map-panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Where in Vallejo are problems persisting? (Showing the last 2 weeks of reports)</h3>
+                </div>
+                <div id="map" class="panel-body"></div>
+            </div>
         </div>
-      </div>
-    </div>
-
-
-</div>
-
+    </div> <!-- end map row -->
+</div> <!-- end container -->
 
 {% endblock %}

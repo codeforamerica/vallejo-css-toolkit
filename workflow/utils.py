@@ -9,7 +9,7 @@ from django.db import connection
 log = logging.getLogger('consolelogger')
 
 
-def get_location_history(address_number, street_name):
+def get_location_history(address_number, street_name, report_id):
     query = """
         SELECT TO_CHAR(data.date, 'MM/DD/YYYY'), data.source, data.case_no, data.case_type, data.description
         FROM (
@@ -33,10 +33,30 @@ def get_location_history(address_number, street_name):
             FROM data_load_rmscase rms
             WHERE LOWER(rms.address) = CAST(%(address_number)s AS TEXT) || ' ' || LOWER(%(street_name)s)
             AND rms.date IS NOT NULL
+            UNION
+            SELECT
+                report.reported_datetime AT TIME ZONE 'America/Los_Angeles' AS date,
+                'CSS' AS source,
+                CAST(report.id AS TEXT) AS case_no,
+                CASE WHEN report.report_type = 1 THEN 'Squatters'
+                     WHEN report.report_type = 2 THEN 'Homeless encampment'
+                     WHEN report.report_type = 3 THEN 'Drugs'
+                     WHEN report.report_type = 4 THEN 'Illegal Auto Repair'
+                     WHEN report.report_type = 5 THEN 'Illegal Dumping'
+                     WHEN report.report_type = 6 THEN 'Prostitution'
+                     WHEN report.report_type = 7 THEN 'Abandoned Vehicle'
+                     WHEN report.report_type = 8 THEN 'Communication/Question'
+                     WHEN report.report_type = 9 THEN 'Other'
+                END AS case_type,
+                report.problem AS description
+            FROM workflow_csscall report
+            WHERE report.address_number = %(address_number)s
+            AND LOWER(report.street_name) = LOWER(%(street_name)s)
+            AND report.id != %(report_id)s
         ) AS data
         ORDER BY data.date DESC
     """
-    params = {'address_number': address_number, 'street_name': street_name}
+    params = {'address_number': address_number, 'street_name': street_name, 'report_id': report_id}
     cursor = connection.cursor()
 
     try:

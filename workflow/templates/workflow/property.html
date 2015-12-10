@@ -6,6 +6,7 @@
 
 <!-- <link rel="stylesheet" href="{% static "workflow/css/workflow.css" %}"/> -->
 <link rel="stylesheet" href="{% static "workflow/css/table_page_new.css" %}"/>
+<script src="{% static "workflow/js/properties.js" %}"></script>
 
 {% endblock %}
 
@@ -37,10 +38,10 @@
                     <tbody>
                         {% for report in reports %}
                             <tr>
-                                <td class="data-cell timestamp-data-cell">{{ report.reported_datetime|date:"m/d/y" }}</td>
-                                <td class="data-cell">{{ report.problem|default_if_none:'' }}</td>
-                                <td class="data-cell">{{ report.get_report_type_display|default_if_none:'' }}</td>
-                                <td class="data-cell">{{ report.get_status_display|default_if_none:'' }}</td>
+                                <td class="data-cell timestamp-data-cell clickable-cell" data-href="/workflow/report/{{ report.id }}">{{ report.reported_datetime|date:"m/d/y" }}</td>
+                                <td class="data-cell clickable-cell" data-href="/workflow/report/{{ report.id }}">{{ report.problem|default_if_none:'' }}</td>
+                                <td class="data-cell clickable-cell" data-href="/workflow/report/{{ report.id }}">{{ report.get_report_type_display|default_if_none:'' }}</td>
+                                <td class="data-cell clickable-cell" data-href="/workflow/report/{{ report.id }}">{{ report.get_status_display|default_if_none:'' }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

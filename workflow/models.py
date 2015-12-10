@@ -216,6 +216,17 @@ class CSSReportView(models.Model):
         super(CSSReportView, self).save(*args, **kwargs)
 
 
+class VerificationView(models.Model):
+    verification = models.ForeignKey(Verification)
+    user = models.ForeignKey(User)
+    timestamp = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.timestamp:
+            self.timestamp = pytz.utc.localize(datetime.utcnow())
+        super(VerificationView, self).save(*args, **kwargs)
+
+
 class Recording(models.Model):
     LOCATION = 1
     DESCRIPTION = 2
@@ -246,6 +257,20 @@ class ReportNotification(models.Model):
         if not self.created_at:
             self.created_at = pytz.utc.localize(datetime.utcnow())
         super(ReportNotification, self).save(*args, **kwargs)
+
+
+class StaffReportNotification(models.Model):
+    report = models.ForeignKey(CSSCall)
+    message = models.CharField(max_length=512)
+    created_at = models.DateTimeField()
+    sent_at = models.DateTimeField(null=True)
+    from_user = models.ForeignKey(User, related_name="+")
+    to_user = models.ForeignKey(User, related_name="+")
+
+    def save(self, *args, **kwargs):
+        if not self.created_at:
+            self.created_at = pytz.utc.localize(datetime.utcnow())
+        super(StaffReportNotification, self).save(*args, **kwargs)
 
 
 class UploadedAsset(models.Model):

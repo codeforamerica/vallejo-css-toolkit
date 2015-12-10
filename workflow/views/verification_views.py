@@ -12,7 +12,7 @@ from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
-from workflow.models import Verification, CSSCase, VerificationContactAction, UploadedAsset, CSSCall
+from workflow.models import Verification, CSSCase, VerificationContactAction, UploadedAsset, CSSCall, VerificationView
 from workflow.forms.verification_forms import PropertyDetailsForm, UploadAssetForm
 
 log = logging.getLogger('consolelogger')
@@ -21,6 +21,7 @@ log = logging.getLogger('consolelogger')
 @login_required(login_url='/login/')
 def verification(request, verification_id):
     instance = get_object_or_404(Verification, id=verification_id)
+    VerificationView.objects.create(verification=instance, user=request.user)
 
     readonly = not (request.user.is_staff or request.user.is_superuser)
     property_details_form = PropertyDetailsForm(request.POST or None, request.FILES or None, readonly=readonly, instance=instance)
@@ -65,8 +66,12 @@ def verification(request, verification_id):
                 case = CSSCase.objects.create(verification=verification)[0]
             return HttpResponseRedirect('/workflow/case/{}'.format(case.id))
 
-        # TODO: handle other conditions
-        else:
+        # TODO:
+        # elif request.POST.get('next-action') == 'Forward':
+        # elif request.POST.get('next-action') == 'Resolve':
+        # elif request.POST.get('next-action') == 'Revert to Report':
+
+        else:  # we're just saving the verification
             return HttpResponseRedirect('/workflow/verification/{}'.format(verification.id))
 
     # either the form was invalid or we're just loading the page
