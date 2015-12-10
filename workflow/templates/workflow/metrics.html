@@ -1,0 +1,60 @@
+{% extends "base/layout.html" %}
+
+{% load staticfiles %}
+
+{% block assets %}
+
+<link rel="stylesheet" href="{% static "workflow/css/table_page_new.css" %}"/>
+
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-sm-offset-0">
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Month</th>
+                        <th>Created Reports</th>
+                        <th>% via Spanish web form</th>
+                        <th>Created Verifications</th>
+                        <th>Created Cases</th>
+                        <th>Report Views</th>
+                        <th>Verification Views</th>
+                        <th>Case Views</th>
+                        <th>Case Actions</th>
+                        <th>New Users</th>
+                        <th>Files Uploaded</th>
+                        <th>Extracted RMS Cases</th>
+                        <th>Extracted CRW Cases</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in data %}
+                        <tr>
+                            <td>{{row.0}}</td>
+                            <td>{{row.1}}</td>
+                            <td>{{row.2}}</td>
+                            <td>{{row.3}}</td>
+                            <td>{{row.4}}</td>
+                            <td>{{row.5}}</td>
+                            <td>{{row.6}}</td>
+                            <td>{{row.7}}</td>
+                            <td>{{row.8}}</td>
+                            <td>{{row.9}}</td>
+                            <td>{{row.10}}</td>
+                            <td>{{row.11}}</td>
+                            <td>{{row.12}}</td>
+                            <td>{{row.13}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

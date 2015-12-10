@@ -28,10 +28,11 @@ urlpatterns = patterns(
     url(r'^workflow/property/$', 'workflow.views.property_views.property', name='property'),
     url(r'^workflow/properties/$', 'workflow.views.property_views.properties', name='properties'),
 
-    # landing + auth page views
+    # landing, auth, and metircs page views
     url(r'^workflow/$', 'workflow.views.landing', name='landing'),
     url(r'^login/$', 'workflow.views.login_view', name='login_view'),
     url(r'^get_notifications/$', 'workflow.views.get_notifications', name='get_notifications'),
     url(r'^mark_notifications_seen/$', 'workflow.views.mark_notifications_seen', name='mark_notifications_seen'),
     url(r'^logout/$', 'workflow.views.logout_view', name='logout_view'),
+    url(r'^metrics/$', 'workflow.views.metrics', name='metrics'),
 )
