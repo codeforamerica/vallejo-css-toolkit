@@ -1,48 +1,44 @@
 <nav class="navbar navbar-default">
-  <div class="container-fluid">
+    <div class="container-fluid">
 
-    <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mobile-menu" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" href="/workflow">COMPASS</a>
-    </div>
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#mobile-menu" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/workflow">COMPASS</a>
+        </div>
 
-    <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="collapse navbar-collapse" id="mobile-menu">
-      <ul class="nav navbar-nav">
-        <li role="presentation" id="calls-nav-tab"><a href="/workflow/reports"> Reports</a></li>
-        <li role="presentation" id="cases-nav-tab"><a href="/workflow/cases"> Cases</a></li>
-        <li role="presentation" id="cases-nav-tab"><a href="/workflow/properties" id="properties"> Properties</a></li>
-      </ul>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="mobile-menu">
+            <ul class="nav navbar-nav">
+                <li role="presentation" id="calls-nav-tab"><a href="/workflow/reports"> Reports</a></li>
+                <li role="presentation" id="cases-nav-tab"><a href="/workflow/cases"> Cases</a></li>
+                <li role="presentation" id="properties-nav-tab"><a href="/workflow/properties"> Properties</a></li>
+            </ul>
 
-      <ul class="nav navbar-nav navbar-right">
-        <li role="presentation" id="cases-nav-tab" class="dropdown">
-          <a href="#" id="notifications" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span class="glyphicon glyphicon-bell" aria-hidden="true"></span> (3)
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#">175 Red Rock Way inactive for 21 days</a></li>
-            <li><a href="#">Karen wants you to look at 21 Maine St</a></li>
-            <li><a href="#">You've been assigned to 8821 Florida St</a></li>
-          </ul>
-        </li>
-        <li role="presentation" id="cases-nav-tab" class="dropdown">
-          <a href="#" id="user" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-            {{ user.get_username }}
-            <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a target="_blank" href="https://s3.amazonaws.com/vallejo-css-toolkit/COMPASSusermanual.pdf">Help</a></li>
-            <li><a href="/logout">Log Out</a></li>
-          </ul>
-        </li>
-      </ul>
-    </div><!-- /.navbar-collapse -->
+            <ul class="nav navbar-nav navbar-right">
+                <li role="presentation" id="cases-nav-tab" class="dropdown">
+                    <a href="#" id="notifications" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span class="new_notification_bell glyphicon glyphicon-bell" aria-hidden="true"></span><span class="new_notification_count"></span>
+                    </a>
+                    <ul class="notification-details"></ul>
+                </li>
+                <li role="presentation" id="cases-nav-tab" class="dropdown">
+                    <a href="#" id="user" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                        {{ user.get_username }}
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a target="_blank" href="https://s3.amazonaws.com/vallejo-css-toolkit/COMPASSusermanual.pdf">Help</a></li>
+                        <li><a href="/logout">Log Out</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
 
-  </div><!-- /.container-fluid -->
+    </div><!-- /.container-fluid -->
 </nav>

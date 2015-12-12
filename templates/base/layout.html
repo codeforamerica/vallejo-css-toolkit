@@ -27,6 +27,10 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
         <link rel="stylesheet" href="{% static "base/base.css" %}"/>
 
+        {% if not exclude_navbar %}
+            <script src="{% static 'base/notifications.js' %}"></script>
+        {% endif %}
+
 
         {% block assets %}
         {% endblock %}

@@ -80,6 +80,14 @@ th{
   border-color:#eeeeee;
 }
 
+.metrics-table>thead>tr>th, .metrics-table>tbody>tr>td{
+  padding-top: 25px;
+  padding-bottom:8px;
+  padding-left: 10px;
+  padding-right: 8px;
+  border-color:#eeeeee;
+}
+
 .clickable-cell {
     cursor: pointer;
 }

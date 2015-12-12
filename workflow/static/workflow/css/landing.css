@@ -21,7 +21,7 @@ a.add-report:hover{
 
 .panel{
   margin-bottom:30px;
-  height:360px;
+  height: auto; /*360px;*/
   overflow:hidden;
 }
 
@@ -67,8 +67,6 @@ a.add-report:hover{
   margin-bottom:0;
   line-height: 1.5
 }
-
-
 
 .table>thead>tr>th, .table>tbody>tr>td{
   padding-left:15px;
