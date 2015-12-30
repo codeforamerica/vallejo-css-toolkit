@@ -19,47 +19,46 @@
 
 {% load widget_tweaks %}
 
-<div class="workflow-pg-wrapper">
-    <div class="container">
+<form id="case-details-form" method="POST">
+    {% csrf_token %}
 
-        <div class="row subnav">
-            <div class="col-md-8 col-sm-7 col-xs-12">
-                <h1>{{ property_address }}</h1>
-                {% if report.reported_datetime and report.name %}
-                    <p class="reporter-subheader"> reported on {{ report.reported_datetime|date }} by {{ report.name }}</p>
-                {% endif %}
-            </div>
+    <div class="workflow-pg-wrapper">
+        <div class="container">
 
-            <div class="col-md-4 col-sm-5 col-xs-12">
-                <ul class="nav nav-pills pull-right">
-                    <li role="presentation"><a href="/workflow/report/{{ report_id }}">Report</a></li>
-                    <li role="presentation"><a href="/workflow/verification/{{ verification_id }}">Verification</a></li>
-                    <li role="presentation" class="active"><a href="#">Case</a></li>
-                </ul>
-            </div>
-        </div>
+            <div class="row subnav">
+                <div class="col-md-8 col-sm-7 col-xs-12">
+                    <h1>{{ property_address }}</h1>
+                    {% if report.reported_datetime and report.name %}
+                        <p class="reporter-subheader"> reported on {{ report.reported_datetime|date }} by {{ report.name }}</p>
+                    {% endif %}
+                </div>
 
-        <div class="row">
-            <div class="col-sm-4 pane-selectors">
-                <div class="list-group">
-                    <h5 class="list-group-item list-group-item-title">Case</h5>
-                    <a href="#case-details" class="list-group-item active">Case Details<span class="fa fa-list-item fa-angle-right"></span></a>
-                    <a href="#incident-log" class="list-group-item">Activity Log<span class="fa fa-list-item fa-angle-right"></span></a>
-<!--                     <a href="#docs" class="list-group-item">People Contacted<span class="fa fa-list-item fa-angle-right"></span></a>
- -->
+                <div class="col-md-4 col-sm-5 col-xs-12">
+                    <ul class="nav nav-pills pull-right">
+                        <li role="presentation"><a href="/workflow/report/{{ report_id }}">Report</a></li>
+                        <li role="presentation"><a href="/workflow/verification/{{ verification_id }}">Verification</a></li>
+                        <li role="presentation" class="active"><a href="#">Case</a></li>
+                    </ul>
                 </div>
             </div>
 
-            <!--Case Details pane-->
-            <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="case-details">
-                <div class="row">
-                    <div class="col-sm-12">
-                        <h4>Case Details</h4>
+            <div class="row">
+                <div class="col-sm-4 pane-selectors">
+                    <div class="list-group">
+                        <h5 class="list-group-item list-group-item-title">Case</h5>
+                        <a href="#case-details" class="list-group-item active">Case Details<span class="fa fa-list-item fa-angle-right"></span></a>
+                        <a href="#incident-log" class="list-group-item">Activity Log<span class="fa fa-list-item fa-angle-right"></span></a>
                     </div>
                 </div>
 
-                <form id="case-details-form" method="POST">
-                    {% csrf_token %}
+                <!--Case Details pane-->
+                <div class="col-sm-7 col-sm-offset-1 report tab-pane" id="case-details">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <h4>Case Details</h4>
+                        </div>
+                    </div>
+
                     {{ case_details_form.non_field_errors }}
                     <input name="case_id" type="hidden" value="{{ case_id }}">
 
@@ -114,213 +113,188 @@
                             </div>
                         </div>
                     </div>
-                </form>
-            </div><!--End Case Details pane-->
+                </div><!--End Case Details pane-->
 
-            <!-- Incident Log pane -->
-            <div class="tab-pane" id="incident-log">
-                <div class="col-md-7 col-md-offset-1 report">
-                    <h4>Activity Log</h4>
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <div class="table-wrapper">
-                                <table class="table table-hover small-table" id="call-log">
-                                    <thead>
-                                        <tr>
-                                            <th>Date</th>
-                                            <th>Officer</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>Today</td>
-                                            <td>Garcia</td>
-                                            <td>This is the description of the service call</td>
-                                        </tr>
-                                        <tr>
-                                            <td>10/15/15</td>
-                                            <td>Hans</td>
-                                            <td>This is the description of the service call</td>
-                                        </tr>
-                                        <tr>
-                                            <td>10/10/15</td>
-                                            <td>Hans</td>
-                                            <td>This is the description of the service call</td>
-                                        </tr>
-                                        <tr>
-                                            <td>10/1/15</td>
-                                            <td>Park</td>
-                                            <td>This is the description of the service call</td>
-                                        </tr>
-                                        <tr>
-                                            <td>8/8/15</td>
-                                            <td>Garrick</td>
-                                            <td>This is the description of the service call</td>
-                                        </tr>
-                                        <tr>
-                                            <td>1/23/15</td>
-                                            <td>Hans</td>
-                                            <td>This is the description of the service call</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div> <!--table wrapper-->
-                            {% if user.is_staff or user.is_superuser %}
-                                <a href="#" class="pull-right" data-toggle="modal" data-target="#addincident">Add Activity</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                </div><!--contact log table-->
-            </div><!-- end Activity Log pane -->
-
-        </div> <!-- end row -->
-
-        <!-- Activity Log Modal-->
-        <div class="modal fade" id="addincident" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-            <div class="modal-dialog  modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Add Activity</h4>
-                    </div>
-                    <div class="modal-body">
+                <!-- Incident Log pane -->
+                <div class="tab-pane" id="incident-log">
+                    <div class="col-md-7 col-md-offset-1 report">
+                        <h4>Activity Log</h4>
                         <div class="row">
-                            <div class="col-sm-10 col-sm-offset-1">
-                                <h4>Activity Description</h4>
+                            <div class="col-sm-12">
+                                <div class="table-wrapper">
+                                    <table class="table table-hover small-table" id="call-log">
+                                        <thead>
+                                            <tr>
+                                                <th>Date</th>
+                                                <th>Officer</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Today</td>
+                                                <td>Garcia</td>
+                                                <td>This is the description of the service call</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div> <!--table wrapper-->
+                                {% if user.is_staff or user.is_superuser %}
+                                    <a href="#" class="pull-right" data-toggle="modal" data-target="#addincident">Add Activity</a>
+                                {% endif %}
                             </div>
-                            <form>
-                                <div class="col-sm-5 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Date:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-5">
-                                    <div class="form-group">
-                                        <label for="">Time:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Time Spent at Property:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Officer:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Description:</label>
-                                        <textarea class="form-control" rows="3"></textarea>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Property Secured?</label>
-                                        <select class="form-control" name="next-action">
-                                            <option>Secured</option>
-                                            <option>Not Secured</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Board-up Company:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1">
-                                  <h4>People Contacted</h4>
-                                </div>
-
-                                <div class="col-sm-5 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Name:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-5">
-                                    <div class="form-group">
-                                        <label for="">DOB:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-5 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Name:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-5">
-                                    <div class="form-group">
-                                        <label for="">DOB:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1">
-                                  <h4>Arrests</h4>
-                                </div>
-
-                                <div class="col-sm-10 col-sm-offset-1">
-                                    <div class="form-group">
-                                        <label for="">Case Number:</label>
-                                        <input type="" class="form-control" id="" placeholder="">
-                                    </div>
-                                </div>
-
-                            </form>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Add</button>
+                    </div><!--contact log table-->
+                </div><!-- end Incident Log pane -->
+
+            </div> <!-- end row -->
+
+        </div>
+    </div>
+
+    <div class="footer container-fluid">
+        <div class="container next-actions">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-6">
+                    <div class="row">
+                        <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
+                            <div class="form-group">
+                                <select class="form-control" name="next-action">
+                                    <option>Save Case</option>
+                                    <option>Forward</option>
+                                    <option>Resolve</option>
+                                    <option>Revert to Verification</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
+                            <button type="submit" form="case-details-form" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
-</div>
+</form>
 
-<div class="footer container-fluid">
-    <div class="container next-actions">
-        <div class="row">
-            <div class="col-sm-6 col-sm-offset-6">
+<!-- Activity Log Modal-->
+<div class="modal fade" id="addincident" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog  modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Add Activity</h4>
+            </div>
+            <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6 col-md-offset-2 col-sm-7 col-sm-offset-1 col-xs-8">
-                        <div class="form-group">
-                            <select class="form-control" name="next-action">
-                                <option>Save Case</option>
-                                <option>Forward</option>
-                                <option>Resolve</option>
-                                <option>Revert to Verification</option>
-                            </select>
-                        </div>
+                    <div class="col-sm-10 col-sm-offset-1">
+                        <h4>Activity Description</h4>
                     </div>
-                    <div class="col-md-4 col-sm-4 col-xs-3 submit-btn">
-                        <button type="submit" form="case-details-form" class="btn btn-success btn-lg" aria-haspopup="true" aria-expanded="true">Confirm</button>
+                    <form id="add_case_activity">
+                        <div class="col-sm-5 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Date:</label>
+                                <input class="form-control" name="date">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label>Time:</label>
+                                <input class="form-control" name="time">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Time Spent at Property:</label>
+                                <input class="form-control" name="time_spent">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Officer:</label>
+                                <input class="form-control" name="officer">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Description:</label>
+                                <textarea class="form-control" name="description" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Property Secured?</label>
+                                <select class="form-control" name="prop_secured">
+                                    <option>Secured</option>
+                                    <option>Not Secured</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Board-up Company:</label>
+                                <input class="form-control" name="boardup_co">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                          <h4>People Contacted</h4>
+                        </div>
+
+                        <div class="col-sm-5 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Name:</label>
+                                <input class="form-control" name="per1_name">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label>DOB:</label>
+                                <input class="form-control" name="per1_dob">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Name:</label>
+                                <input class="form-control" name="per2_name">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-5">
+                            <div class="form-group">
+                                <label>DOB:</label>
+                                <input class="form-control" name="per2_dob">
+                            </div>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                          <h4>Arrests</h4>
+                        </div>
+
+                        <div class="col-sm-10 col-sm-offset-1">
+                            <div class="form-group">
+                                <label>Case Number:</label>
+                                <input class="form-control" name="case_number">
+                            </div>
+                        </div>
+
                     </div>
                 </div>
-            </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="addActivity()">Add</button>
+                </div>
+            </form>
         </div>
     </div>
-</div>
+</div>  <!-- end add incident modal -->
 
 {% endblock %}

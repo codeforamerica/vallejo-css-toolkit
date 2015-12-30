@@ -21,6 +21,10 @@ function addContact() {
 
 $(document).ready(function(){
 
+    $('#property-details-form-submit').click(function() {
+        $("#property-details-form").submit();
+    });
+
     $(".tab-pane").hide();
     $("#prop-details").show();
     $(".pane-selectors a").click(function (e) {

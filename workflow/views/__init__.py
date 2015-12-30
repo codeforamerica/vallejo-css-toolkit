@@ -12,7 +12,7 @@ from django.contrib import messages
 from django.http import HttpResponseRedirect, JsonResponse
 from django.db.models import Count
 
-from workflow.models import CSSCall, CSSCase, StaffReportNotification, CaseAction, Verification, CSSReportView, UploadedAsset, VerificationView
+from workflow.models import CSSCall, CSSCase, StaffReportNotification, CaseAction, Verification, CSSReportView, UploadedAsset, VerificationView, CaseView
 from data_load.models import RMSCase, CRWCase
 
 
@@ -59,7 +59,7 @@ def landing(request):
                 report_data['source'],
                 [i[1] for i in CSSCall.SOURCE_CHOICES if report_data['source'] == i[0]][0],
                 report_data['dcount'],
-                [i['dcount'] for i in reports_by_source_last_month if i['source'] == report_data['source']] and [i['dcount'] for i in reports_by_source_last_month if i['source'] == report_data['source']] or 0
+                [i['dcount'] for i in reports_by_source_last_month if i['source'] == report_data['source']] and [i['dcount'] for i in reports_by_source_last_month if i['source'] == report_data['source']][0] or 0
             ))
 
     for report_data in reports_by_source_last_month:
@@ -89,7 +89,7 @@ def landing(request):
                 report_data['report_type'],
                 [i[1] for i in CSSCall.REPORT_TYPE_CHOICES if report_data['report_type'] == i[0]][0],
                 report_data['dcount'],
-                [i['dcount'] for i in reports_by_report_type_last_month if i['report_type'] == report_data['report_type']] and [i['dcount'] for i in reports_by_report_type_last_month if i['report_type'] == report_data['report_type']] or 0
+                [i['dcount'] for i in reports_by_report_type_last_month if i['report_type'] == report_data['report_type']] and [i['dcount'] for i in reports_by_report_type_last_month if i['report_type'] == report_data['report_type']][0] or 0
             ))
 
     for report_data in reports_by_report_type_last_month:
@@ -192,7 +192,7 @@ def metrics(request):
     created_cases = CSSCase.objects.filter(created_at__gte=cutoff).extra(select={'year': "date_part('year', created_at)", 'month': "date_part('month', created_at)"}).values('year', 'month').annotate(Count('id'))
     report_views = CSSReportView.objects.filter(timestamp__gte=cutoff).extra(select={'year': "date_part('year', timestamp)", 'month': "date_part('month', timestamp)"}).values('year', 'month').annotate(Count('id'))
     verification_views = VerificationView.objects.filter(timestamp__gte=cutoff).extra(select={'year': "date_part('year', timestamp)", 'month': "date_part('month', timestamp)"}).values('year', 'month').annotate(Count('id'))
-    # TODO: case_views
+    case_views = CaseView.objects.filter(timestamp__gte=cutoff).extra(select={'year': "date_part('year', timestamp)", 'month': "date_part('month', timestamp)"}).values('year', 'month').annotate(Count('id'))
     case_actions = CaseAction.objects.filter(timestamp__gte=cutoff).extra(select={'year': "date_part('year', timestamp)", 'month': "date_part('month', timestamp)"}).values('year', 'month').annotate(Count('id'))
     added_users = User.objects.filter(date_joined__gte=cutoff).extra(select={'year': "date_part('year', date_joined)", 'month': "date_part('month', date_joined)"}).values('year', 'month').annotate(Count('id'))
     uploaded_files = UploadedAsset.objects.filter(timestamp__gte=cutoff).extra(select={'year': "date_part('year', timestamp)", 'month': "date_part('month', timestamp)"}).values('year', 'month').annotate(Count('id'))
@@ -213,6 +213,7 @@ def metrics(request):
         ('added_users', added_users),
         ('uploaded_files', uploaded_files),
         ('verification_views', verification_views),
+        ('case_views', case_views)
     )
 
     for label, data_by_type in data_with_labels:
@@ -238,7 +239,7 @@ def metrics(request):
                 data_by_month.get('created_cases', 0),
                 data_by_month.get('report_views', 0),
                 data_by_month.get('verification_views', 0),
-                '?',
+                data_by_month.get('case_views', 0),
                 data_by_month.get('case_actions', 0),
                 data_by_month.get('added_users', 0),
                 data_by_month.get('uploaded_files', 0),

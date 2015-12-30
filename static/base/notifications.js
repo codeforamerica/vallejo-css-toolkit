@@ -4,9 +4,9 @@ $(document).ready(function(){
         $(".new_notification_count").addClass('seen');
         $(".new_notification_bell").addClass('seen');
 
-        // $.ajax({
-        //     url: "/mark_notifications_seen/"
-        // });
+        $.ajax({
+            url: "/mark_notifications_seen/"
+        });
 
     });
 

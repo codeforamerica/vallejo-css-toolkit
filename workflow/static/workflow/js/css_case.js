@@ -9,6 +9,43 @@ function removeAssignee (e, tableCell, assignee) {
     });
 }
 
+function addActivity() {
+    console.log('hi');
+
+    $.ajax({
+        // TODO update and support url
+        // TODO need to link to existing to read them
+        "url": "/workflow/add_contact_action/",
+        "type": "POST",
+        "data": {
+            "date": document.forms['add_case_activity']['date'].value,
+            "time": document.forms['add_case_activity']['time'].value,
+            "time_spent": document.forms['add_case_activity']['time_spent'].value,
+            "officer": document.forms['add_case_activity']['officer'].value,
+            "description": document.forms['add_case_activity']['description'].value,
+            "prop_secured": document.forms['add_case_activity']['prop_secured'].value,
+            "boardup_co": document.forms['add_case_activity']['boardup_co'].value,
+            "per1_name": document.forms['add_case_activity']['per1_name'].value,
+            "per1_dob": document.forms['add_case_activity']['per1_dob'].value,
+            "per2_name": document.forms['add_case_activity']['per2_name'].value,
+            "per2_dob": document.forms['add_case_activity']['per2_dob'].value,
+            "case-number": document.forms['add_case_activity']['case_number'].value,
+        }
+    }).done( function(data) {
+        // TODO: update this
+        // if ($('#call-log tr').length > 1) {
+        //     $('#call-log tr:last').after('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
+        // } else {
+        //     $('#no-contacts-msg').hide();
+        //     $('#call-log').find('tbody').append('<tr><td>' + data.timestamp + '</td><td>' + data.contacter_name + '</td><td>' + data.contact_type + '</td><td>' + data.contact_description + '</td></tr>');
+        // }
+        $('#addincident').modal('hide');
+    });
+
+
+
+}
+
 $(document).ready(function(){
 
     function getCookie(name) {

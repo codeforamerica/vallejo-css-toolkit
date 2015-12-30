@@ -4,6 +4,10 @@ $(document).ready(function(){
 
     $(".to-delete-submit-btn").hide();
 
+    $("#delete-selected-submit").click(function() {
+        $("#delete-selected").submit();
+    });
+
     $(".clickable-cell").click(function(e) {
         if ($(this).data("href") !== undefined) {
             window.document.location = $(this).data("href");

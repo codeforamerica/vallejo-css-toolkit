@@ -7,12 +7,14 @@ import traceback
 
 import boto
 from boto.s3.key import Key
+
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.models import User
 
-from workflow.models import Verification, CSSCase, VerificationContactAction, UploadedAsset, CSSCall, VerificationView
+from workflow.models import Verification, CSSCase, VerificationContactAction, UploadedAsset, CSSCall, VerificationView, ReportNotification, StaffReportNotification
 from workflow.forms.verification_forms import PropertyDetailsForm, UploadAssetForm
 
 log = logging.getLogger('consolelogger')
@@ -57,8 +59,6 @@ def verification(request, verification_id):
         except:
             log.error("Encountered exception attempting to upload submitted file: {}".format(traceback.format_exc()))
 
-        messages.add_message(request, messages.SUCCESS, 'Verification successfully updated.')
-
         if request.POST.get('next-action') == 'Move to Case':
             if not CSSCase.objects.filter(verification=verification):
                 case = CSSCase.objects.create(verification=verification)
@@ -66,12 +66,17 @@ def verification(request, verification_id):
                 case = CSSCase.objects.create(verification=verification)[0]
             return HttpResponseRedirect('/workflow/case/{}'.format(case.id))
 
-        # TODO:
-        # elif request.POST.get('next-action') == 'Forward':
-        # elif request.POST.get('next-action') == 'Resolve':
-        # elif request.POST.get('next-action') == 'Revert to Report':
+        elif request.POST.get('next-action') == 'Forward':
+            return HttpResponseRedirect('/workflow/forward_verification/{}'.format(verification.id))
+
+        elif request.POST.get('next-action') == 'Resolve':
+            return HttpResponseRedirect('/workflow/resolve_verification/{}'.format(verification.id))
+
+        elif request.POST.get('next-action') == 'Revert to Report':
+            return HttpResponseRedirect('/workflow/revert_verification/{}'.format(verification.id))
 
         else:  # we're just saving the verification
+            messages.add_message(request, messages.SUCCESS, 'Verification successfully updated.')
             return HttpResponseRedirect('/workflow/verification/{}'.format(verification.id))
 
     # either the form was invalid or we're just loading the page
@@ -99,6 +104,68 @@ def verification(request, verification_id):
             'report': instance.report
         }
     )
+
+
+@login_required(login_url='/login/')
+def revert_verification(request, verification_id):
+    verification = get_object_or_404(Verification, id=verification_id)
+    report = verification.report
+
+    for case in CSSCase.objects.filter(verification=verification):
+        case.delete()
+
+    verification.delete()
+    messages.add_message(request, messages.SUCCESS, "Successfully reverted verification to report stage.")
+    return HttpResponseRedirect('/workflow/report/{}'.format(report.id))
+
+
+@login_required(login_url='/login/')
+def resolve_verification(request, verification_id):
+    if request.method == 'POST':
+        verification = get_object_or_404(Verification, id=verification_id)
+        message = request.POST.get('message')
+        if message:
+            ReportNotification.objects.create(report=verification.report, message=message)
+            messages.add_message(request, messages.SUCCESS, "Successfully scheduled outgoing message to reporter.")
+
+        return HttpResponseRedirect('/workflow/reports/')
+
+    else:
+        return render(
+            request,
+            'workflow/message_reporter.html',
+            {
+                'default_message': 'The issue you reported was resolved. Thank you!',
+                'title': "Resolve Report",
+                'cancel_url': '/workflow/reports/'
+            }
+        )
+
+
+@login_required(login_url='/login/')
+def forward_verification(request, verification_id):
+    if request.method == 'POST':
+        verification = get_object_or_404(Verification, id=verification_id)
+        message = request.POST.get('message')
+        to_user_id = request.POST.get('to_user_id')
+        if message:
+            StaffReportNotification.objects.create(report=verification.report, message=message, from_user=request.user, to_user=User.objects.get(id=to_user_id))
+            messages.add_message(request, messages.SUCCESS, "Successfully forwarded report to recipient.")
+
+        return HttpResponseRedirect('/workflow/reports/')
+
+    else:
+        return render(
+            request,
+            'workflow/message_reporter.html',
+            {
+                'users': User.objects.filter(is_active=True).exclude(id=request.user.id),
+                'forward': True,
+                'default_message': 'Please take a look at this verification. Thank you.',
+                'title': "Resolve Report",
+                'cancel_url': '/workflow/reports/'
+            }
+        )
 
 
 @login_required(login_url='/login/')

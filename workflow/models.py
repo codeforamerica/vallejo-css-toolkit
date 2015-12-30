@@ -234,7 +234,9 @@ class Recording(models.Model):
 
 class CSSCaseAssignee(models.Model):
     case = models.ForeignKey(CSSCase, null=True, blank=True)
+    # TODO: assignee_name needs to be deprecated
     assignee_name = models.CharField(max_length=256, null=True, blank=True)
+    assignee_user = models.ForeignKey(User)
 
 
 class ReportNotification(models.Model):
@@ -254,7 +256,7 @@ class StaffReportNotification(models.Model):
     message = models.CharField(max_length=512)
     created_at = models.DateTimeField()
     sent_at = models.DateTimeField(null=True)
-    from_user = models.ForeignKey(User, related_name="+")
+    from_user = models.ForeignKey(User, related_name="+", null=True)
     to_user = models.ForeignKey(User, related_name="+")
 
     def save(self, *args, **kwargs):
@@ -285,3 +287,14 @@ class CaseAction(models.Model):
         if not self.timestamp:
             self.timestamp = pytz.utc.localize(datetime.utcnow())
         super(CaseAction, self).save(*args, **kwargs)
+
+
+class CaseView(models.Model):
+    case = models.ForeignKey(CSSCase)
+    user = models.ForeignKey(User)
+    timestamp = models.DateTimeField()
+
+    def save(self, *args, **kwargs):
+        if not self.timestamp:
+            self.timestamp = pytz.utc.localize(datetime.utcnow())
+        super(CaseView, self).save(*args, **kwargs)
