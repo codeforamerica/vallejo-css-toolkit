@@ -70,14 +70,17 @@ def send_public_notifications():
             elif report_notification.report.caller_preferred_contact == CSSCall.TEXT_CONTACT_PREFERENCE:
                 reporter_phone = report_notification.report.phone and re.sub(r'\D', '', report_notification.report.phone) or ''
                 if len(reporter_phone) == 10:
-                    twilio_client.messages.create(
-                        to="+".format(reporter_phone),
-                        from_="+".format(TWILIO_NUMBER),
-                        body="This is an update regarding a report you filed with the City of Vallejo.\n{}".format(report_notification.message)
-                    )
+                    try:
+                        twilio_client.messages.create(
+                            to="+1".format(reporter_phone),
+                            from_="+1".format(TWILIO_NUMBER),
+                            body="This is an update regarding a report you filed with the City of Vallejo.\n{}".format(report_notification.message)
+                        )
+                    except:
+                        log.error("Encountered error sending public SMS: {}".format(traceback.format_exc()))
 
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
         send_staff_notifications()
-        send_public_notifications()
+        # send_public_notifications()

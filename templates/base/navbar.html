@@ -33,7 +33,11 @@
                         {{ user.get_username }}
                         <span class="caret"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a target="_blank" href="https://s3.amazonaws.com/vallejo-css-toolkit/COMPASSusermanual.pdf">Help</a></li>
+<!--                         <li><a target="_blank" href="https://s3.amazonaws.com/vallejo-css-toolkit/COMPASSusermanual.pdf">Help</a></li> -->
+                        <li><a target="_blank" href="https://docs.google.com/document/d/1i5OoiuFThu97u1pQeStuca59mX_tjOzjudxVkVnPIOo/pub">Help</a></li>
+                        {% if user.is_superuser %}
+                            <li><a target="_blank" href="https://docs.google.com/document/d/133Vw0S4T06lpBiZPpPIlAgz7p90-rb40vSDiMx-hcTo/pub">Superuser Help</a></li>
+                        {% endif %}
                         <li><a href="/logout">Log Out</a></li>
                     </ul>
                 </li>
