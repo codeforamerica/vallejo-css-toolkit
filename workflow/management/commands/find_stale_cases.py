@@ -18,7 +18,7 @@ def find_stale_cases():
                 StaffReportNotification.objects.create(
                     report=unresolved_case.verification.report,
                     message="You're receiving this message because you have an assigned case that has been inactive for more than 21 days.",
-                    to_user=case_assignee.assignee_user.user
+                    to_user=case_assignee.assignee_user
                 )
 
 
